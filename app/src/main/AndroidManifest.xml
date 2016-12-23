@@ -15,6 +15,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ContactosActivity" />
+        <activity android:name=".ConversacionActivity" />
+        <activity
+            android:name=".AlarmasActivity"
+            android:label="@string/title_activity_alarmas"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
