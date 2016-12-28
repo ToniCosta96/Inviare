@@ -6,4 +6,6 @@
         android:icon="@drawable/ic_add_black_24dp"
         android:id="@+id/add"
         app:showAsAction="always" />
+    <item android:title="@string/ajustes"
+        android:id="@+id/ajustes" />
 </menu>

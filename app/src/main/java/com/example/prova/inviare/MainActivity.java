@@ -25,10 +25,11 @@ public class MainActivity extends AppCompatActivity {
         final RecyclerView recyclerView= (RecyclerView) findViewById(R.id.recycler_view_conversaciones);
 
         arrayContactos= new ArrayList<>();
-        arrayContactos.add(new Contacto("Prova"));
+        arrayContactos.add(new Contacto("Prova1","sub1","1"));
+        arrayContactos.add(new Contacto("Prova2","sub2","2"));
 
         // specify an adapter (see also next example)
-        final AdaptadorConversaciones adaptador = new AdaptadorConversaciones(arrayContactos);
+        final AdaptadorConversaciones adaptador = new AdaptadorConversaciones(this,arrayContactos);
         recyclerView.setAdapter(adaptador);
         // use a linear layout manager
         recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
