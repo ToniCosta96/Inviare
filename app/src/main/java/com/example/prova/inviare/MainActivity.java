@@ -15,7 +15,7 @@ import com.example.prova.inviare.elementos.Contacto;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    private ArrayList<Contacto> arrayContactos;
+    private ArrayList<Contacto> arrayConversaciones;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,12 +24,12 @@ public class MainActivity extends AppCompatActivity {
 
         final RecyclerView recyclerView= (RecyclerView) findViewById(R.id.recycler_view_conversaciones);
 
-        arrayContactos= new ArrayList<>();
-        arrayContactos.add(new Contacto("Prova1","sub1","1"));
-        arrayContactos.add(new Contacto("Prova2","sub2","2"));
+        arrayConversaciones= new ArrayList<>();
+        arrayConversaciones.add(new Contacto("Conversacion1","sub1","1"));
+        arrayConversaciones.add(new Contacto("Conversacion2","sub2","2"));
 
         // specify an adapter (see also next example)
-        final AdaptadorConversaciones adaptador = new AdaptadorConversaciones(this,arrayContactos);
+        final AdaptadorConversaciones adaptador = new AdaptadorConversaciones(this,arrayConversaciones);
         recyclerView.setAdapter(adaptador);
         // use a linear layout manager
         recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
@@ -44,11 +44,17 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent i;
         switch (item.getItemId()) {
             case R.id.add:
-                //Añadir nuevo contacto
-                Intent i= new Intent(getApplicationContext(),ContactosActivity.class);
+                //Intent -> Añadir nuevo contacto
+                i= new Intent(getApplicationContext(),ContactosActivity.class);
                 startActivity(i);
+                return true;
+            case R.id.ajustes:
+                //Intent -> Ajustes
+                //i= new Intent(getApplicationContext(),AjustesActivity.class); //esto aun no existe
+                //startActivity(i);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
