@@ -46,12 +46,12 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent i;
         switch (item.getItemId()) {
-            case R.id.add:
+            case R.id.item_add:
                 //Intent -> Añadir nuevo contacto
                 i= new Intent(getApplicationContext(),ContactosActivity.class);
                 startActivity(i);
                 return true;
-            case R.id.ajustes:
+            case R.id.item_ajustes:
                 //Intent -> Ajustes
                 //i= new Intent(getApplicationContext(),AjustesActivity.class); //esto aun no existe
                 //startActivity(i);

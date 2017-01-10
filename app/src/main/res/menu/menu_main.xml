@@ -4,8 +4,8 @@
 
     <item android:title="@string/anyadir_contacto"
         android:icon="@drawable/ic_add_black_24dp"
-        android:id="@+id/add"
+        android:id="@+id/item_add"
         app:showAsAction="always" />
     <item android:title="@string/ajustes"
-        android:id="@+id/ajustes" />
+        android:id="@+id/item_ajustes" />
 </menu>
