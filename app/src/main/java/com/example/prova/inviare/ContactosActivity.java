@@ -46,10 +46,10 @@ public class ContactosActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent i;
         switch (item.getItemId()) {
-            case R.id.item_silenciar:
+            case R.id.item_actualizar:
                 //
                 return true;
-            case R.id.item_bloquear:
+            case R.id.item_ajustes:
                 //
                 return true;
             default:
