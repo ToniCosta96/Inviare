@@ -60,8 +60,9 @@ public class ContactosActivity extends AppCompatActivity {
                 ContactsContract.Contacts.DISPLAY_NAME,
                 ContactsContract.CommonDataKinds.Phone.PHOTO_URI,
                 ContactsContract.CommonDataKinds.Phone.NUMBER,
-                ContactsContract.CommonDataKinds.Photo.CONTACT_ID };
-        final String filtro = ""+ ContactsContract.Contacts.HAS_PHONE_NUMBER + " > 0 and " + ContactsContract.CommonDataKinds.Phone.TYPE+"="+ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE;
+                ContactsContract.CommonDataKinds.Photo.CONTACT_ID };//ContactsContract.RawContacts.ACCOUNT_TYPE
+        final String filtro = ""+ ContactsContract.Contacts.HAS_PHONE_NUMBER + " > 0 and " + ContactsContract.CommonDataKinds.Phone.TYPE+"="+ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE+
+                " and "+ContactsContract.RawContacts.ACCOUNT_TYPE+"='com.google'";
         final String orden = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME+" ASC";
         Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, PROJECTION,filtro,null, orden);
 
