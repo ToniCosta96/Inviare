@@ -39,8 +39,6 @@ public class ContactosActivity extends AppCompatActivity {
         final RecyclerView recyclerView= (RecyclerView) findViewById(R.id.recycler_view_contactos);
 
         arrayContactos= new ArrayList<>();
-        arrayContactos.add(new Contacto("Contacto1","sub1","1"));
-        arrayContactos.add(new Contacto("Contacto2","sub2","2"));
 
         // specify an adapter
         adaptador = new AdaptadorConversaciones(this,arrayContactos);
