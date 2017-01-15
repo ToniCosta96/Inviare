@@ -11,6 +11,10 @@ import android.view.MenuItem;
 
 import com.example.prova.inviare.adapters.AdaptadorConversaciones;
 import com.example.prova.inviare.elementos.Contacto;
+import com.layer.sdk.LayerClient;
+import com.layer.sdk.exceptions.LayerException;
+import com.layer.sdk.listeners.LayerAuthenticationListener;
+import com.layer.sdk.listeners.LayerConnectionListener;
 
 import java.util.ArrayList;
 
