@@ -1,7 +1,6 @@
 package com.example.prova.inviare.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -9,12 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.prova.inviare.ConversacionActivity;
 import com.example.prova.inviare.R;
-import com.example.prova.inviare.elementos.Contacto;
 import com.example.prova.inviare.elementos.Mensaje;
 
 import java.util.ArrayList;
@@ -74,10 +70,10 @@ public class AdaptadorChat extends RecyclerView.Adapter<AdaptadorChat.ListaViewH
 
             if(elementLlista.isPropietario()){
                 int margin = context.getResources().getDimensionPixelSize(R.dimen.chat_margin1);
-                layoutParams.setMargins(dpToPixel(50), margin, margin, 0);
+                layoutParams.setMargins(dpToPixel(60), margin, margin, dpToPixel(5));
             }else{
                 int margin = context.getResources().getDimensionPixelSize(R.dimen.chat_margin1);
-                layoutParams.setMargins(margin, margin, dpToPixel(50), dpToPixel(5));
+                layoutParams.setMargins(margin, margin, dpToPixel(60), dpToPixel(5));
             }
             cardView.setLayoutParams(layoutParams);
         }
