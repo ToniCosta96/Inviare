@@ -1,37 +1,24 @@
 package com.example.prova.inviare;
 
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.prova.inviare.adapters.AdaptadorChat;
-import com.example.prova.inviare.adapters.AdaptadorConversaciones;
-import com.example.prova.inviare.elementos.Contacto;
 import com.example.prova.inviare.elementos.Mensaje;
-import com.layer.atlas.AtlasMessagesRecyclerView;
-import com.layer.atlas.messagetypes.location.LocationCellFactory;
-import com.layer.atlas.messagetypes.text.TextCellFactory;
-import com.layer.atlas.messagetypes.threepartimage.ThreePartImageCellFactory;
-import com.layer.sdk.LayerClient;
-import com.layer.sdk.messaging.Conversation;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 public class ConversacionActivity extends AppCompatActivity{
     private ArrayList<Mensaje> arrayMensajes;
+    private boolean seleccionarAlarma=true;
     //private AtlasMessagesRecyclerView messagesList;
     //private Conversation conversation;
     //private Picasso picasso;
@@ -52,16 +39,18 @@ public class ConversacionActivity extends AppCompatActivity{
         //Adaptador - AdaptadorConversaciones
         final AdaptadorChat adaptador = new AdaptadorChat(arrayMensajes, getApplicationContext());
         recyclerView.setAdapter(adaptador);
-        // use a linear layout manager
+        //Use a linear layout manager
         recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
 
         //TextWatcher
         TextWatcher tw = new TextWatcher() {
             public void afterTextChanged(Editable s){
-                Log.d("aaa","aaa");
+                //Cambiar floating_button -> Alarma-Enviar
                 if(editTextConversacion.getText().toString().isEmpty()){
+                    seleccionarAlarma=true;
                     floatingActionButton.setImageResource(R.drawable.ic_access_alarm_24dp);
                 }else{
+                    seleccionarAlarma=false;
                     floatingActionButton.setImageResource(R.drawable.ic_send_button);
                 }
             }
@@ -72,10 +61,17 @@ public class ConversacionActivity extends AppCompatActivity{
         };
         editTextConversacion.addTextChangedListener(tw);
 
+        //FloatingButton
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(),AlarmasActivity.class));
+                if(seleccionarAlarma){
+                    //Seleccionar alarma
+                    startActivity(new Intent(getApplicationContext(),AlarmasActivity.class));
+                }else{
+                    //Enviar mensaje
+                }
+
             }
         });
 
