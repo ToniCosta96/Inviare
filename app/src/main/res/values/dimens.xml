@@ -5,7 +5,8 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
     <dimen name="separacion_contacto_titulo">20dp</dimen>
-    <dimen name="max_size_64">64dp</dimen>
     <dimen name="chat_margin1">10dp</dimen>
     <dimen name="perfil_padding_image">20dp</dimen>
+    <dimen name="max_size_64">64dp</dimen>
+    <dimen name="max_size_128">128dp</dimen>
 </resources>
