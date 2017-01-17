@@ -1,8 +1,8 @@
 package com.example.prova.inviare;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -11,10 +11,6 @@ import android.view.MenuItem;
 
 import com.example.prova.inviare.adapters.AdaptadorConversaciones;
 import com.example.prova.inviare.elementos.Contacto;
-import com.layer.sdk.LayerClient;
-import com.layer.sdk.exceptions.LayerException;
-import com.layer.sdk.listeners.LayerAuthenticationListener;
-import com.layer.sdk.listeners.LayerConnectionListener;
 
 import java.util.ArrayList;
 
@@ -53,6 +49,11 @@ public class MainActivity extends AppCompatActivity {
             case R.id.item_add:
                 //Intent -> Añadir nuevo contacto
                 i= new Intent(getApplicationContext(),ContactosActivity.class);
+                startActivity(i);
+                return true;
+            case R.id.item_perfil:
+                //Intent -> Perfil
+                i= new Intent(getApplicationContext(),PerfilActivity.class);
                 startActivity(i);
                 return true;
             case R.id.item_ajustes:

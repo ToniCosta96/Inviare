@@ -9,4 +9,9 @@
     <string name="bloquear">Bloquear</string>
     <string name="actualizar">Actualizar</string>
     <string name="enviar">Alarma</string>
+    <string name="perfil">Perfil</string>
+    <string name="nombre">Nombre</string>
+    <string name="correo_electronico">Correo electrónico:</string>
+    <string name="telefono">Teléfono</string>
+    <string name="estado">Estado</string>
 </resources>

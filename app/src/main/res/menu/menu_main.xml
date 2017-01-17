@@ -6,6 +6,8 @@
         android:icon="@drawable/ic_add_black_24dp"
         android:id="@+id/item_add"
         app:showAsAction="always" />
+    <item android:title="@string/perfil"
+        android:id="@+id/item_perfil" />
     <item android:title="@string/ajustes"
         android:id="@+id/item_ajustes" />
 </menu>
