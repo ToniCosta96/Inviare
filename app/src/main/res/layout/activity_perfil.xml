@@ -16,7 +16,9 @@
         android:id="@+id/imageView_perfil"
         android:padding="@dimen/perfil_padding_image"
         android:maxHeight="@dimen/max_size_128"
-        android:maxWidth="@dimen/max_size_128" />
+        android:maxWidth="@dimen/max_size_128"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter" />
 
     <EditText
         android:layout_width="match_parent"

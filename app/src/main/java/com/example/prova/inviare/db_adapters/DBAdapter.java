@@ -34,10 +34,10 @@ public class DBAdapter {
     private static final String DIA = "dia";
     private static final String FRECUENCIA = "frecuencia";
 
-    private static final String DATABASE_CREATE_PERFIL = "CREATE TABLE "+TABLE_PERFIL+" (_id integer primary key autoincrement, nombre text, telefono integer, email text, estado text, imagen text);";
+    private static final String DATABASE_CREATE_PERFIL = "CREATE TABLE "+TABLE_PERFIL+" (_id integer primary key autoincrement, nombre text, telefono text, email text, estado text, imagen text);";
     private static final String DATABASE_CREATE_CONTACTOS = "CREATE TABLE "+TABLE_CONTACTOS+" (_id integer primary key autoincrement, nombre text, imagen text);";
     private static final String DATABASE_CREATE_MENSAJES = "CREATE TABLE "+TABLE_MENSAJES+
-            " (_id integer primary key autoincrement, mensaje text, date text, tipo text, contacto_id integer, FOREIGN KEY(contacto_id) REFERENCES contactos(_id));";
+            " (_id integer primary key autoincrement, mensaje text, date text, tipo text, hora text, dia text, frecuencia text, contacto_id integer, FOREIGN KEY(contacto_id) REFERENCES contactos(_id));";
 
     private static final String DATABASE_DROP_PERFIL = "DROP TABLE IF EXISTS "+TABLE_PERFIL+";";
     private static final String DATABASE_DROP_CONTACTOS = "DROP TABLE IF EXISTS "+TABLE_CONTACTOS+";";
@@ -65,38 +65,51 @@ public class DBAdapter {
         }
     }
 
-    public void insertarEstudiante(String n, int e, String cc, float nm){
+    public void actualizarPerfil(String nom, String tlfn, String em, String est, String img){
         //Creamos un nuevo registro de valores a insertar
         ContentValues newValues = new ContentValues();
         //Asignamos los valores de cada campo
-        newValues.put(NOMBRE,n);
-        newValues.put(EDAD,e);
-        newValues.put(CICLO_Y_CURSO,cc);
-        newValues.put(NOTA_MEDIA,nm);
-        db.insert(DATABASE_ESTUDIANTE,null,newValues);
+        newValues.put(NOMBRE,nom);
+        newValues.put(TELEFONO,tlfn);
+        newValues.put(EMAIL,em);
+        newValues.put(ESTADO,est);
+        newValues.put(IMAGEN,img);
+        db.insert(TABLE_PERFIL,null,newValues);
     }
-
-    public void insertarProfesor(String n, int e, String cc, String ccTutor, String d){
+    public void insertarContacto(String nom, String img){
         //Creamos un nuevo registro de valores a insertar
         ContentValues newValues = new ContentValues();
         //Asignamos los valores de cada campo
-        newValues.put(NOMBRE,n);
-        newValues.put(EDAD,e);
-        newValues.put(CICLO_Y_CURSO,cc);
-        newValues.put(TUTOR,ccTutor);
-        newValues.put(DESPACHO,d);
-        db.insert(DATABASE_PROFESOR,null,newValues);
+        newValues.put(NOMBRE,nom);
+        newValues.put(IMAGEN,img);
+        db.insert(TABLE_CONTACTOS,null,newValues);
+    }
+    public void insertarMensaje(String m, String dt, String tip, String h, String d, String f){
+        //Creamos un nuevo registro de valores a insertar
+        ContentValues newValues = new ContentValues();
+        //Asignamos los valores de cada campo
+        newValues.put(MENSAJE,m);
+        newValues.put(DATE_TIME,dt);
+        newValues.put(TIPO,tip);
+        newValues.put(HORA,h);
+        newValues.put(DIA,d);
+        newValues.put(FRECUENCIA,f);
+        db.insert(TABLE_MENSAJES,null,newValues);
     }
 
-    public void eliminarEstudiante(String id){
+    public void eliminarContactoPorId(String id){
         ContentValues newValues = new ContentValues();
-        int n=db.delete(DATABASE_ESTUDIANTE,"_id=?",new String[]{id});
+        int n=db.delete(TABLE_CONTACTOS,"_id=?",new String[]{id});
         Toast.makeText(this.context,n+" registros eliminados",Toast.LENGTH_SHORT).show();
     }
-
-    public void eliminarProfesor(String id){
+    public void eliminarContactoPorNombre(String nom){
         ContentValues newValues = new ContentValues();
-        int n=db.delete(DATABASE_PROFESOR,"_id=?",new String[]{id});
+        int n=db.delete(TABLE_CONTACTOS,"nombre LIKE ?",new String[]{nom});
+        Toast.makeText(this.context,n+" registros eliminados",Toast.LENGTH_SHORT).show();
+    }
+    public void eliminarMensajes(String[] id){
+        ContentValues newValues = new ContentValues();
+        int n=db.delete(TABLE_MENSAJES,"_id=?",id);
         Toast.makeText(this.context,n+" registros eliminados",Toast.LENGTH_SHORT).show();
     }
 

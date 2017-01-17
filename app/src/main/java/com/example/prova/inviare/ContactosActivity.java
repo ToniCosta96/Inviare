@@ -135,7 +135,7 @@ public class ContactosActivity extends AppCompatActivity {
                     // contacts-related task you need to do.
 
                 } else {
-                    Toast.makeText(this, "No Permissions ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "No se ha asignado ningún permiso.", Toast.LENGTH_SHORT).show();
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                 }

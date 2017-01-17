@@ -8,5 +8,5 @@
     <dimen name="chat_margin1">10dp</dimen>
     <dimen name="perfil_padding_image">20dp</dimen>
     <dimen name="max_size_64">64dp</dimen>
-    <dimen name="max_size_128">128dp</dimen>
+    <dimen name="max_size_128">192dp</dimen>
 </resources>
