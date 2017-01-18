@@ -9,6 +9,11 @@
     android:orientation="vertical"
     tools:context="com.example.prova.inviare.PerfilActivity">
 
+    <include
+        android:id="@+id/toolbar_perfil"
+        layout="@layout/tool_bar_perfil"
+        ></include>
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
