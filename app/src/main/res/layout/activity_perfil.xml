@@ -23,14 +23,16 @@
         android:maxHeight="@dimen/max_size_128"
         android:maxWidth="@dimen/max_size_128"
         android:adjustViewBounds="true"
-        android:scaleType="fitCenter" />
+        android:scaleType="fitCenter"
+        android:minHeight="@dimen/max_size_128"
+        android:minWidth="@dimen/max_size_128" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
         android:ems="10"
-        android:id="@+id/editText__perfil_nombre"
+        android:id="@+id/editText_perfil_nombre"
         android:hint="@string/nombre" />
 
     <EditText

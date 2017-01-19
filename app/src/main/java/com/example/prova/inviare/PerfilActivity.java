@@ -10,12 +10,19 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.prova.inviare.asynctasks.GuardarImagen;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -32,9 +39,26 @@ public class PerfilActivity extends AppCompatActivity {
 
         final Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar_perfil);
         setSupportActionBar(toolbar);
-        getWindow().setStatusBarColor(this.getResources().getColor(R.color.colorPrimaryDark));
+        getWindow().setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark));
         final Button btnGuardar= (Button) findViewById(R.id.btn_guardar_perfil);
+        final EditText editTextNombre= (EditText) findViewById(R.id.editText_perfil_nombre);
+        final EditText editTextEstado= (EditText) findViewById(R.id.editText_perfil_estado);
+        final EditText editTextTelefono= (EditText) findViewById(R.id.editText_perfil_tlfn);
+        final TextView textViewCorreo= (TextView) findViewById(R.id.textView_correo);
         imageViewPerfil= (ImageView) findViewById(R.id.imageView_perfil);
+
+        //Se carga el SharedPreferences
+        SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.shared_preferences), Context.MODE_PRIVATE);
+        String imagenPerfil = sharedPref.getString(getResources().getString(R.string.preferences_imagen_perfil),"");
+        final String nombrePerfil = sharedPref.getString(getResources().getString(R.string.preferences_nombre_perfil),"");
+        final String estadoPerfil = sharedPref.getString(getResources().getString(R.string.preferences_estado_perfil),"");
+        final String telefonoPerfil = sharedPref.getString(getResources().getString(R.string.preferences_telefono_perfil),"");
+        final String emailPerfil = sharedPref.getString(getResources().getString(R.string.preferences_email_perfil),"");
+
+        editTextNombre.setText(nombrePerfil);
+        editTextEstado.setText(estadoPerfil);
+        editTextTelefono.setText(telefonoPerfil);
+        textViewCorreo.setText(emailPerfil);
 
         //Se añade el listener al imageView y se carga la imagen del sharedPreferences
         imageViewPerfil.setOnClickListener(new View.OnClickListener() {
@@ -45,11 +69,30 @@ public class PerfilActivity extends AppCompatActivity {
                 startActivityForResult(intent, PHOTO_PICK_REQUEST_CODE);
             }
         });
-        SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.shared_preferences), Context.MODE_PRIVATE);
-        String imagenPerfil = sharedPref.getString(getResources().getString(R.string.preferences_imagen_perfil),"");
         if(!imagenPerfil.isEmpty()) {
-            imageViewPerfil.setImageBitmap(BitmapFactory.decodeFile(imagenPerfil));
+            //imageViewPerfil.setImageBitmap(BitmapFactory.decodeFile(imagenPerfil,options));
+            File fileImagen= new File(imagenPerfil);
+            Picasso.with(this).invalidate(fileImagen);
+            Picasso.with(getApplicationContext()).load(fileImagen).into(imageViewPerfil);
         }
+
+        //Boton GUARDAR
+        btnGuardar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(editTextNombre.getText().toString().compareTo(nombrePerfil)!=0 || editTextEstado.getText().toString().compareTo(estadoPerfil)!=0 ||
+                editTextTelefono.getText().toString().compareTo(telefonoPerfil)!=0){
+                    Context context=getApplicationContext();
+                    SharedPreferences sharedPref = context.getSharedPreferences(context.getString(R.string.shared_preferences), Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString(context.getString(R.string.preferences_nombre_perfil),editTextNombre.getText().toString());
+                    editor.putString(context.getString(R.string.preferences_estado_perfil),editTextEstado.getText().toString());
+                    editor.putString(context.getString(R.string.preferences_telefono_perfil),editTextTelefono.getText().toString());
+                    editor.apply();
+                    finish();
+                }
+            }
+        });
     }
 
     @Override
@@ -60,18 +103,10 @@ public class PerfilActivity extends AppCompatActivity {
                 //Display an error
                 return;
             }
-            try{
-                //Bitmap bitmapImage=MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData());
-                imageViewPerfil.setImageBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData()));
-                Log.d("","");
+                Picasso.with(getApplicationContext()).load(data.getData()).into(imageViewPerfil);
                 //Si se carga el bitmap se guarda la URI en el SharedPreferences (shared_preferences)
-                SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(getString(R.string.shared_preferences), Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putString(getString(R.string.preferences_imagen_perfil), saveImageToInternalStorage("perfil.jpg",MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData())));
-                editor.commit();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                new GuardarImagen(getApplicationContext()).execute(data.getData());
+
         }
     }
 
