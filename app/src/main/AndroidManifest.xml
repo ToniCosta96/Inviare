@@ -17,7 +17,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ContactosActivity" />
+        <activity android:name=".ContactosActivity" android:noHistory="true"/>
         <activity android:name=".ConversacionActivity" />
         <activity
             android:name=".AlarmasActivity"

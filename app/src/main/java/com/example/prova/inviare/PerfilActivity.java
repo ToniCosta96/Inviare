@@ -6,14 +6,11 @@ import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,9 +34,18 @@ public class PerfilActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perfil);
 
+        //Toolbar
         final Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar_perfil);
         setSupportActionBar(toolbar);
         getWindow().setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         final Button btnGuardar= (Button) findViewById(R.id.btn_guardar_perfil);
         final EditText editTextNombre= (EditText) findViewById(R.id.editText_perfil_nombre);
         final EditText editTextEstado= (EditText) findViewById(R.id.editText_perfil_estado);
@@ -54,7 +60,6 @@ public class PerfilActivity extends AppCompatActivity {
         final String estadoPerfil = sharedPref.getString(getResources().getString(R.string.preferences_estado_perfil),"");
         final String telefonoPerfil = sharedPref.getString(getResources().getString(R.string.preferences_telefono_perfil),"");
         final String emailPerfil = sharedPref.getString(getResources().getString(R.string.preferences_email_perfil),"");
-
         editTextNombre.setText(nombrePerfil);
         editTextEstado.setText(estadoPerfil);
         editTextTelefono.setText(telefonoPerfil);
@@ -80,6 +85,7 @@ public class PerfilActivity extends AppCompatActivity {
         btnGuardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Si hay cambios se guardan
                 if(editTextNombre.getText().toString().compareTo(nombrePerfil)!=0 || editTextEstado.getText().toString().compareTo(estadoPerfil)!=0 ||
                 editTextTelefono.getText().toString().compareTo(telefonoPerfil)!=0){
                     Context context=getApplicationContext();
@@ -89,8 +95,10 @@ public class PerfilActivity extends AppCompatActivity {
                     editor.putString(context.getString(R.string.preferences_estado_perfil),editTextEstado.getText().toString());
                     editor.putString(context.getString(R.string.preferences_telefono_perfil),editTextTelefono.getText().toString());
                     editor.apply();
-                    finish();
+                    Toast.makeText(getApplicationContext(),"Cambios guardados correctamente.",Toast.LENGTH_SHORT).show();
                 }
+                //Cerrar activity
+                finish();
             }
         });
     }

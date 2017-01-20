@@ -15,7 +15,7 @@ import java.io.File;
 
 public class DBAdapter {
     private static final String DATABASE_NAME = "db_inviare.db";
-    private static final String TABLE_PERFIL = "perfil"; // ID - NOMBRE - TELEFONO - EMAIL - ESTADO - IMAGE
+    //private static final String TABLE_PERFIL = "perfil"; // ID - NOMBRE - TELEFONO - EMAIL - ESTADO - IMAGE
     private static final String TABLE_CONTACTOS = "contactos"; // ID - NOMBRE - IMAGEN
     private static final String TABLE_MENSAJES = "mensajes"; // ID_CONTACTOS <-> ID - MENSAJE - DATETIME - TIPO - HORA - DIA - FRECUENCIA
     private static final int DATABASE_VERSION = 1;
@@ -34,12 +34,10 @@ public class DBAdapter {
     private static final String DIA = "dia";
     private static final String FRECUENCIA = "frecuencia";
 
-    private static final String DATABASE_CREATE_PERFIL = "CREATE TABLE "+TABLE_PERFIL+" (_id integer primary key autoincrement, nombre text, telefono text, email text, estado text, imagen text);";
-    private static final String DATABASE_CREATE_CONTACTOS = "CREATE TABLE "+TABLE_CONTACTOS+" (_id integer primary key autoincrement, nombre text, imagen text);";
+    private static final String DATABASE_CREATE_CONTACTOS = "CREATE TABLE "+TABLE_CONTACTOS+" (_id integer primary key autoincrement, nombre text, imagen text, bloqueado integer, silenciado integer);";
     private static final String DATABASE_CREATE_MENSAJES = "CREATE TABLE "+TABLE_MENSAJES+
             " (_id integer primary key autoincrement, mensaje text, date text, tipo text, hora text, dia text, frecuencia text, contacto_id integer, FOREIGN KEY(contacto_id) REFERENCES contactos(_id));";
 
-    private static final String DATABASE_DROP_PERFIL = "DROP TABLE IF EXISTS "+TABLE_PERFIL+";";
     private static final String DATABASE_DROP_CONTACTOS = "DROP TABLE IF EXISTS "+TABLE_CONTACTOS+";";
     private static final String DATABASE_DROP_MENSAJES = "DROP TABLE IF EXISTS "+TABLE_MENSAJES+";";
 
@@ -65,17 +63,6 @@ public class DBAdapter {
         }
     }
 
-    public void actualizarPerfil(String nom, String tlfn, String em, String est, String img){
-        //Creamos un nuevo registro de valores a insertar
-        ContentValues newValues = new ContentValues();
-        //Asignamos los valores de cada campo
-        newValues.put(NOMBRE,nom);
-        newValues.put(TELEFONO,tlfn);
-        newValues.put(EMAIL,em);
-        newValues.put(ESTADO,est);
-        newValues.put(IMAGEN,img);
-        db.insert(TABLE_PERFIL,null,newValues);
-    }
     public void insertarContacto(String nom, String img){
         //Creamos un nuevo registro de valores a insertar
         ContentValues newValues = new ContentValues();
@@ -128,14 +115,12 @@ public class DBAdapter {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL(DATABASE_CREATE_PERFIL);
             db.execSQL(DATABASE_CREATE_CONTACTOS);
             db.execSQL(DATABASE_CREATE_MENSAJES);
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            db.execSQL(DATABASE_DROP_PERFIL);
             db.execSQL(DATABASE_DROP_CONTACTOS);
             db.execSQL(DATABASE_DROP_MENSAJES);
             onCreate(db);

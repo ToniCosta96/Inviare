@@ -18,8 +18,11 @@
     <string name="enviar">Alarma</string>
     <string name="perfil">Perfil</string>
     <string name="nombre">Nombre</string>
-    <string name="correo_electronico">Correo electrónico:</string>
     <string name="telefono">Teléfono</string>
     <string name="estado">Estado</string>
     <string name="guardar">GUARDAR</string>
+    <string name="nombre_textview">Nombre:</string>
+    <string name="estado_textview">Estado:</string>
+    <string name="telefono_textview">Teléfono:</string>
+    <string name="correo_electronico_textview">Correo electrónico:</string>
 </resources>

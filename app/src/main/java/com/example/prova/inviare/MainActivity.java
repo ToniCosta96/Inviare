@@ -25,8 +25,8 @@ public class MainActivity extends AppCompatActivity {
         final RecyclerView recyclerView= (RecyclerView) findViewById(R.id.recycler_view_conversaciones);
 
         arrayConversaciones= new ArrayList<>();
-        arrayConversaciones.add(new Contacto("Conversacion1","sub1","1"));
-        arrayConversaciones.add(new Contacto("Conversacion2","sub2","2"));
+        arrayConversaciones.add(new Contacto(arrayConversaciones.size(),"Conversacion1","sub1","1"));
+        arrayConversaciones.add(new Contacto(arrayConversaciones.size(),"Conversacion2","sub2","2"));
 
         // specify an adapter (see also next example)
         final AdaptadorConversaciones adaptador = new AdaptadorConversaciones(this,arrayConversaciones);

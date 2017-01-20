@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:label="Perfil"
+    android:id="@+id/activity_perfil"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.prova.inviare.PerfilActivity">
+
+    <include
+        android:id="@+id/toolbar_perfil"
+        layout="@layout/tool_bar_perfil"
+        />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/unknown"
+            android:id="@+id/imageView_perfil"
+            android:padding="@dimen/perfil_padding_image"
+            android:maxHeight="@dimen/max_size_128"
+            android:maxWidth="@dimen/max_size_128"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:minHeight="@dimen/max_size_128"
+            android:minWidth="@dimen/max_size_128"
+            android:layout_weight="4" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="3">
+
+            <TextView
+                android:text="@string/nombre_textview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView_perfil_nombre"
+                android:paddingLeft="@dimen/separacion_perfil_2b"
+                android:layout_weight="1" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:id="@+id/editText_perfil_nombre"
+                android:hint="@string/nombre"
+                android:layout_weight="1" />
+
+            <TextView
+                android:text="@string/estado_textview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView_perfil_estado"
+                android:paddingLeft="@dimen/separacion_perfil_2b"
+                android:layout_weight="1" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:id="@+id/editText_perfil_estado"
+                android:hint="@string/estado"
+                android:layout_weight="1" />
+
+            <TextView
+                android:text="@string/telefono_textview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView_perfil_telefono"
+                android:paddingLeft="@dimen/separacion_perfil_2b"
+                android:layout_weight="1" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="phone"
+                android:ems="10"
+                android:id="@+id/editText_perfil_tlfn"
+                android:hint="@string/telefono"
+                android:layout_weight="1" />
+
+            <TextView
+                android:text="@string/correo_electronico_textview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView_correo_titulo"
+                android:paddingLeft="@dimen/separacion_perfil_2"
+                android:paddingBottom="@dimen/separacion_perfil_2b"
+                android:layout_weight="1" />
+
+            <TextView
+                android:text="Correo electrónico"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView_correo"
+                android:textAppearance="@android:style/TextAppearance.Material.Subhead"
+                android:paddingLeft="@dimen/separacion_perfil_3"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

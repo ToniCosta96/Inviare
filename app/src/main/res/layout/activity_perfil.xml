@@ -12,7 +12,7 @@
     <include
         android:id="@+id/toolbar_perfil"
         layout="@layout/tool_bar_perfil"
-        ></include>
+        />
 
     <ImageView
         android:layout_width="match_parent"
@@ -27,6 +27,14 @@
         android:minHeight="@dimen/max_size_128"
         android:minWidth="@dimen/max_size_128" />
 
+    <TextView
+        android:text="@string/nombre_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView_perfil_nombre"
+        android:paddingEnd="@dimen/separacion_perfil_2b"
+        android:paddingStart="@dimen/separacion_perfil_2b" />
+
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,6 +43,13 @@
         android:id="@+id/editText_perfil_nombre"
         android:hint="@string/nombre" />
 
+    <TextView
+        android:text="@string/estado_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView_perfil_estado"
+        android:paddingLeft="@dimen/separacion_perfil_2b" />
+
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -42,6 +57,13 @@
         android:ems="10"
         android:id="@+id/editText_perfil_estado"
         android:hint="@string/estado" />
+
+    <TextView
+        android:text="@string/telefono_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView_perfil_telefono"
+        android:paddingLeft="@dimen/separacion_perfil_2b" />
 
     <EditText
         android:layout_width="match_parent"
@@ -52,16 +74,19 @@
         android:hint="@string/telefono" />
 
     <TextView
-        android:text="@string/correo_electronico"
+        android:text="@string/correo_electronico_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textView_correo_titulo" />
+        android:id="@+id/textView_correo_titulo"
+        android:paddingLeft="@dimen/separacion_perfil_2"
+        android:paddingBottom="@dimen/separacion_perfil_2b" />
 
     <TextView
         android:text="Correo electrónico"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textView_correo"
-        android:textAppearance="@android:style/TextAppearance.Material.Subhead" />
+        android:textAppearance="@android:style/TextAppearance.Material.Subhead"
+        android:paddingLeft="@dimen/separacion_perfil_3" />
 
 </LinearLayout>

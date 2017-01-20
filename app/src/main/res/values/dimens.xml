@@ -9,4 +9,7 @@
     <dimen name="perfil_padding_image">20dp</dimen>
     <dimen name="max_size_64">64dp</dimen>
     <dimen name="max_size_128">192dp</dimen>
+    <dimen name="separacion_perfil_2">10dp</dimen>
+    <dimen name="separacion_perfil_3">25dp</dimen>
+    <dimen name="separacion_perfil_2b">5dp</dimen>
 </resources>
