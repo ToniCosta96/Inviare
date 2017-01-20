@@ -9,7 +9,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.example.prova.inviare.adapters.AdaptadorConversaciones;
+import com.example.prova.inviare.adapters.AdaptadorContactos;
 import com.example.prova.inviare.elementos.Contacto;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         arrayConversaciones.add(new Contacto(arrayConversaciones.size(),"Conversacion2","sub2","2"));
 
         // specify an adapter (see also next example)
-        final AdaptadorConversaciones adaptador = new AdaptadorConversaciones(this,arrayConversaciones);
+        final AdaptadorContactos adaptador = new AdaptadorContactos(this,arrayConversaciones);
         recyclerView.setAdapter(adaptador);
         // use a linear layout manager
         recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));

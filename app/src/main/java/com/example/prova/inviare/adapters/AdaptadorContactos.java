@@ -18,11 +18,11 @@ import java.util.ArrayList;
  * Created by user on 24/12/2016.
  */
 
-public class AdaptadorConversaciones extends RecyclerView.Adapter<AdaptadorConversaciones.ListaViewHolder>{
+public class AdaptadorContactos extends RecyclerView.Adapter<AdaptadorContactos.ListaViewHolder>{
     private Activity activity;
     private ArrayList<Contacto> listData;
 
-    public AdaptadorConversaciones(Activity a, ArrayList<Contacto> listData) {
+    public AdaptadorContactos(Activity a, ArrayList<Contacto> listData) {
         this.activity=a;
         this.listData = listData;
     }
@@ -42,7 +42,6 @@ public class AdaptadorConversaciones extends RecyclerView.Adapter<AdaptadorConve
             public void onClick(View view) {
                 Intent i= new Intent(activity.getApplicationContext(), ConversacionActivity.class);
                 activity.startActivity(i);
-                activity.finish();
             }
         });
         //Método bindLista de la clase ListaViewHolder

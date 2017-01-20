@@ -1,11 +1,9 @@
 package com.example.prova.inviare;
 
-import android.app.Activity;
+
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
@@ -22,8 +20,6 @@ import com.example.prova.inviare.asynctasks.GuardarImagen;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 public class PerfilActivity extends AppCompatActivity {
     int PHOTO_PICK_REQUEST_CODE = 0;
@@ -38,6 +34,7 @@ public class PerfilActivity extends AppCompatActivity {
         final Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar_perfil);
         setSupportActionBar(toolbar);
         getWindow().setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark));
+        getSupportActionBar().setTitle(getResources().getString(R.string.perfil));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -106,7 +103,7 @@ public class PerfilActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PHOTO_PICK_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == PHOTO_PICK_REQUEST_CODE && resultCode == AppCompatActivity.RESULT_OK) {
             if (data == null) {
                 //Display an error
                 return;
@@ -116,29 +113,5 @@ public class PerfilActivity extends AppCompatActivity {
                 new GuardarImagen(getApplicationContext()).execute(data.getData());
 
         }
-    }
-
-    private String saveImageToInternalStorage(String nombre, Bitmap bitmapImage){
-        ContextWrapper cw = new ContextWrapper(getApplicationContext());
-        // path to /data/data/yourapp/app_data/imageDir
-        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-        // Create imageDir
-        File mypath=new File(directory,nombre);
-
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(mypath);
-            // Use the compress method on the BitMap object to write image to the OutputStream
-            bitmapImage.compress(Bitmap.CompressFormat.JPEG, 80, fos);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if(fos!=null) fos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return mypath.getAbsolutePath();
     }
 }
