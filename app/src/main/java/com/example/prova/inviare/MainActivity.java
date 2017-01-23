@@ -58,8 +58,8 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.item_ajustes:
                 //Intent -> Ajustes
-                //i= new Intent(getApplicationContext(),AjustesActivity.class); //esto aun no existe
-                //startActivity(i);
+                i= new Intent(getApplicationContext(),AjustesActivity.class);
+                startActivity(i);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

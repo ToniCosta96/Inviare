@@ -163,7 +163,8 @@ public class ContactosActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"La lista de contactos ha sido actualizada.",Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.item_ajustes:
-                //
+                //Intent -> Ajustes
+                startActivity(new Intent(getApplicationContext(),AjustesActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

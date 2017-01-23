@@ -19,9 +19,6 @@ import java.util.ArrayList;
 public class ConversacionActivity extends AppCompatActivity{
     private ArrayList<Mensaje> arrayMensajes;
     private boolean seleccionarAlarma=true;
-    //private AtlasMessagesRecyclerView messagesList;
-    //private Conversation conversation;
-    //private Picasso picasso;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,20 +68,7 @@ public class ConversacionActivity extends AppCompatActivity{
                 }else{
                     //Enviar mensaje
                 }
-
             }
         });
-
-        /*// Create a LayerClient ready to receive push notifications through GCM. App IDs are specific to your application and should be kept private.
-        LayerClient layerClient = LayerClient.newInstance(getApplicationContext(), "APP ID",
-                new LayerClient.Options().googleCloudMessagingSenderId("GCM Project Number"));
-
-        messagesList = ((AtlasMessagesRecyclerView) findViewById(R.id.messages_list))
-                .init(layerClient, picasso)
-                .setConversation(conversation)
-                .addCellFactories(
-                        new TextCellFactory(),
-                        new ThreePartImageCellFactory(this, layerClient, picasso),
-                        new LocationCellFactory(this, picasso));*/
     }
 }
