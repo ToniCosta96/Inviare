@@ -25,4 +25,5 @@
     <string name="estado_textview">Estado:</string>
     <string name="telefono_textview">Teléfono:</string>
     <string name="correo_electronico_textview">Correo electrónico:</string>
+    <string name="acceso_directo_chat">Acceso directo</string>
 </resources>

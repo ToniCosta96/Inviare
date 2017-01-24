@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         final RecyclerView recyclerView= (RecyclerView) findViewById(R.id.recycler_view_conversaciones);
 
         arrayConversaciones= new ArrayList<>();
-        arrayConversaciones.add(new Contacto(arrayConversaciones.size(),"Conversacion1","sub1","1"));
+        arrayConversaciones.add(new Contacto(arrayConversaciones.size(),"Tú","chat contigo","último uso"));
         arrayConversaciones.add(new Contacto(arrayConversaciones.size(),"Conversacion2","sub2","2"));
 
         // specify an adapter (see also next example)
@@ -49,6 +49,11 @@ public class MainActivity extends AppCompatActivity {
             case R.id.item_add:
                 //Intent -> Añadir nuevo contacto
                 i= new Intent(getApplicationContext(),ContactosActivity.class);
+                startActivity(i);
+                return true;
+            case R.id.item_acceso_directo:
+                //Intent -> Acceso directo
+                i= new Intent(getApplicationContext(),ConversacionActivity.class);
                 startActivity(i);
                 return true;
             case R.id.item_perfil:

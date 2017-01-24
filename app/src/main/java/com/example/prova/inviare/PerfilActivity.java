@@ -34,9 +34,12 @@ public class PerfilActivity extends AppCompatActivity {
         final Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar_perfil);
         setSupportActionBar(toolbar);
         getWindow().setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark));
-        getSupportActionBar().setTitle(getResources().getString(R.string.perfil));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        android.support.v7.app.ActionBar actionBar=getSupportActionBar();
+        if(actionBar!=null) {
+            actionBar.setTitle(getResources().getString(R.string.perfil));
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+        }
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

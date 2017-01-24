@@ -5,7 +5,11 @@
     <item android:title="@string/anyadir_contacto"
         android:icon="@drawable/ic_add_black_24dp"
         android:id="@+id/item_add"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
+    <item android:title="@string/acceso_directo_chat"
+        android:id="@+id/item_acceso_directo"
+        android:icon="@drawable/ic_person_24dp"
+        app:showAsAction="ifRoom" />
     <item android:title="@string/perfil"
         android:id="@+id/item_perfil" />
     <item android:title="@string/ajustes"

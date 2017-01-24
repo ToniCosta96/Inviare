@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/textView_perfil_nombre"
         android:paddingEnd="@dimen/separacion_perfil_2b"
-        android:paddingStart="@dimen/separacion_perfil_2b" />
+        android:paddingStart="@dimen/separacion_perfil_2" />
 
     <EditText
         android:layout_width="match_parent"
@@ -48,7 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textView_perfil_estado"
-        android:paddingLeft="@dimen/separacion_perfil_2b" />
+        android:paddingLeft="@dimen/separacion_perfil_2" />
 
     <EditText
         android:layout_width="match_parent"
@@ -63,7 +63,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textView_perfil_telefono"
-        android:paddingLeft="@dimen/separacion_perfil_2b" />
+        android:paddingLeft="@dimen/separacion_perfil_2" />
 
     <EditText
         android:layout_width="match_parent"
@@ -78,11 +78,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textView_correo_titulo"
-        android:paddingLeft="@dimen/separacion_perfil_2"
-        android:paddingBottom="@dimen/separacion_perfil_2b" />
+        android:paddingLeft="@dimen/separacion_perfil_2b"
+        android:paddingBottom="@dimen/separacion_perfil_2" />
 
     <TextView
-        android:text="Correo electrónico"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textView_correo"
