@@ -1,6 +1,8 @@
 package com.example.prova.inviare;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,16 +18,22 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private ArrayList<Contacto> arrayConversaciones;
+    private static int USUARIO_ACCESO_DIRECTO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Se carga el SharedPreferences
+        final int ID_PROPIETARIO=getResources().getInteger(R.integer.id_propietario);
+        SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.shared_preferences), Context.MODE_PRIVATE);
+        USUARIO_ACCESO_DIRECTO = sharedPref.getInt(getResources().getString(R.string.preferences_acceso_directo),ID_PROPIETARIO);
+
         final RecyclerView recyclerView= (RecyclerView) findViewById(R.id.recycler_view_conversaciones);
 
         arrayConversaciones= new ArrayList<>();
-        arrayConversaciones.add(new Contacto(arrayConversaciones.size(),"Tú","chat contigo","último uso"));
+        arrayConversaciones.add(new Contacto(ID_PROPIETARIO,"Tú","chat contigo","último uso"));
         arrayConversaciones.add(new Contacto(arrayConversaciones.size(),"Conversacion2","sub2","2"));
 
         // specify an adapter (see also next example)
@@ -54,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.item_acceso_directo:
                 //Intent -> Acceso directo
                 i= new Intent(getApplicationContext(),ConversacionActivity.class);
+                i.putExtra(getResources().getString(R.string.conversacion_id),USUARIO_ACCESO_DIRECTO);
                 startActivity(i);
                 return true;
             case R.id.item_perfil:

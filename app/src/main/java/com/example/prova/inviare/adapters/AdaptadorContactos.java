@@ -35,12 +35,13 @@ public class AdaptadorContactos extends RecyclerView.Adapter<AdaptadorContactos.
 
     @Override
     public void onBindViewHolder(ListaViewHolder holder, final int position) {
-        Contacto item = listData.get(position);
+        final Contacto item = listData.get(position);
         //
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i= new Intent(activity.getApplicationContext(), ConversacionActivity.class);
+                i.putExtra(activity.getResources().getString(R.string.conversacion_id),item.getId());
                 activity.startActivity(i);
             }
         });

@@ -6,6 +6,9 @@
     <string name="preferences_email_perfil">email_perfil</string>
     <string name="preferences_estado_perfil">estado_perfil</string>
     <string name="preferences_imagen_perfil">imagen_perfil</string>
+    <string name="preferences_acceso_directo">usuario_acceso_directo</string>
+
+    <string name="conversacion_id">id_conversacion</string>
 
     <string name="title_activity_alarmas">Enviar notificación</string>
     <string name="action_settings">Settings</string>
@@ -26,4 +29,5 @@
     <string name="telefono_textview">Teléfono:</string>
     <string name="correo_electronico_textview">Correo electrónico:</string>
     <string name="acceso_directo_chat">Acceso directo</string>
+    <string name="eliminar_mensajes">Eliminar mensajes</string>
 </resources>
