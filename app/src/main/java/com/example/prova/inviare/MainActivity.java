@@ -17,7 +17,9 @@ import com.example.prova.inviare.elementos.Contacto;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+    private static final int AJUSTES_REQUEST=0;
     private ArrayList<Contacto> arrayConversaciones;
+    private AdaptadorContactos adaptador;
     private static int USUARIO_ACCESO_DIRECTO;
 
     @Override
@@ -28,24 +30,46 @@ public class MainActivity extends AppCompatActivity {
         //Se carga el SharedPreferences
         final int ID_PROPIETARIO=getResources().getInteger(R.integer.id_propietario);
         SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.shared_preferences), Context.MODE_PRIVATE);
-        USUARIO_ACCESO_DIRECTO = sharedPref.getInt(getResources().getString(R.string.preferences_acceso_directo),ID_PROPIETARIO);
-        final int preferenceAccesoDirecto=sharedPref.getInt(getResources().getString(R.string.preferences_acceso_directo),ID_PROPIETARIO);
+        USUARIO_ACCESO_DIRECTO = sharedPref.getInt(getResources().getString(R.string.preferences_usuario_acceso_directo),ID_PROPIETARIO);
+        final int posicionChatPersonal = sharedPref.getInt(getResources().getString(R.string.preferences_anclar_chat_personal),ID_PROPIETARIO);
 
         final RecyclerView recyclerView= (RecyclerView) findViewById(R.id.recycler_view_conversaciones);
 
         arrayConversaciones= new ArrayList<>();
-        if(preferenceAccesoDirecto==-1){
+        if(posicionChatPersonal==-1){
+            //Se añade primero el chat personal y luego el resto de chats
             arrayConversaciones.add(new Contacto(ID_PROPIETARIO,"Tú","chat contigo","último uso"));
         }else{
+            //Se añaden los chats y se intercala el chat personal en la posición correspondiente
             arrayConversaciones.add(new Contacto(ID_PROPIETARIO,"Tú","chat contigo","último uso"));
             arrayConversaciones.add(new Contacto(arrayConversaciones.size(),"Conversacion2","sub2","2"));
         }
 
         // specify an adapter (see also next example)
-        final AdaptadorContactos adaptador = new AdaptadorContactos(this,arrayConversaciones);
+        adaptador = new AdaptadorContactos(this,arrayConversaciones);
         recyclerView.setAdapter(adaptador);
         // use a linear layout manager
         recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == AJUSTES_REQUEST) {
+            if(resultCode == AppCompatActivity.RESULT_OK){
+                arrayConversaciones.clear();
+                final int ID_PROPIETARIO=getResources().getInteger(R.integer.id_propietario);
+                if(data.getIntExtra(getApplicationContext().getString(R.string.preferences_anclar_chat_personal),ID_PROPIETARIO)==ID_PROPIETARIO){
+                    //Se añade primero el chat personal y luego el resto de chats
+                    arrayConversaciones.add(new Contacto(ID_PROPIETARIO,"Tú","chat contigo","último uso"));
+                }else{
+                    //Se añaden los chats y se intercala el chat personal en la posición correspondiente
+                    arrayConversaciones.add(new Contacto(ID_PROPIETARIO,"Tú","chat contigo","último uso"));
+                    arrayConversaciones.add(new Contacto(arrayConversaciones.size(),"Conversacion2","sub2","2"));
+                }
+                adaptador.notifyDataSetChanged();
+            }
+        }
     }
 
     @Override
@@ -78,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.item_ajustes:
                 //Intent -> Ajustes
                 i= new Intent(getApplicationContext(),AjustesActivity.class);
-                startActivity(i);
+                startActivityForResult(i, AJUSTES_REQUEST);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

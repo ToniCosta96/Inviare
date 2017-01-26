@@ -163,7 +163,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView_desc_anclar_chat"
-                android:layout_weight="1"
                 android:layout_below="@+id/textView_anclar_chat"
                 android:layout_alignParentStart="true" />
 
@@ -178,6 +177,60 @@
                 android:clickable="false"
                 android:checked="true" />
         </RelativeLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/ajustes_margen_ajuste"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:id="@+id/layout_ajuste_5">
+
+            <TextView
+                android:text="@string/ajustes_permisos_contactos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView_permisos"
+                android:textAppearance="@android:style/TextAppearance.Material.Subhead" />
+
+            <TextView
+                android:text="@string/ajustes_permisos_descripcion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView_desc_permisos" />
+        </LinearLayout>
+        <TextView
+            android:text="@string/ajustes_t3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_t3"
+            android:paddingStart="@dimen/ajustes_margen_titulo"
+            android:paddingEnd="@dimen/ajustes_margen_titulo"
+            android:textAppearance="@android:style/TextAppearance.Material.Title"
+            android:textColor="@color/colorAccent"/>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/ajustes_margen_ajuste"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:id="@+id/layout_ajuste_6">
+
+            <TextView
+                android:text="@string/ajustes_eliminar_DB"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView_eliminarDB"
+                android:textAppearance="@android:style/TextAppearance.Material.Subhead" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView_desc_eliminarDB"
+                android:text="@string/ajustes_eliminar_DB_descripcion" />
+        </LinearLayout>
 
     </LinearLayout>
 </ScrollView>

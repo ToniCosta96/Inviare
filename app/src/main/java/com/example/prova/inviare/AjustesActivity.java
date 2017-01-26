@@ -1,12 +1,17 @@
 package com.example.prova.inviare;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Switch;
+
+import com.example.prova.inviare.db_adapters.DBAdapter;
 
 public class AjustesActivity extends AppCompatActivity implements View.OnClickListener{
     View ajuste2;
@@ -26,6 +31,8 @@ public class AjustesActivity extends AppCompatActivity implements View.OnClickLi
         ajuste2= (View) findViewById(R.id.layout_ajuste_2);
         final View ajuste3= (View) findViewById(R.id.layout_ajuste_3);
         final View ajuste4= (View) findViewById(R.id.layout_ajuste_4);
+        final View ajuste5= (View) findViewById(R.id.layout_ajuste_5);
+        final View ajuste6= (View) findViewById(R.id.layout_ajuste_6);
         switchSonido= (Switch) findViewById(R.id.switch_sonido);
         switchHorarioNocturno= (Switch) findViewById(R.id.switch_sonido_noche);
         switchAnclarChat= (Switch) findViewById(R.id.switch_anclar_chat);
@@ -35,6 +42,8 @@ public class AjustesActivity extends AppCompatActivity implements View.OnClickLi
         ajuste2.setOnClickListener(this);
         ajuste3.setOnClickListener(this);
         ajuste4.setOnClickListener(this);
+        ajuste5.setOnClickListener(this);
+        ajuste6.setOnClickListener(this);
 
         //Se carga el SharedPreferences
         SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.shared_preferences), Context.MODE_PRIVATE);
@@ -81,6 +90,35 @@ public class AjustesActivity extends AppCompatActivity implements View.OnClickLi
                 int anclarChat=0;
                 if (switchAnclarChat.isChecked()) anclarChat=-1;
                 editor.putInt(context.getString(R.string.preferences_anclar_chat_personal),anclarChat);
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra(context.getResources().getString(R.string.preferences_anclar_chat_personal),anclarChat);
+                setResult(AppCompatActivity.RESULT_OK,returnIntent);
+                break;
+            case R.id.layout_ajuste_5:
+                //Ajuste_5 -> Contactos/Permisos
+
+                break;
+            case R.id.layout_ajuste_6:
+                //Ajuste_6 -> General/Eliminar datos de la aplicación
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(context.getResources().getString(R.string.dialog_eliminar_DB_titulo))
+                        .setMessage(context.getResources().getString(R.string.dialog_eliminar_DB))
+                        .setPositiveButton(context.getResources().getString(R.string.dialog_de_acuerdo), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                //Eliminar base de datos
+                                DBAdapter dbAdapter = new DBAdapter(getApplicationContext());
+                                dbAdapter.open();
+                                dbAdapter.eliminarDB();
+                            }
+                        })
+                        .setNegativeButton(context.getResources().getString(R.string.dialog_no), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // User cancelled the dialog
+                            }
+                        });
+                // Create the AlertDialog object
+                builder.create().show();
+
                 break;
             default:
                 break;

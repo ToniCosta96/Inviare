@@ -6,13 +6,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.example.prova.inviare.elementos.Contacto;
 import com.example.prova.inviare.elementos.Mensaje;
 
-import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -73,6 +71,7 @@ public class DBAdapter {
     }
 
     public void seleccionarMensaje(ArrayList<Mensaje> arrayElementos, int valor, String columna, String tabla){
+        //Se introducen los mensajes de la base de datos en el arrayElementos
         String selectQuery = "SELECT * FROM "+tabla+" WHERE "+columna+" = "+valor+";";
         Cursor cursor= db.rawQuery(selectQuery, null);
 
@@ -80,14 +79,14 @@ public class DBAdapter {
         if(cursor.moveToFirst()){
             do {
                 //Se crea un objeto 'Elemento' con los datos de la DB recogidos por el cursor
-                Log.d("aaaa",""+cursor.getInt(7));
                 arrayElementos.add(new Mensaje(cursor.getString(1),cursor.getString(2),true));
             } while (cursor.moveToNext());
         }
         cursor.close();
     }
 
-    public void seleccionar(ArrayList<Mensaje> arrayElementos, String valor, String columna, String tabla){
+    public void seleccionarContacto(Contacto contacto, ArrayList<Mensaje> arrayElementos, String valor, String columna, String tabla){
+        //Se introducen los contactos de la base de datos en el arrayElementos y se intercala Contacto si no es null
         String selectQuery = "SELECT * FROM "+tabla+" WHERE "+columna+" LIKE '"+valor+"';";
         Cursor cursor= db.rawQuery(selectQuery, null);
 
@@ -110,16 +109,15 @@ public class DBAdapter {
         insertQuery.append("('");
         insertQuery.append(nom);//Nombre del contacto
         insertQuery.append("', '");
-        insertQuery.append(estado);//Nombre del contacto
+        insertQuery.append(estado);//Estado del contacto
         insertQuery.append("', '");
         insertQuery.append(img);//Imagen del contacto
         insertQuery.append("', '");
-        insertQuery.append("0");//No esta bloqueado al añadirlo
+        insertQuery.append("0");//Bloqueado_silenciado (no esta bloqueado al añadirlo)
         insertQuery.append("', '),");
         if(cursor.moveToFirst()){
-            int i=0;
             do {
-                //Se añaden los datos del cursor a la consulta insert "InsertQuery"
+                //Se añaden los datos del cursor anterior a la consulta insert "InsertQuery"
                 insertQuery.append("('");
                 insertQuery.append(cursor.getString(1));
                 insertQuery.append("', '");
@@ -172,9 +170,7 @@ public class DBAdapter {
     }
 
     public void eliminarDB(){
-        //context.deleteDatabase(DATABASE_NAME);
-        //SQLiteOpenHelp.close();
-        if(SQLiteDatabase.deleteDatabase(new File(DATABASE_NAME)))
+        if(context.deleteDatabase(DATABASE_NAME))
             Toast.makeText(context,"La base de datos ha sido eliminada correctamente",Toast.LENGTH_SHORT).show();
     }
 
