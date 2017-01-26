@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Inviare</string>
+    <!-- SharedPreferences. -->
     <string name="shared_preferences">shared_preferences</string>
     <string name="preferences_nombre_perfil">nombre_perfil</string>
     <string name="preferences_telefono_perfil">telefono_perfil</string>
@@ -7,8 +8,15 @@
     <string name="preferences_estado_perfil">estado_perfil</string>
     <string name="preferences_imagen_perfil">imagen_perfil</string>
     <string name="preferences_acceso_directo">usuario_acceso_directo</string>
+    <string name="preferences_sonido_notificacion">sonido_notificacion</string>
+    <string name="preferences_horario_nocturno">horario_nocturno</string>
+    <string name="preferences_horario_nocturno_hora_inicio">horario_nocturno_inicio</string>
+    <string name="preferences_horario_nocturno_hora_final">horario_nocturno_final</string>
+    <string name="preferences_led_notificacion">led_notificacion</string>
+    <string name="preferences_anclar_chat_personal">anclar_chat_personal</string>
 
-    <string name="conversacion_id">id_conversacion</string>
+    <!-- Intents (Extras). -->
+    <string name="intent_conversacion_id">id_conversacion</string>
 
     <string name="title_activity_alarmas">Enviar notificación</string>
     <string name="action_settings">Settings</string>
@@ -30,4 +38,14 @@
     <string name="correo_electronico_textview">Correo electrónico:</string>
     <string name="acceso_directo_chat">Acceso directo</string>
     <string name="eliminar_mensajes">Eliminar mensajes</string>
+    <string name="ajustes_t1">Notificación</string>
+    <string name="ajustes_sonido_notificacion">Sonido</string>
+    <string name="ajustes_sonido_descripcion">El móvil sonará al recibir una notificación</string>
+    <string name="ajustes_sonido_noche">Horario nocturno</string>
+    <string name="ajustes_nocturno_descripcion">El móvil no sonará por la noche</string>
+    <string name="ajustes_t2">Contactos</string>
+    <string name="ajustes_anclar_chat">Anclar chat personal</string>
+    <string name="ajustes_anclar_chat_descripcion">Situar el chat personal como primer contacto</string>
+    <string name="ajustes_led">Led de notificación</string>
+    <string name="ajustes_led_descripcion">Activar led de notificación</string>
 </resources>

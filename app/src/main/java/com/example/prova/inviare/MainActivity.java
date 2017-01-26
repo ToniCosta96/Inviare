@@ -29,12 +29,17 @@ public class MainActivity extends AppCompatActivity {
         final int ID_PROPIETARIO=getResources().getInteger(R.integer.id_propietario);
         SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.shared_preferences), Context.MODE_PRIVATE);
         USUARIO_ACCESO_DIRECTO = sharedPref.getInt(getResources().getString(R.string.preferences_acceso_directo),ID_PROPIETARIO);
+        final int preferenceAccesoDirecto=sharedPref.getInt(getResources().getString(R.string.preferences_acceso_directo),ID_PROPIETARIO);
 
         final RecyclerView recyclerView= (RecyclerView) findViewById(R.id.recycler_view_conversaciones);
 
         arrayConversaciones= new ArrayList<>();
-        arrayConversaciones.add(new Contacto(ID_PROPIETARIO,"Tú","chat contigo","último uso"));
-        arrayConversaciones.add(new Contacto(arrayConversaciones.size(),"Conversacion2","sub2","2"));
+        if(preferenceAccesoDirecto==-1){
+            arrayConversaciones.add(new Contacto(ID_PROPIETARIO,"Tú","chat contigo","último uso"));
+        }else{
+            arrayConversaciones.add(new Contacto(ID_PROPIETARIO,"Tú","chat contigo","último uso"));
+            arrayConversaciones.add(new Contacto(arrayConversaciones.size(),"Conversacion2","sub2","2"));
+        }
 
         // specify an adapter (see also next example)
         final AdaptadorContactos adaptador = new AdaptadorContactos(this,arrayConversaciones);
@@ -62,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.item_acceso_directo:
                 //Intent -> Acceso directo
                 i= new Intent(getApplicationContext(),ConversacionActivity.class);
-                i.putExtra(getResources().getString(R.string.conversacion_id),USUARIO_ACCESO_DIRECTO);
+                i.putExtra(getResources().getString(R.string.intent_conversacion_id),USUARIO_ACCESO_DIRECTO);
                 startActivity(i);
                 return true;
             case R.id.item_perfil:

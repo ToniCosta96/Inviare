@@ -4,6 +4,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
+
     <dimen name="separacion_contacto_titulo">20dp</dimen>
     <dimen name="chat_margin1">10dp</dimen>
     <dimen name="perfil_padding_image">20dp</dimen>
@@ -12,4 +13,7 @@
     <dimen name="separacion_perfil_2">5dp</dimen>
     <dimen name="separacion_perfil_2b">10dp</dimen>
     <dimen name="separacion_perfil_3">25dp</dimen>
+    <dimen name="ajustes_margen_titulo">15dp</dimen>
+    <dimen name="ajustes_margen_ajuste">15dp</dimen>
+    <dimen name="ajustes_subtitulo_bottom">2dp</dimen>
 </resources>

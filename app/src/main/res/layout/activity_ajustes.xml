@@ -1,10 +1,183 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_ajustes"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.example.prova.inviare.AjustesActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-</LinearLayout>
+        <TextView
+            android:text="@string/ajustes_t1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_t1"
+            android:textAppearance="@android:style/TextAppearance.Material.Title"
+            android:textColor="@color/colorAccent"
+            android:paddingTop="@dimen/ajustes_margen_titulo"
+            android:paddingLeft="@dimen/ajustes_margen_titulo"
+            android:paddingRight="@dimen/ajustes_margen_titulo" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:id="@+id/layout_ajuste_1"
+            android:padding="@dimen/ajustes_margen_ajuste">
+
+            <TextView
+                android:text="@string/ajustes_sonido_notificacion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView_sonido"
+                android:textAppearance="@android:style/TextAppearance.Material.Subhead"
+                android:layout_marginBottom="@dimen/ajustes_subtitulo_bottom" />
+
+            <TextView
+                android:text="@string/ajustes_sonido_descripcion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView_desc_sonido"
+                android:layout_weight="1"
+                android:layout_below="@+id/textView_sonido"
+                android:layout_alignParentStart="true" />
+
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/switch_sonido"
+                android:gravity="start"
+                android:checked="true"
+                android:layout_alignBaseline="@+id/textView_sonido"
+                android:layout_alignBottom="@+id/textView_sonido"
+                android:layout_alignParentEnd="true"
+                android:clickable="false" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:id="@+id/layout_ajuste_2"
+            android:padding="@dimen/ajustes_margen_ajuste">
+
+            <TextView
+                android:text="@string/ajustes_sonido_noche"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView_nocte"
+                android:textAppearance="@android:style/TextAppearance.Material.Subhead"
+                android:layout_marginBottom="@dimen/ajustes_subtitulo_bottom" />
+
+            <TextView
+                android:text="@string/ajustes_nocturno_descripcion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView_desc_nocte"
+                android:layout_weight="1"
+                android:layout_below="@+id/textView_nocte"
+                android:layout_alignParentStart="true" />
+
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/switch_sonido_noche"
+                android:gravity="start"
+                android:checked="false"
+                android:layout_alignBaseline="@+id/textView_nocte"
+                android:layout_alignBottom="@+id/textView_nocte"
+                android:layout_alignParentEnd="true"
+                android:clickable="false" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:id="@+id/layout_ajuste_3"
+            android:padding="@dimen/ajustes_margen_ajuste">
+
+            <TextView
+                android:text="@string/ajustes_led"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView_led_notificacion"
+                android:textAppearance="@android:style/TextAppearance.Material.Subhead"
+                android:layout_marginBottom="@dimen/ajustes_subtitulo_bottom" />
+
+            <TextView
+                android:text="@string/ajustes_led_descripcion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView_desc_led_notificacion"
+                android:layout_weight="1"
+                android:layout_below="@+id/textView_led_notificacion"
+                android:layout_alignParentStart="true" />
+
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/switch_led_notificacion"
+                android:gravity="start"
+                android:layout_alignBaseline="@+id/textView_led_notificacion"
+                android:layout_alignBottom="@+id/textView_led_notificacion"
+                android:layout_alignParentEnd="true"
+                android:clickable="false"
+                android:checked="true" />
+        </RelativeLayout>
+
+        <TextView
+            android:text="@string/ajustes_t2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_t2"
+            android:paddingStart="@dimen/ajustes_margen_titulo"
+            android:paddingEnd="@dimen/ajustes_margen_titulo"
+            android:textAppearance="@android:style/TextAppearance.Material.Title"
+            android:textColor="@color/colorAccent"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:id="@+id/layout_ajuste_4"
+            android:padding="@dimen/ajustes_margen_ajuste">
+
+            <TextView
+                android:text="@string/ajustes_anclar_chat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView_anclar_chat"
+                android:textAppearance="@android:style/TextAppearance.Material.Subhead"
+                android:layout_marginBottom="@dimen/ajustes_subtitulo_bottom" />
+
+            <TextView
+                android:text="@string/ajustes_anclar_chat_descripcion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView_desc_anclar_chat"
+                android:layout_weight="1"
+                android:layout_below="@+id/textView_anclar_chat"
+                android:layout_alignParentStart="true" />
+
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/switch_anclar_chat"
+                android:gravity="start"
+                android:layout_alignBaseline="@+id/textView_anclar_chat"
+                android:layout_alignBottom="@+id/textView_anclar_chat"
+                android:layout_alignParentEnd="true"
+                android:clickable="false"
+                android:checked="true" />
+        </RelativeLayout>
+
+    </LinearLayout>
+</ScrollView>

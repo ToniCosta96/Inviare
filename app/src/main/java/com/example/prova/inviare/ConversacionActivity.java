@@ -1,8 +1,6 @@
 package com.example.prova.inviare;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +8,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -43,7 +40,7 @@ public class ConversacionActivity extends AppCompatActivity{
         arrayMensajes= new ArrayList<>();
 
         //Se obtiene el ID de la conversación y se carga de la base de datos.
-        id_conversacion = getIntent().getIntExtra(getResources().getString(R.string.conversacion_id),-2);
+        id_conversacion = getIntent().getIntExtra(getResources().getString(R.string.intent_conversacion_id),-2);
         dbAdapter = new DBAdapter(getApplicationContext());
         dbAdapter.open();
         if(id_conversacion>-2) dbAdapter.seleccionarMensaje(arrayMensajes,id_conversacion,DBAdapter.ID_CONTACTO,DBAdapter.TABLE_MENSAJES);
