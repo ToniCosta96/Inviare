@@ -59,4 +59,6 @@
     <string name="ajustes_t3">General</string>
     <string name="ajustes_eliminar_DB">Eliminar datos de la aplicación</string>
     <string name="ajustes_eliminar_DB_descripcion">Se eliminarán todos los mensajes guardados en el dispositivo</string>
+    <string name="simple_date_format_DB">dd MM yyyy, HH:mm:ss</string>
+    <string name="simple_date_format_INTERFAZ">dd MM yyyy, HH:mm</string>
 </resources>

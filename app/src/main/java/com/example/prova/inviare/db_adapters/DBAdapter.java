@@ -8,10 +8,14 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
 
+import com.example.prova.inviare.R;
 import com.example.prova.inviare.elementos.Contacto;
 import com.example.prova.inviare.elementos.Mensaje;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by 2dam on 17/01/2017.
@@ -31,7 +35,7 @@ public class DBAdapter {
     private static final String IMAGEN = "imagen";
 
     private static final String MENSAJE = "mensaje";
-    private static final String DATE_TIME = "date";
+    private static final String DATE_TIME = "fecha";
 
     private static final String TIPO = "tipo";
     private static final String HORA = "hora";
@@ -40,10 +44,14 @@ public class DBAdapter {
     public static final String ID_CONTACTO = "contacto_id";
 
     public static final String TIPO_TEXTO = "text";
+    public static final String TIPO_FANTASMA = "fecha_sin_texto";
+    public static final String TIPO_ALARMA_REPETITIVA = "alarma1";
+    public static final String TIPO_ALARMA_PERSISTENTE = "alarma2";
+    public static final String TIPO_ALARMA_FIJA = "alarma3";
 
-    private static final String DATABASE_CREATE_CONTACTOS = "CREATE TABLE "+TABLE_CONTACTOS+" (_id integer primary key autoincrement, nombre text, estado text, imagen text, bloqueado_silenciado integer);";
+    private static final String DATABASE_CREATE_CONTACTOS = "CREATE TABLE "+TABLE_CONTACTOS+" (_id integer primary key AUTOINCREMENT, nombre text, estado text, imagen text, bloqueado_silenciado integer);";
     private static final String DATABASE_CREATE_MENSAJES = "CREATE TABLE "+TABLE_MENSAJES+
-            " (_id integer primary key autoincrement, mensaje text, date text, tipo text, hora text, dia text, frecuencia text, contacto_id integer, FOREIGN KEY(contacto_id) REFERENCES contactos(_id));";
+            " (_id integer primary key AUTOINCREMENT, mensaje text, fecha text, tipo text, hora text, dia text, frecuencia text, contacto_id integer, FOREIGN KEY(contacto_id) REFERENCES contactos(_id));";
 
     private static final String DATABASE_DROP_CONTACTOS = "DROP TABLE IF EXISTS "+TABLE_CONTACTOS+";";
     private static final String DATABASE_DROP_MENSAJES = "DROP TABLE IF EXISTS "+TABLE_MENSAJES+";";
@@ -79,21 +87,29 @@ public class DBAdapter {
         if(cursor.moveToFirst()){
             do {
                 //Se crea un objeto 'Elemento' con los datos de la DB recogidos por el cursor
-                arrayElementos.add(new Mensaje(cursor.getString(1),cursor.getString(2),true));
+                SimpleDateFormat df = new SimpleDateFormat(context.getResources().getString(R.string.simple_date_format_DB), java.util.Locale.getDefault());
+                SimpleDateFormat df2 = new SimpleDateFormat(context.getResources().getString(R.string.simple_date_format_INTERFAZ), java.util.Locale.getDefault());
+                Date dateSegundos=null;
+                try {
+                    dateSegundos = df.parse(cursor.getString(2));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                arrayElementos.add(new Mensaje(cursor.getString(1),df2.format(dateSegundos),true));
             } while (cursor.moveToNext());
         }
         cursor.close();
     }
 
-    public void seleccionarContacto(Contacto contacto, ArrayList<Mensaje> arrayElementos, String valor, String columna, String tabla){
+    public void seleccionarContacto(Contacto contacto, ArrayList<Contacto> arrayElementos, String valor, String columna, String tabla){
         //Se introducen los contactos de la base de datos en el arrayElementos y se intercala Contacto si no es null
-        String selectQuery = "SELECT * FROM "+tabla+" WHERE "+columna+" LIKE '"+valor+"';";
+        String selectQuery = "SELECT nombre,estado,imagen,fecha FROM contactos INNER JOIN mensajes ON contactos._id=mensajes.contacto_id GROUP BY contactos._id ORDER BY mensajes.fecha;";
         Cursor cursor= db.rawQuery(selectQuery, null);
 
         if(cursor.moveToFirst()){
             do {
                 //Se crea un objeto 'Elemento' con los datos de la DB recogidos por el cursor
-                arrayElementos.add(new Mensaje(cursor.getString(1),cursor.getString(2),true));
+                arrayElementos.add(new Contacto(cursor.getInt(0),cursor.getString(1),cursor.getString(2),cursor.getString(3)));
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -133,13 +149,13 @@ public class DBAdapter {
         cursor.close();
         db.execSQL(insertQuery.toString());
     }
-    public void insertarMensaje(String m, String dt, String tip, String h, String d, String f, int contacto_id){
+    public void insertarMensaje(String m, String dt, String tipo, String h, String d, String f, int contacto_id){
         //Creamos un nuevo registro de valores a insertar
         ContentValues newValues = new ContentValues();
         //Asignamos los valores de cada campo
         newValues.put(MENSAJE,m);
         newValues.put(DATE_TIME,dt);
-        newValues.put(TIPO,tip);
+        newValues.put(TIPO,tipo);
         newValues.put(HORA,h);
         newValues.put(DIA,d);
         newValues.put(FRECUENCIA,f);

@@ -21,6 +21,7 @@ import com.example.prova.inviare.elementos.Mensaje;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public class ConversacionActivity extends AppCompatActivity{
     private DBAdapter dbAdapter;
@@ -79,16 +80,22 @@ public class ConversacionActivity extends AppCompatActivity{
                     startActivity(new Intent(getApplicationContext(),AlarmasActivity.class));
                 }else{
                     //Enviar mensaje
-                    SimpleDateFormat df = new SimpleDateFormat("dd MM yyyy, HH:mm", java.util.Locale.getDefault());
-                    String date = df.format(Calendar.getInstance().getTime());
+                    //Guardar en la base de datos local
+                    SimpleDateFormat dfDataBase = new SimpleDateFormat(getResources().getString(R.string.simple_date_format_DB), java.util.Locale.getDefault());
+                    SimpleDateFormat dfMuestra = new SimpleDateFormat(getResources().getString(R.string.simple_date_format_INTERFAZ), java.util.Locale.getDefault());
+                    Date horaActual = Calendar.getInstance().getTime();
+                    String date = dfDataBase.format(horaActual);
+                    String dateMuestra = dfMuestra.format(horaActual);
                     dbAdapter.insertarMensaje(editTextConversacion.getText().toString(),date,DBAdapter.TIPO_TEXTO,null,null,null,id_conversacion);
                     //Mostrar por pantalla (A la derecha si es propietario [-1])
                     boolean propietario=false;
                     if(id_conversacion==getResources().getInteger(R.integer.id_propietario)) propietario=true;
-                    arrayMensajes.add(new Mensaje(editTextConversacion.getText().toString(),date, propietario));
+                    arrayMensajes.add(new Mensaje(editTextConversacion.getText().toString(),dateMuestra, propietario));
                     adaptador.notifyItemInserted(arrayMensajes.size()-1);
                     //Eliminar del editText
                     editTextConversacion.setText("");
+                    //Enviar a FireBbase
+
                 }
             }
         });

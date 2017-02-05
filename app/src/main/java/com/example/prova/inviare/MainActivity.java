@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
                     arrayConversaciones.add(new Contacto(ID_PROPIETARIO,"Tú","chat contigo","último uso"));
                     arrayConversaciones.add(new Contacto(arrayConversaciones.size(),"Conversacion2","sub2","2"));
                 }
+                //Se le notifican los cambios al adaptador (AdaptadorContactos)
                 adaptador.notifyDataSetChanged();
             }
         }
