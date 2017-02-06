@@ -61,4 +61,8 @@
     <string name="ajustes_eliminar_DB_descripcion">Se eliminarán todos los mensajes guardados en el dispositivo</string>
     <string name="simple_date_format_DB">dd MM yyyy, HH:mm:ss</string>
     <string name="simple_date_format_INTERFAZ">dd MM yyyy, HH:mm</string>
+    <string name="hora_inicio_t">Realizar tarea a partir de: </string>
+    <string name="hora_duracion_t">Terminar tarea antes de: </string>
+    <string name="tarea_terminada">Hecho</string>
+    <string name="declinar_tarea">Rechazar</string>
 </resources>

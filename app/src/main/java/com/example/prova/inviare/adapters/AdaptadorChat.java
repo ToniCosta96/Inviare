@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.prova.inviare.R;
+import com.example.prova.inviare.elementos.Alarma;
 import com.example.prova.inviare.elementos.Mensaje;
 
 import java.util.ArrayList;
@@ -20,10 +21,16 @@ import java.util.ArrayList;
  */
 
 public class AdaptadorChat extends RecyclerView.Adapter<AdaptadorChat.ListaViewHolder> {
-    private ArrayList<Mensaje> listData;
+    private ArrayList<Object> listData;
     private static Context context;
 
-    public AdaptadorChat(ArrayList<Mensaje> listData, Context context) {
+    private final static int MENSAJE=0;
+    private final static int MENSAJE_FANTASMA=1;
+    private final static int ALARMA_REPETITIVA=2;
+    private final static int ALARMA_PERSISTENTE=3;
+    private final static int ALARMA_UNICA=4;
+
+    public AdaptadorChat(ArrayList<Object> listData, Context context) {
         this.listData = listData;
         this.context=context;
     }
@@ -37,9 +44,39 @@ public class AdaptadorChat extends RecyclerView.Adapter<AdaptadorChat.ListaViewH
 
     @Override
     public void onBindViewHolder(AdaptadorChat.ListaViewHolder holder, int position) {
+        switch (holder.getItemViewType()) {
+            case USER:
+                ViewHolder1 vh1 = (ViewHolder1) viewHolder;
+                configureViewHolder1(vh1, position);
+                break;
+            case IMAGE:
+                ViewHolder2 vh2 = (ViewHolder2) viewHolder;
+                configureViewHolder2(vh2, position);
+                break;
+            default:
+                RecyclerViewSimpleTextViewHolder vh = (RecyclerViewSimpleTextViewHolder) viewHolder;
+                configureDefaultViewHolder(vh, position);
+                break;
+        }
+
         Mensaje item = listData.get(position);
         //Método bindLista de la clase ListaViewHolder
         holder.bindLlista(item);
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        Object objeto=listData.get(position);
+        if (objeto instanceof Mensaje) {
+            return MENSAJE;
+        } else if (objeto instanceof Alarma) {
+            if(((Alarma) objeto).getTipo().compareTo("alarma1")==0){
+                return ALARMA_REPETITIVA;
+            }else if(((Alarma) objeto).getTipo().compareTo("alarma2")==0){
+                return ALARMA_PERSISTENTE;
+            }
+        }
+        return -1;
     }
 
     @Override

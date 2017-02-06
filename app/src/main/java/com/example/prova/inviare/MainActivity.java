@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Se carga el SharedPreferences
+        // Se carga el SharedPreferences
         final int ID_PROPIETARIO=getResources().getInteger(R.integer.id_propietario);
         SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.shared_preferences), Context.MODE_PRIVATE);
         USUARIO_ACCESO_DIRECTO = sharedPref.getInt(getResources().getString(R.string.preferences_usuario_acceso_directo),ID_PROPIETARIO);
@@ -36,16 +36,16 @@ public class MainActivity extends AppCompatActivity {
         final RecyclerView recyclerView= (RecyclerView) findViewById(R.id.recycler_view_conversaciones);
 
         arrayConversaciones= new ArrayList<>();
-        if(posicionChatPersonal==-1){
-            //Se añade primero el chat personal y luego el resto de chats
+        if(posicionChatPersonal==ID_PROPIETARIO){
+            // Se añade primero el chat personal y luego el resto de chats
             arrayConversaciones.add(new Contacto(ID_PROPIETARIO,"Tú","chat contigo","último uso"));
         }else{
-            //Se añaden los chats y se intercala el chat personal en la posición correspondiente
+            // Se añaden los chats y se intercala el chat personal en la posición correspondiente
             arrayConversaciones.add(new Contacto(ID_PROPIETARIO,"Tú","chat contigo","último uso"));
             arrayConversaciones.add(new Contacto(arrayConversaciones.size(),"Conversacion2","sub2","2"));
         }
 
-        // specify an adapter (see also next example)
+        // Especificar un adaptador para el RecyclerView
         adaptador = new AdaptadorContactos(this,arrayConversaciones);
         recyclerView.setAdapter(adaptador);
         // use a linear layout manager

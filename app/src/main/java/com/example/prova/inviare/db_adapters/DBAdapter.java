@@ -38,8 +38,9 @@ public class DBAdapter {
     private static final String DATE_TIME = "fecha";
 
     private static final String TIPO = "tipo";
-    private static final String HORA = "hora";
-    private static final String DIA = "dia";
+    private static final String HORA_INICIO = "hora_inicio";
+    private static final String HORA = "hora_duracion";
+    private static final String DIA = "dia_alarma";
     private static final String FRECUENCIA = "frecuencia";
     public static final String ID_CONTACTO = "contacto_id";
 
@@ -51,7 +52,7 @@ public class DBAdapter {
 
     private static final String DATABASE_CREATE_CONTACTOS = "CREATE TABLE "+TABLE_CONTACTOS+" (_id integer primary key AUTOINCREMENT, nombre text, estado text, imagen text, bloqueado_silenciado integer);";
     private static final String DATABASE_CREATE_MENSAJES = "CREATE TABLE "+TABLE_MENSAJES+
-            " (_id integer primary key AUTOINCREMENT, mensaje text, fecha text, tipo text, hora text, dia text, frecuencia text, contacto_id integer, FOREIGN KEY(contacto_id) REFERENCES contactos(_id));";
+            " (_id integer primary key AUTOINCREMENT, mensaje text, fecha text, tipo text, hora_inicio text, hora_duracion text, dia_alarma text, frecuencia text, contacto_id integer, FOREIGN KEY(contacto_id) REFERENCES contactos(_id));";
 
     private static final String DATABASE_DROP_CONTACTOS = "DROP TABLE IF EXISTS "+TABLE_CONTACTOS+";";
     private static final String DATABASE_DROP_MENSAJES = "DROP TABLE IF EXISTS "+TABLE_MENSAJES+";";
@@ -163,13 +164,14 @@ public class DBAdapter {
         cursor.close();
         db.execSQL(insertQuery.toString());
     }*/
-    public void insertarMensaje(String m, String dt, String tipo, String h, String d, String f, int contacto_id){
+    public void insertarMensaje(String m, String dt, String tipo, String h_i, String h, String d, String f, int contacto_id){
         //Creamos un nuevo registro de valores a insertar
         ContentValues newValues = new ContentValues();
         //Asignamos los valores de cada campo
         newValues.put(MENSAJE,m);
         newValues.put(DATE_TIME,dt);
         newValues.put(TIPO,tipo);
+        newValues.put(HORA_INICIO,h_i);
         newValues.put(HORA,h);
         newValues.put(DIA,d);
         newValues.put(FRECUENCIA,f);

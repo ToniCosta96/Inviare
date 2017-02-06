@@ -42,7 +42,7 @@ public class ConversacionActivity extends AppCompatActivity{
         final FloatingActionButton floatingActionButton= (FloatingActionButton) findViewById(R.id.floatingActionButton);
         arrayMensajes= new ArrayList<>();
 
-        //Se obtiene el ID de la conversación y se carga de la base de datos.
+        //Se obtiene el ID de la conversación y se carga de la base de datos ([-2] no carga nada).
         id_conversacion = getIntent().getIntExtra(getResources().getString(R.string.intent_conversacion_id),-2);
         dbAdapter = new DBAdapter(getApplicationContext());
         dbAdapter.open();
@@ -54,6 +54,8 @@ public class ConversacionActivity extends AppCompatActivity{
         recyclerView.setAdapter(adaptador);
         //Use a linear layout manager
         recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
+        //Recycler scroll
+        recyclerView.scrollToPosition(arrayMensajes.size()-1);
         recyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
@@ -103,7 +105,7 @@ public class ConversacionActivity extends AppCompatActivity{
                     Date horaActual = Calendar.getInstance().getTime();
                     String date = dfDataBase.format(horaActual);
                     String dateMuestra = dfMuestra.format(horaActual);
-                    dbAdapter.insertarMensaje(editTextConversacion.getText().toString(),date,DBAdapter.TIPO_TEXTO,null,null,null,id_conversacion);
+                    dbAdapter.insertarMensaje(editTextConversacion.getText().toString(),date,DBAdapter.TIPO_TEXTO,null,null,null,null,id_conversacion);
                     //Mostrar por pantalla (A la derecha si es propietario [-1])
                     boolean propietario=false;
                     if(id_conversacion==getResources().getInteger(R.integer.id_propietario)) propietario=true;
