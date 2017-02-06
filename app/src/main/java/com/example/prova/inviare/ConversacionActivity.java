@@ -30,6 +30,8 @@ public class ConversacionActivity extends AppCompatActivity{
     private AdaptadorChat adaptador;
     private boolean seleccionarAlarma=true;
 
+    private int oldBottom=0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,11 +48,26 @@ public class ConversacionActivity extends AppCompatActivity{
         dbAdapter.open();
         if(id_conversacion>-2) dbAdapter.seleccionarMensaje(arrayMensajes,id_conversacion,DBAdapter.ID_CONTACTO,DBAdapter.TABLE_MENSAJES);
 
+        //RecyclerView
         //Adaptador - AdaptadorConversaciones
         adaptador = new AdaptadorChat(arrayMensajes, getApplicationContext());
         recyclerView.setAdapter(adaptador);
         //Use a linear layout manager
         recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
+        recyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
+                if(recyclerView.getBottom() < oldBottom && !arrayMensajes.isEmpty()) {
+                    recyclerView.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            recyclerView.smoothScrollToPosition(arrayMensajes.size()-1);
+                        }
+                    }, 100);
+                }
+                oldBottom=recyclerView.getBottom();
+            }
+        });
 
         //TextWatcher
         TextWatcher tw = new TextWatcher() {
@@ -91,7 +108,9 @@ public class ConversacionActivity extends AppCompatActivity{
                     boolean propietario=false;
                     if(id_conversacion==getResources().getInteger(R.integer.id_propietario)) propietario=true;
                     arrayMensajes.add(new Mensaje(editTextConversacion.getText().toString(),dateMuestra, propietario));
+                    //Notificar cambios a la interfaz
                     adaptador.notifyItemInserted(arrayMensajes.size()-1);
+                    recyclerView.scrollToPosition(arrayMensajes.size()-1);
                     //Eliminar del editText
                     editTextConversacion.setText("");
                     //Enviar a FireBbase

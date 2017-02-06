@@ -103,7 +103,7 @@ public class DBAdapter {
 
     public void seleccionarContacto(Contacto contacto, ArrayList<Contacto> arrayElementos, String valor, String columna, String tabla){
         //Se introducen los contactos de la base de datos en el arrayElementos y se intercala Contacto si no es null
-        String selectQuery = "SELECT nombre,estado,imagen,fecha FROM contactos INNER JOIN mensajes ON contactos._id=mensajes.contacto_id GROUP BY contactos._id ORDER BY mensajes.fecha;";
+        String selectQuery = "SELECT c.nombre,c.estado,c.imagen,m.fecha FROM contactos c INNER JOIN mensajes m ON c._id=m.contacto_id GROUP BY c._id ORDER BY m.fecha;";
         Cursor cursor= db.rawQuery(selectQuery, null);
 
         if(cursor.moveToFirst()){
