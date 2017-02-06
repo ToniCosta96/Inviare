@@ -116,6 +116,20 @@ public class DBAdapter {
     }
 
     public void insertarContacto(String nom, String estado, String img){
+        String insertQuery = "INSERT INTO contactos (nombre, estado, imagen, bloqueado_silenciado) VALUES " + "('" +
+                nom +//Nombre del contacto
+                "', '" +
+                estado +//Estado del contacto
+                "', '" +
+                img +//Imagen del contacto
+                "', '" +
+                "0" +//Bloqueado_silenciado ([0] por defecto porque no esta bloqueado al añadirlo)
+                "', ');";
+        //Ejecutamos el INSERT
+        db.execSQL(insertQuery);
+    }
+
+    /*public void insertarContacto(String nom, String estado, String img){
         String selectQuery = "SELECT * FROM contactos;";
         StringBuilder insertQuery = new StringBuilder("INSERT INTO contactos (nombre, estado, imagen, bloqueado_silenciado) VALUES ");
         Cursor cursor= db.rawQuery(selectQuery, null);
@@ -148,7 +162,7 @@ public class DBAdapter {
         }
         cursor.close();
         db.execSQL(insertQuery.toString());
-    }
+    }*/
     public void insertarMensaje(String m, String dt, String tipo, String h, String d, String f, int contacto_id){
         //Creamos un nuevo registro de valores a insertar
         ContentValues newValues = new ContentValues();
