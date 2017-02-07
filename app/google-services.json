@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "365771943478",
+    "firebase_url": "https://inviare-411d4.firebaseio.com",
+    "project_id": "inviare-411d4",
+    "storage_bucket": "inviare-411d4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:365771943478:android:4e8f6f230fdfcf32",
+        "android_client_info": {
+          "package_name": "com.example.prova.inviare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "365771943478-2atun392qrihdc87tru54en7n9qvgt5v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsua8rl1Bunz8toqHKFGS7QG0FPzmNiOE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "365771943478-2atun392qrihdc87tru54en7n9qvgt5v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
