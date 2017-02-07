@@ -8,9 +8,14 @@ public class Alarma {
     private String hora_duracion;
     private String dia;
     private String frecuencia;
+    private String cursoTarea;
     private boolean propietario;
 
-    public Alarma(String mensaje, String fecha, int tipo, String hora_inicio, String hora_duracion, String dia, String frecuencia, boolean propietario) {
+    public static final String TAREA_EN_CURSO="0";
+    public static final String TAREA_RECHAZADA="1";
+    public static final String TAREA_REALIZADA="2";
+
+    public Alarma(String mensaje, String fecha, int tipo, String hora_inicio, String hora_duracion, String dia, String frecuencia, String cursoTarea, boolean propietario) {
         this.mensaje = mensaje;
         this.fecha = fecha;
         this.tipo = tipo;
@@ -18,6 +23,7 @@ public class Alarma {
         this.hora_duracion = hora_duracion;
         this.dia = dia;
         this.frecuencia = frecuencia;
+        this.cursoTarea = cursoTarea;
         this.propietario = propietario;
     }
 
@@ -75,6 +81,14 @@ public class Alarma {
 
     public void setFrecuencia(String frecuencia) {
         this.frecuencia = frecuencia;
+    }
+
+    public String getCursoTarea() {
+        return cursoTarea;
+    }
+
+    public void setgetCursoTarea(String cursoTarea) {
+        this.cursoTarea = cursoTarea;
     }
 
     public boolean isPropietario() {
