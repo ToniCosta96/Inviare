@@ -17,6 +17,13 @@
 
     <!-- Intents (Extras). -->
     <string name="intent_conversacion_id">id_conversacion</string>
+    <string name="intent_alarma_mensaje">mensaje</string>
+    <string name="intent_alarma_fecha">fecha</string>
+    <string name="intent_alarma_tipo">tipo_alarma</string>
+    <string name="intent_alarma_hora_inicio">hora_inicio</string>
+    <string name="intent_alarma_hora_duracion">hora_duracion</string>
+    <string name="intent_alarma_dia">dia_alarma</string>
+    <string name="intent_alarma_frecuencia">frecuencia</string>
 
     <!-- Dialog. -->
     <string name="dialog_eliminar_DB_titulo">¿Realmente desea eliminar todos los datos de la aplicación?</string>

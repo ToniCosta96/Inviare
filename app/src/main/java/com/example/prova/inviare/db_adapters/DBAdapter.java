@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.example.prova.inviare.R;
@@ -18,7 +17,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Objects;
 
 /**
  * Created by 2dam on 17/01/2017.
@@ -36,10 +34,10 @@ public class DBAdapter {
     private static final String EMAIL = "email";
     private static final String ESTADO  = "estado";
     private static final String IMAGEN = "imagen";
+    private static final String BLOQUEADO_SILENCIADO = "bloqueado_silenciado";
 
     private static final String MENSAJE = "mensaje";
     private static final String DATE_TIME = "fecha";
-
     private static final String TIPO = "tipo";
     private static final String HORA_INICIO = "hora_inicio";
     private static final String HORA = "hora_duracion";
@@ -47,15 +45,15 @@ public class DBAdapter {
     private static final String FRECUENCIA = "frecuencia";
     public static final String ID_CONTACTO = "contacto_id";
 
-    public static final String TIPO_TEXTO = "text";
-    public static final String TIPO_FANTASMA = "fecha_sin_texto";
-    public static final String TIPO_ALARMA_REPETITIVA = "alarma1";
-    public static final String TIPO_ALARMA_PERSISTENTE = "alarma2";
-    public static final String TIPO_ALARMA_FIJA = "alarma3";
+    public static final int TIPO_TEXTO = 0; //Texto
+    public static final int TIPO_FANTASMA = 1; //Fecha sin texto
+    public static final int TIPO_ALARMA_REPETITIVA = 2; //Alarma repetitiva
+    public static final int TIPO_ALARMA_PERSISTENTE = 3; //Alarma persistente
+    public static final int TIPO_ALARMA_FIJA = 4; //Alarma fija
 
     private static final String DATABASE_CREATE_CONTACTOS = "CREATE TABLE "+TABLE_CONTACTOS+" (_id integer primary key AUTOINCREMENT, nombre text, estado text, imagen text, bloqueado_silenciado integer);";
     private static final String DATABASE_CREATE_MENSAJES = "CREATE TABLE "+TABLE_MENSAJES+
-            " (_id integer primary key AUTOINCREMENT, mensaje text, fecha text, tipo text, hora_inicio text, hora_duracion text, dia_alarma text, frecuencia text, contacto_id integer, FOREIGN KEY(contacto_id) REFERENCES contactos(_id));";
+            " (_id integer primary key AUTOINCREMENT, mensaje text, fecha text, tipo integer, hora_inicio text, hora_duracion text, dia_alarma text, frecuencia text, contacto_id integer, FOREIGN KEY(contacto_id) REFERENCES contactos(_id));";
 
     private static final String DATABASE_DROP_CONTACTOS = "DROP TABLE IF EXISTS "+TABLE_CONTACTOS+";";
     private static final String DATABASE_DROP_MENSAJES = "DROP TABLE IF EXISTS "+TABLE_MENSAJES+";";
@@ -100,10 +98,10 @@ public class DBAdapter {
                 }
                 //Se averigua si el mensaje es del propietario y el tipo de mensaje
                 final boolean mensajePropietario = cursor.getInt(8) == context.getResources().getInteger(R.integer.id_propietario);
-                if(cursor.getString(3).compareTo(TIPO_TEXTO)==0){
+                if(cursor.getInt(3)==TIPO_TEXTO){
                     arrayElementos.add(new Mensaje(cursor.getString(1),df2.format(dateSegundos),mensajePropietario));
-                }else if(cursor.getString(3).compareTo(TIPO_ALARMA_REPETITIVA)==0 || cursor.getString(2).compareTo(TIPO_ALARMA_PERSISTENTE)==0){
-                    arrayElementos.add(new Alarma(cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4),cursor.getString(5),cursor.getString(6),cursor.getString(7),mensajePropietario));
+                }else if(cursor.getInt(3)==TIPO_ALARMA_REPETITIVA || cursor.getInt(2)==TIPO_ALARMA_PERSISTENTE){
+                    arrayElementos.add(new Alarma(cursor.getString(1),cursor.getString(2),cursor.getInt(3),cursor.getString(4),cursor.getString(5),cursor.getString(6),cursor.getString(7),mensajePropietario));
                 }
 
             } while (cursor.moveToNext());
@@ -111,7 +109,7 @@ public class DBAdapter {
         cursor.close();
     }
 
-    public void seleccionarContacto(Contacto contacto, ArrayList<Contacto> arrayElementos, String valor, String columna, String tabla){
+    public void seleccionarContactos(ArrayList<Contacto> arrayElementos, String valor, String columna, String tabla){
         //Se introducen los contactos de la base de datos en el arrayElementos y se intercala Contacto si no es null
         String selectQuery = "SELECT c.nombre,c.estado,c.imagen,m.fecha FROM contactos c INNER JOIN mensajes m ON c._id=m.contacto_id GROUP BY c._id ORDER BY m.fecha;";
         Cursor cursor= db.rawQuery(selectQuery, null);
@@ -126,17 +124,15 @@ public class DBAdapter {
     }
 
     public void insertarContacto(String nom, String estado, String img){
-        String insertQuery = "INSERT INTO contactos (nombre, estado, imagen, bloqueado_silenciado) VALUES " + "('" +
-                nom +//Nombre del contacto
-                "', '" +
-                estado +//Estado del contacto
-                "', '" +
-                img +//Imagen del contacto
-                "', '" +
-                "0" +//Bloqueado_silenciado ([0] por defecto porque no esta bloqueado al añadirlo)
-                "', ');";
+        //Creamos un nuevo registro de valores a insertar
+        ContentValues newValues = new ContentValues();
+        //Asignamos los valores de cada campo
+        newValues.put(NOMBRE,nom);//Nombre del contacto
+        newValues.put(ESTADO,estado);//Estado del contacto
+        newValues.put(IMAGEN,img);//Imagen del contacto
+        newValues.put(BLOQUEADO_SILENCIADO,0);//Bloqueado_silenciado ([0] por defecto porque no esta bloqueado al añadirlo)
         //Ejecutamos el INSERT
-        db.execSQL(insertQuery);
+        db.insert(TABLE_MENSAJES,null,newValues);
     }
 
     /*public void insertarContacto(String nom, String estado, String img){
@@ -173,7 +169,7 @@ public class DBAdapter {
         cursor.close();
         db.execSQL(insertQuery.toString());
     }*/
-    public void insertarMensaje(String m, String dt, String tipo, String h_i, String h, String d, String f, int contacto_id){
+    public void insertarMensaje(String m, String dt, int tipo, String h_i, String h, String d, String f, int contacto_id){
         //Creamos un nuevo registro de valores a insertar
         ContentValues newValues = new ContentValues();
         //Asignamos los valores de cada campo

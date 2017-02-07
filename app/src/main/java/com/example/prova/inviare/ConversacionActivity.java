@@ -47,8 +47,8 @@ public class ConversacionActivity extends AppCompatActivity{
         id_conversacion = getIntent().getIntExtra(getResources().getString(R.string.intent_conversacion_id),-2);
         dbAdapter = new DBAdapter(getApplicationContext());
         dbAdapter.open();
-        arrayMensajes.add(new Alarma("Mensaje","fecha","alarma1","hora_i","hora_d","dia","frecuencia",true));
-        arrayMensajes.add(new Alarma("Mensaje","fecha","alarma1","hora_i","hora_d","dia","frecuencia",false));
+        arrayMensajes.add(new Alarma("Mensaje","fecha",2,"hora_i","hora_d","dia","frecuencia",true));
+        arrayMensajes.add(new Alarma("Mensaje","fecha",3,"hora_i","hora_d","dia","frecuencia",false));
         if(id_conversacion==-1) dbAdapter.seleccionarMensaje(arrayMensajes,id_conversacion,DBAdapter.ID_CONTACTO,DBAdapter.TABLE_MENSAJES);
         //RecyclerView
         //Adaptador - AdaptadorConversaciones

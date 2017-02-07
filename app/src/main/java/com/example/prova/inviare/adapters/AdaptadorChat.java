@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +21,6 @@ public class AdaptadorChat extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private ArrayList<Object> listData;
     private Context context;
 
-    private final static int MENSAJE=0;
-    private final static int MENSAJE_FANTASMA=1;
-    private final static int ALARMA_REPETITIVA=2;
-    private final static int ALARMA_PERSISTENTE=3;
-    private final static int ALARMA_UNICA=4;
-
     public AdaptadorChat(ArrayList<Object> listData, Context context) {
         this.listData = listData;
         this.context=context;
@@ -38,15 +31,15 @@ public class AdaptadorChat extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         RecyclerView.ViewHolder viewHolder;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         switch (viewType) {
-            case MENSAJE:
+            case DBAdapter.TIPO_TEXTO:
                 View v1 = inflater.inflate(R.layout.lista_chat1, parent, false);
                 viewHolder = new AdaptadorChat.ViewHolderMensaje(v1);
                 break;
-            case ALARMA_REPETITIVA:
+            case DBAdapter.TIPO_ALARMA_REPETITIVA:
                 View v2 = inflater.inflate(R.layout.lista_chat_alarma_persistente, parent, false);
                 viewHolder = new AdaptadorChat.ViewHolderAlarmaPersistente(v2);
                 break;
-            case ALARMA_PERSISTENTE:
+            case DBAdapter.TIPO_ALARMA_PERSISTENTE:
                 View v3 = inflater.inflate(R.layout.lista_chat_alarma_persistente, parent, false);
                 viewHolder = new AdaptadorChat.ViewHolderAlarmaPersistente(v3);
                 break;
@@ -62,16 +55,16 @@ public class AdaptadorChat extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         switch (holder.getItemViewType()) {
-            case MENSAJE:
+            case DBAdapter.TIPO_TEXTO:
                 Mensaje item = (Mensaje) listData.get(position);
                 ((ViewHolderMensaje)holder).bindLlista(item);
                 //configureViewHolder1(vh1, position);
                 break;
-            case ALARMA_REPETITIVA:
+            case DBAdapter.TIPO_ALARMA_REPETITIVA:
                 Alarma alarma1 = (Alarma) listData.get(position);
                 ((ViewHolderAlarmaPersistente)holder).bindLlista(alarma1);
                 break;
-            case ALARMA_PERSISTENTE:
+            case DBAdapter.TIPO_ALARMA_PERSISTENTE:
                 Alarma alarma2 = (Alarma) listData.get(position);
                 ((ViewHolderAlarmaPersistente)holder).bindLlista(alarma2);
                 break;
@@ -86,13 +79,9 @@ public class AdaptadorChat extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public int getItemViewType(int position) {
         Object objeto=listData.get(position);
         if (objeto instanceof Mensaje) {
-            return MENSAJE;
+            return DBAdapter.TIPO_TEXTO;
         } else if (objeto instanceof Alarma) {
-            if(((Alarma) objeto).getTipo().compareTo(DBAdapter.TIPO_ALARMA_REPETITIVA)==0){
-                return ALARMA_REPETITIVA;
-            }else if(((Alarma) objeto).getTipo().compareTo(DBAdapter.TIPO_ALARMA_PERSISTENTE)==0){
-                return ALARMA_PERSISTENTE;
-            }
+            return ((Alarma) objeto).getTipo();
         }
         return -1;
     }
@@ -155,9 +144,9 @@ public class AdaptadorChat extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
 
         public void bindLlista(Alarma elementLlista) {
-            if(elementLlista.getTipo().compareTo(DBAdapter.TIPO_ALARMA_REPETITIVA)==0){
+            if(elementLlista.getTipo()==DBAdapter.TIPO_ALARMA_REPETITIVA){
                 textViewTitulo.setText("Alarma repetitiva");
-            }else if (elementLlista.getTipo().compareTo(DBAdapter.TIPO_ALARMA_PERSISTENTE)==0){
+            }else if (elementLlista.getTipo()==DBAdapter.TIPO_ALARMA_PERSISTENTE){
                 textViewTitulo.setText("Alarma persistente");
             }
             textViewMensaje.setText(elementLlista.getMensaje());

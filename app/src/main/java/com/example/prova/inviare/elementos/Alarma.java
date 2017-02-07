@@ -3,14 +3,14 @@ package com.example.prova.inviare.elementos;
 public class Alarma {
     private String mensaje;
     private String fecha;
-    private String tipo;
+    private int tipo;
     private String hora_inicio;
     private String hora_duracion;
     private String dia;
     private String frecuencia;
     private boolean propietario;
 
-    public Alarma(String mensaje, String fecha, String tipo, String hora_inicio, String hora_duracion, String dia, String frecuencia, boolean propietario) {
+    public Alarma(String mensaje, String fecha, int tipo, String hora_inicio, String hora_duracion, String dia, String frecuencia, boolean propietario) {
         this.mensaje = mensaje;
         this.fecha = fecha;
         this.tipo = tipo;
@@ -37,11 +37,11 @@ public class Alarma {
         this.fecha = fecha;
     }
 
-    public String getTipo() {
+    public int getTipo() {
         return tipo;
     }
 
-    public void setTipo(String tipo) {
+    public void setTipo(int tipo) {
         this.tipo = tipo;
     }
 
