@@ -25,8 +25,8 @@ import java.util.Date;
 public class DBAdapter {
     private static final String DATABASE_NAME = "db_inviare.db";
     //private static final String TABLE_PERFIL = "perfil"; // ID - NOMBRE - TELEFONO - EMAIL - ESTADO - IMAGE
-    public static final String TABLE_CONTACTOS = "contactos"; // ID - NOMBRE - IMAGEN - BLOQUEADO_SILENCIADO (0,1[silenciado],2[bloqueado])
-    public static final String TABLE_MENSAJES = "mensajes"; // ID_CONTACTOS <-> ID - MENSAJE - DATETIME - TIPO - HORA - DIA - FRECUENCIA
+    public static final String TABLE_CONTACTOS = "contactos"; // _ID - NOMBRE - ESTADO - IMAGEN - PERMISOS (0,1[silenciado],2[bloqueado])
+    public static final String TABLE_MENSAJES = "mensajes"; //  _ID - MENSAJE - DATETIME - TIPO - HORA_INICIO - HORA - DIA - FRECUENCIA - ID_CONTACTO
     private static final int DATABASE_VERSION = 1;
 
     private static final String NOMBRE = "nombre";
@@ -34,7 +34,7 @@ public class DBAdapter {
     private static final String EMAIL = "email";
     private static final String ESTADO  = "estado";
     private static final String IMAGEN = "imagen";
-    private static final String BLOQUEADO_SILENCIADO = "bloqueado_silenciado";
+    private static final String PERMISOS = "permisos";
 
     private static final String MENSAJE = "mensaje";
     private static final String DATE_TIME = "fecha";
@@ -51,7 +51,7 @@ public class DBAdapter {
     public static final int TIPO_ALARMA_PERSISTENTE = 3; //Alarma persistente
     public static final int TIPO_ALARMA_FIJA = 4; //Alarma fija
 
-    private static final String DATABASE_CREATE_CONTACTOS = "CREATE TABLE "+TABLE_CONTACTOS+" (_id integer primary key AUTOINCREMENT, nombre text, estado text, imagen text, bloqueado_silenciado integer);";
+    private static final String DATABASE_CREATE_CONTACTOS = "CREATE TABLE "+TABLE_CONTACTOS+" (_id integer primary key AUTOINCREMENT, nombre text, estado text, imagen text, permisos integer);";
     private static final String DATABASE_CREATE_MENSAJES = "CREATE TABLE "+TABLE_MENSAJES+
             " (_id integer primary key AUTOINCREMENT, mensaje text, fecha text, tipo integer, hora_inicio text, hora_duracion text, dia_alarma text, frecuencia text, contacto_id integer, FOREIGN KEY(contacto_id) REFERENCES contactos(_id));";
 
@@ -130,14 +130,14 @@ public class DBAdapter {
         newValues.put(NOMBRE,nom);//Nombre del contacto
         newValues.put(ESTADO,estado);//Estado del contacto
         newValues.put(IMAGEN,img);//Imagen del contacto
-        newValues.put(BLOQUEADO_SILENCIADO,0);//Bloqueado_silenciado ([0] por defecto porque no esta bloqueado al añadirlo)
+        newValues.put(PERMISOS,0);//Permisos ([0] por defecto porque no esta bloqueado ni silenciado al añadirlo)
         //Ejecutamos el INSERT
         db.insert(TABLE_MENSAJES,null,newValues);
     }
 
     /*public void insertarContacto(String nom, String estado, String img){
         String selectQuery = "SELECT * FROM contactos;";
-        StringBuilder insertQuery = new StringBuilder("INSERT INTO contactos (nombre, estado, imagen, bloqueado_silenciado) VALUES ");
+        StringBuilder insertQuery = new StringBuilder("INSERT INTO contactos (nombre, estado, imagen, pwermisos) VALUES ");
         Cursor cursor= db.rawQuery(selectQuery, null);
         //Eliminamos la tabla contactos
         db.delete(TABLE_CONTACTOS,null,null);
@@ -149,7 +149,7 @@ public class DBAdapter {
         insertQuery.append("', '");
         insertQuery.append(img);//Imagen del contacto
         insertQuery.append("', '");
-        insertQuery.append("0");//Bloqueado_silenciado (no esta bloqueado al añadirlo)
+        insertQuery.append("0");//Permisos (no esta bloqueado al añadirlo)
         insertQuery.append("', '),");
         if(cursor.moveToFirst()){
             do {

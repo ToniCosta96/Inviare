@@ -44,7 +44,10 @@ dependencies {
     compile 'com.google.android.gms:play-services-auth:10.0.1'
     compile 'com.google.apis:google-api-services-gmail:v1-rev57-1.22.0'
 
+}
 
+configurations {
+    compile.exclude group: "org.apache.httpcomponents", module: "httpclient"
 }
 
 apply plugin: 'com.google.gms.google-services'
