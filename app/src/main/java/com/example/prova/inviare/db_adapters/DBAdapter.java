@@ -6,9 +6,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.prova.inviare.R;
+import com.example.prova.inviare.elementos.Alarma;
 import com.example.prova.inviare.elementos.Contacto;
 import com.example.prova.inviare.elementos.Mensaje;
 
@@ -16,6 +18,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Created by 2dam on 17/01/2017.
@@ -79,12 +82,11 @@ public class DBAdapter {
         }
     }
 
-    public void seleccionarMensaje(ArrayList<Mensaje> arrayElementos, int valor, String columna, String tabla){
+    public void seleccionarMensaje(ArrayList<Object> arrayElementos, int valor, String columna, String tabla){
         //Se introducen los mensajes de la base de datos en el arrayElementos
         String selectQuery = "SELECT * FROM "+tabla+" WHERE "+columna+" = "+valor+";";
         Cursor cursor= db.rawQuery(selectQuery, null);
 
-        boolean propietario;
         if(cursor.moveToFirst()){
             do {
                 //Se crea un objeto 'Elemento' con los datos de la DB recogidos por el cursor
@@ -96,7 +98,14 @@ public class DBAdapter {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                arrayElementos.add(new Mensaje(cursor.getString(1),df2.format(dateSegundos),true));
+                //Se averigua si el mensaje es del propietario y el tipo de mensaje
+                final boolean mensajePropietario = cursor.getInt(8) == context.getResources().getInteger(R.integer.id_propietario);
+                if(cursor.getString(3).compareTo(TIPO_TEXTO)==0){
+                    arrayElementos.add(new Mensaje(cursor.getString(1),df2.format(dateSegundos),mensajePropietario));
+                }else if(cursor.getString(3).compareTo(TIPO_ALARMA_REPETITIVA)==0 || cursor.getString(2).compareTo(TIPO_ALARMA_PERSISTENTE)==0){
+                    arrayElementos.add(new Alarma(cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4),cursor.getString(5),cursor.getString(6),cursor.getString(7),mensajePropietario));
+                }
+
             } while (cursor.moveToNext());
         }
         cursor.close();

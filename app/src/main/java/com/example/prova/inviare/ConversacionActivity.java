@@ -16,6 +16,7 @@ import android.widget.EditText;
 
 import com.example.prova.inviare.adapters.AdaptadorChat;
 import com.example.prova.inviare.db_adapters.DBAdapter;
+import com.example.prova.inviare.elementos.Alarma;
 import com.example.prova.inviare.elementos.Mensaje;
 
 import java.text.SimpleDateFormat;
@@ -26,7 +27,7 @@ import java.util.Date;
 public class ConversacionActivity extends AppCompatActivity{
     private DBAdapter dbAdapter;
     private int id_conversacion;
-    private ArrayList<Mensaje> arrayMensajes;
+    private ArrayList<Object> arrayMensajes;
     private AdaptadorChat adaptador;
     private boolean seleccionarAlarma=true;
 
@@ -46,8 +47,9 @@ public class ConversacionActivity extends AppCompatActivity{
         id_conversacion = getIntent().getIntExtra(getResources().getString(R.string.intent_conversacion_id),-2);
         dbAdapter = new DBAdapter(getApplicationContext());
         dbAdapter.open();
-        if(id_conversacion>-2) dbAdapter.seleccionarMensaje(arrayMensajes,id_conversacion,DBAdapter.ID_CONTACTO,DBAdapter.TABLE_MENSAJES);
-
+        arrayMensajes.add(new Alarma("Mensaje","fecha","alarma1","hora_i","hora_d","dia","frecuencia",true));
+        arrayMensajes.add(new Alarma("Mensaje","fecha","alarma1","hora_i","hora_d","dia","frecuencia",false));
+        if(id_conversacion==-1) dbAdapter.seleccionarMensaje(arrayMensajes,id_conversacion,DBAdapter.ID_CONTACTO,DBAdapter.TABLE_MENSAJES);
         //RecyclerView
         //Adaptador - AdaptadorConversaciones
         adaptador = new AdaptadorChat(arrayMensajes, getApplicationContext());

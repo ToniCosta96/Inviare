@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,18 +12,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.prova.inviare.R;
+import com.example.prova.inviare.db_adapters.DBAdapter;
 import com.example.prova.inviare.elementos.Alarma;
 import com.example.prova.inviare.elementos.Mensaje;
 
 import java.util.ArrayList;
 
-/**
- * Created by user on 14/01/2017.
- */
-
-public class AdaptadorChat extends RecyclerView.Adapter<AdaptadorChat.ListaViewHolder> {
+public class AdaptadorChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<Object> listData;
-    private static Context context;
+    private Context context;
 
     private final static int MENSAJE=0;
     private final static int MENSAJE_FANTASMA=1;
@@ -36,32 +34,52 @@ public class AdaptadorChat extends RecyclerView.Adapter<AdaptadorChat.ListaViewH
     }
 
     @Override
-    public AdaptadorChat.ListaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.lista_chat1, parent, false);
-        AdaptadorChat.ListaViewHolder lvh = new AdaptadorChat.ListaViewHolder(itemView);
-        return lvh;
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        RecyclerView.ViewHolder viewHolder;
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        switch (viewType) {
+            case MENSAJE:
+                View v1 = inflater.inflate(R.layout.lista_chat1, parent, false);
+                viewHolder = new AdaptadorChat.ViewHolderMensaje(v1);
+                break;
+            case ALARMA_REPETITIVA:
+                View v2 = inflater.inflate(R.layout.lista_chat_alarma_persistente, parent, false);
+                viewHolder = new AdaptadorChat.ViewHolderAlarmaPersistente(v2);
+                break;
+            case ALARMA_PERSISTENTE:
+                View v3 = inflater.inflate(R.layout.lista_chat_alarma_persistente, parent, false);
+                viewHolder = new AdaptadorChat.ViewHolderAlarmaPersistente(v3);
+                break;
+            default:
+                //View v = inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+                //viewHolder = new RecyclerViewSimpleTextViewHolder(v);
+                viewHolder = null;
+                break;
+        }
+        return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(AdaptadorChat.ListaViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         switch (holder.getItemViewType()) {
-            case USER:
-                ViewHolder1 vh1 = (ViewHolder1) viewHolder;
-                configureViewHolder1(vh1, position);
+            case MENSAJE:
+                Mensaje item = (Mensaje) listData.get(position);
+                ((ViewHolderMensaje)holder).bindLlista(item);
+                //configureViewHolder1(vh1, position);
                 break;
-            case IMAGE:
-                ViewHolder2 vh2 = (ViewHolder2) viewHolder;
-                configureViewHolder2(vh2, position);
+            case ALARMA_REPETITIVA:
+                Alarma alarma1 = (Alarma) listData.get(position);
+                ((ViewHolderAlarmaPersistente)holder).bindLlista(alarma1);
+                break;
+            case ALARMA_PERSISTENTE:
+                Alarma alarma2 = (Alarma) listData.get(position);
+                ((ViewHolderAlarmaPersistente)holder).bindLlista(alarma2);
                 break;
             default:
-                RecyclerViewSimpleTextViewHolder vh = (RecyclerViewSimpleTextViewHolder) viewHolder;
-                configureDefaultViewHolder(vh, position);
+                //RecyclerViewSimpleTextViewHolder vh = (RecyclerViewSimpleTextViewHolder) viewHolder;
+                //configureDefaultViewHolder(vh, position);
                 break;
         }
-
-        Mensaje item = listData.get(position);
-        //Método bindLista de la clase ListaViewHolder
-        holder.bindLlista(item);
     }
 
     @Override
@@ -70,9 +88,9 @@ public class AdaptadorChat extends RecyclerView.Adapter<AdaptadorChat.ListaViewH
         if (objeto instanceof Mensaje) {
             return MENSAJE;
         } else if (objeto instanceof Alarma) {
-            if(((Alarma) objeto).getTipo().compareTo("alarma1")==0){
+            if(((Alarma) objeto).getTipo().compareTo(DBAdapter.TIPO_ALARMA_REPETITIVA)==0){
                 return ALARMA_REPETITIVA;
-            }else if(((Alarma) objeto).getTipo().compareTo("alarma2")==0){
+            }else if(((Alarma) objeto).getTipo().compareTo(DBAdapter.TIPO_ALARMA_PERSISTENTE)==0){
                 return ALARMA_PERSISTENTE;
             }
         }
@@ -84,13 +102,13 @@ public class AdaptadorChat extends RecyclerView.Adapter<AdaptadorChat.ListaViewH
         return listData.size();
     }
 
-    public static class ListaViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolderMensaje extends RecyclerView.ViewHolder{
         //Datos del view
         private TextView textViewMensaje;
         private TextView textViewHora;
         private CardView cardView;
 
-        public ListaViewHolder(View itemView) {
+        public ViewHolderMensaje(View itemView) {
             super(itemView);
 
             textViewMensaje = (TextView) itemView.findViewById(R.id.textViewMensaje);
@@ -101,6 +119,51 @@ public class AdaptadorChat extends RecyclerView.Adapter<AdaptadorChat.ListaViewH
         public void bindLlista(Mensaje elementLlista) {
             textViewMensaje.setText(elementLlista.getMensaje());
             textViewHora.setText(elementLlista.getHora());
+
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+            if(elementLlista.isPropietario()){
+                int margin = this.itemView.getResources().getDimensionPixelSize(R.dimen.chat_margin1);
+                layoutParams.setMargins(dpToPixel(60), margin, margin, dpToPixel(5));
+            }else{
+                int margin = this.itemView.getResources().getDimensionPixelSize(R.dimen.chat_margin1);
+                layoutParams.setMargins(margin, margin, dpToPixel(60), dpToPixel(5));
+            }
+            cardView.setLayoutParams(layoutParams);
+        }
+
+        private int dpToPixel(float dp){
+            DisplayMetrics displayMetrics = this.itemView.getResources().getDisplayMetrics();
+            return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        }
+    }
+
+    public class ViewHolderAlarmaPersistente extends RecyclerView.ViewHolder {
+        private TextView textViewTitulo,textViewMensaje,textViewHoraInicio,textViewHoraDuracion,textViewFrecuencia;
+        private CardView cardView;
+
+        public ViewHolderAlarmaPersistente(View itemView) {
+            super(itemView);
+
+            textViewTitulo = (TextView) itemView.findViewById(R.id.textView_titulo_AP);
+            textViewMensaje = (TextView) itemView.findViewById(R.id.textView_mensaje_AP);
+            textViewHoraInicio = (TextView) itemView.findViewById(R.id.textView_horaInicio_AP);
+            textViewHoraDuracion = (TextView) itemView.findViewById(R.id.textView_horaDuracion_AP);
+            textViewFrecuencia = (TextView) itemView.findViewById(R.id.textView_frecuencia_AP);
+            cardView= (CardView) itemView.findViewById(R.id.card_view_AP);
+        }
+
+        public void bindLlista(Alarma elementLlista) {
+            if(elementLlista.getTipo().compareTo(DBAdapter.TIPO_ALARMA_REPETITIVA)==0){
+                textViewTitulo.setText("Alarma repetitiva");
+            }else if (elementLlista.getTipo().compareTo(DBAdapter.TIPO_ALARMA_PERSISTENTE)==0){
+                textViewTitulo.setText("Alarma persistente");
+            }
+            textViewMensaje.setText(elementLlista.getMensaje());
+            textViewHoraInicio.setText(elementLlista.getHora_inicio());
+            textViewHoraDuracion.setText(elementLlista.getHora_duracion());
+            textViewFrecuencia.setText(elementLlista.getFrecuencia());
 
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
