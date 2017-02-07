@@ -14,10 +14,6 @@ import com.example.prova.inviare.elementos.Contacto;
 
 import java.util.ArrayList;
 
-/**
- * Created by user on 24/12/2016.
- */
-
 public class AdaptadorConversaciones extends RecyclerView.Adapter<AdaptadorConversaciones.ListaViewHolder>{
     private Activity activity;
     private ArrayList<Contacto> listData;
@@ -42,8 +38,8 @@ public class AdaptadorConversaciones extends RecyclerView.Adapter<AdaptadorConve
             public void onClick(View view) {
                 Intent i= new Intent(activity.getApplicationContext(), ConversacionActivity.class);
                 i.putExtra(activity.getResources().getString(R.string.intent_conversacion_id),item.getId());
+                i.putExtra(activity.getResources().getString(R.string.intent_conversacion_titulo),item.getTitulo());
                 activity.startActivity(i);
-                activity.finish();
             }
         });
         //Método bindLista de la clase ListaViewHolder

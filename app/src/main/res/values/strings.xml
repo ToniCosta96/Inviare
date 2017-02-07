@@ -17,6 +17,7 @@
 
     <!-- Intents (Extras). -->
     <string name="intent_conversacion_id">id_conversacion</string>
+    <string name="intent_conversacion_titulo">titulo_conversacion</string>
     <string name="intent_alarma_mensaje">mensaje</string>
     <string name="intent_alarma_fecha">fecha</string>
     <string name="intent_alarma_tipo">tipo_alarma</string>

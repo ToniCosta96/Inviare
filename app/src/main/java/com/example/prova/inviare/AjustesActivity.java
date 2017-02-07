@@ -14,7 +14,7 @@ import android.widget.Switch;
 import com.example.prova.inviare.db_adapters.DBAdapter;
 
 public class AjustesActivity extends AppCompatActivity implements View.OnClickListener{
-    View ajuste2;
+    private View ajuste2;
     private Switch switchSonido;
     private Switch switchHorarioNocturno;
     private Switch switchAnclarChat;
@@ -25,21 +25,21 @@ public class AjustesActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ajustes);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if(getSupportActionBar()!=null)getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        final View ajuste1= (View) findViewById(R.id.layout_ajuste_1);
-        ajuste2= (View) findViewById(R.id.layout_ajuste_2);
-        final View ajuste3= (View) findViewById(R.id.layout_ajuste_3);
-        final View ajuste4= (View) findViewById(R.id.layout_ajuste_4);
-        final View ajuste5= (View) findViewById(R.id.layout_ajuste_5);
-        final View ajuste6= (View) findViewById(R.id.layout_ajuste_6);
+        final View ajuste1= findViewById(R.id.layout_ajuste_1);
+        ajuste2= findViewById(R.id.layout_ajuste_2);
+        final View ajuste3= findViewById(R.id.layout_ajuste_3);
+        final View ajuste4= findViewById(R.id.layout_ajuste_4);
+        final View ajuste5= findViewById(R.id.layout_ajuste_5);
+        final View ajuste6= findViewById(R.id.layout_ajuste_6);
         switchSonido= (Switch) findViewById(R.id.switch_sonido);
         switchHorarioNocturno= (Switch) findViewById(R.id.switch_sonido_noche);
         switchAnclarChat= (Switch) findViewById(R.id.switch_anclar_chat);
         switchLedNotificacion= (Switch) findViewById(R.id.switch_led_notificacion);
 
         ajuste1.setOnClickListener(this);
-        ajuste2.setOnClickListener(this);
+        ajuste2.setOnClickListener(this); //Se le puede cambiar la opacidad
         ajuste3.setOnClickListener(this);
         ajuste4.setOnClickListener(this);
         ajuste5.setOnClickListener(this);
@@ -118,7 +118,6 @@ public class AjustesActivity extends AppCompatActivity implements View.OnClickLi
                         });
                 // Create the AlertDialog object
                 builder.create().show();
-
                 break;
             default:
                 break;

@@ -11,7 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.example.prova.inviare.adapters.AdaptadorContactos;
+import com.example.prova.inviare.adapters.AdaptadorConversaciones;
 import com.example.prova.inviare.elementos.Contacto;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     private static final int AJUSTES_REQUEST=0;
     private ArrayList<Contacto> arrayConversaciones;
-    private AdaptadorContactos adaptador;
+    private AdaptadorConversaciones adaptador;
     private static int USUARIO_ACCESO_DIRECTO;
 
     @Override
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Especificar un adaptador para el RecyclerView
-        adaptador = new AdaptadorContactos(this,arrayConversaciones);
+        adaptador = new AdaptadorConversaciones(this,arrayConversaciones);
         recyclerView.setAdapter(adaptador);
         // use a linear layout manager
         recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));

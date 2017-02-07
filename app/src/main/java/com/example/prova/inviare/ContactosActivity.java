@@ -21,7 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.example.prova.inviare.adapters.AdaptadorConversaciones;
+import com.example.prova.inviare.adapters.AdaptadorContactos;
 import com.example.prova.inviare.elementos.Contacto;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ import java.util.ArrayList;
 public class ContactosActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CONTACT = 1;
     private ArrayList<Contacto> arrayContactos;
-    private AdaptadorConversaciones adaptador;
+    private AdaptadorContactos adaptador;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +41,7 @@ public class ContactosActivity extends AppCompatActivity {
         arrayContactos= new ArrayList<>();
 
         // specify an adapter
-        adaptador = new AdaptadorConversaciones(this,arrayContactos);
+        adaptador = new AdaptadorContactos(this,arrayContactos);
         recyclerView.setAdapter(adaptador);
         // use a linear layout manager
         recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));

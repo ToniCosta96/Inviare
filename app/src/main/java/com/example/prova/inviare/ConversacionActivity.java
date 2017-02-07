@@ -45,6 +45,11 @@ public class ConversacionActivity extends AppCompatActivity{
 
         //Se obtiene el ID de la conversación y se carga de la base de datos ([-2] no carga nada).
         id_conversacion = getIntent().getIntExtra(getResources().getString(R.string.intent_conversacion_id),-2);
+        android.support.v7.app.ActionBar actionBar=getSupportActionBar();
+        if(actionBar!=null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(getIntent().getStringExtra(getResources().getString(R.string.intent_conversacion_titulo)));
+        }
         dbAdapter = new DBAdapter(getApplicationContext());
         dbAdapter.open();
         arrayMensajes.add(new Alarma("Mensaje","fecha",2,"hora_i","hora_d","dia","frecuencia",true));
@@ -135,6 +140,10 @@ public class ConversacionActivity extends AppCompatActivity{
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent i;
         switch (item.getItemId()) {
+            case android.R.id.home:
+                //Tornar al activity anterior.
+                finish();
+                return true;
             case R.id.item_eliminar_mensajes:
                 //Se eliminan todos los mensajes de la base de datos (DBAdapter) y del arrayMensajes.
                 arrayMensajes.clear();
