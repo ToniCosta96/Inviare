@@ -2,6 +2,7 @@
     <string name="app_name">Inviare</string>
     <!-- SharedPreferences. -->
     <string name="shared_preferences">shared_preferences</string>
+    <string name="preferences_sesion_iniciada">sesion_iniciada</string>
     <string name="preferences_nombre_perfil">nombre_perfil</string>
     <string name="preferences_telefono_perfil">telefono_perfil</string>
     <string name="preferences_email_perfil">email_perfil</string>

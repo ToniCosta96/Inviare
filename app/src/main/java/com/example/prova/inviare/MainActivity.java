@@ -30,6 +30,11 @@ public class MainActivity extends AppCompatActivity {
         // Se carga el SharedPreferences
         final int ID_PROPIETARIO=getResources().getInteger(R.integer.id_propietario);
         SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.shared_preferences), Context.MODE_PRIVATE);
+        //Si NO has iniciado sesión se carga el activity de inicio de sesión.
+        /*if(!sharedPref.getBoolean(getResources().getString(R.string.preferences_sesion_iniciada),false)){
+            startActivity(new Intent(getApplicationContext(),LoginActivity.class));
+            finish();
+        }*/
         USUARIO_ACCESO_DIRECTO = sharedPref.getInt(getResources().getString(R.string.preferences_usuario_acceso_directo),ID_PROPIETARIO);
         final int posicionChatPersonal = sharedPref.getInt(getResources().getString(R.string.preferences_anclar_chat_personal),ID_PROPIETARIO);
 
