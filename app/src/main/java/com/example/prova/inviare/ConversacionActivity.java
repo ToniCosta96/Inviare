@@ -52,8 +52,7 @@ public class ConversacionActivity extends AppCompatActivity{
         }
         dbAdapter = new DBAdapter(getApplicationContext());
         dbAdapter.open();
-        arrayMensajes.add(new Alarma("Mensaje","fecha",2,"hora_i","hora_d","dia","frecuencia",Alarma.TAREA_EN_CURSO,true));
-        arrayMensajes.add(new Alarma("Mensaje","fecha",3,"hora_i","hora_d","dia","frecuencia",Alarma.TAREA_EN_CURSO,false));
+        arrayMensajes.add(new Alarma("Mensaje","fecha",2,"hora_i","hora_d","dia","frecuencia",Alarma.TAREA_EN_CURSO,null,true));
         if(id_conversacion==-1) dbAdapter.seleccionarMensaje(arrayMensajes,id_conversacion,DBAdapter.ID_CONTACTO,DBAdapter.TABLE_MENSAJES);
         //RecyclerView
         //Adaptador - AdaptadorConversaciones

@@ -77,7 +77,8 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:id="@+id/layout_alarma_botones">
 
             <Button
                 style="?android:attr/buttonBarButtonStyle"
@@ -97,6 +98,15 @@
                 android:layout_weight="1"
                 android:backgroundTint="@android:color/holo_green_dark" />
         </LinearLayout>
+
+        <TextView
+            android:text="Curso tarea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_contestacion_AP"
+            android:textAppearance="@android:style/TextAppearance.Material.Body2"
+            android:gravity="center"
+            android:visibility="gone" />
 
     </LinearLayout>
 </android.support.v7.widget.CardView>

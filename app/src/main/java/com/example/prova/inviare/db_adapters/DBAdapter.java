@@ -101,8 +101,8 @@ public class DBAdapter {
                 final boolean mensajePropietario = cursor.getInt(8) == context.getResources().getInteger(R.integer.id_propietario);
                 if(cursor.getInt(3)==TIPO_TEXTO){
                     arrayElementos.add(new Mensaje(cursor.getString(1),df2.format(dateSegundos),mensajePropietario));
-                }else if(cursor.getInt(3)==TIPO_ALARMA_REPETITIVA || cursor.getInt(2)==TIPO_ALARMA_PERSISTENTE){
-                    arrayElementos.add(new Alarma(cursor.getString(1),cursor.getString(2),cursor.getInt(3),cursor.getString(4),cursor.getString(5),cursor.getString(6),cursor.getString(7),cursor.getString(8),mensajePropietario));
+                }else if(cursor.getInt(3)==TIPO_ALARMA_REPETITIVA || cursor.getInt(3)==TIPO_ALARMA_PERSISTENTE){
+                    arrayElementos.add(new Alarma(cursor.getString(1),cursor.getString(2),cursor.getInt(3),cursor.getString(4),cursor.getString(5),cursor.getString(6),cursor.getString(7),cursor.getString(8),cursor.getString(9),mensajePropietario));
                 }
 
             } while (cursor.moveToNext());
