@@ -73,4 +73,8 @@
     <string name="hora_duracion_t">Terminar tarea antes de: </string>
     <string name="tarea_terminada">Hecho</string>
     <string name="declinar_tarea">Rechazar</string>
+    <string name="title_activity_login">LoginActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_registro">RegistroActivity</string>
 </resources>

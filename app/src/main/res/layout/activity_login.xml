@@ -1,0 +1,88 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ActivityPrincipal">
+
+    <ImageView
+        android:id="@+id/back_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true">
+
+        <ImageView
+            android:src="@drawable/title"
+            android:layout_width="wrap_content"
+            android:layout_height="72dp"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/imageView"
+            android:layout_marginTop="50dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/name"
+            android:layout_below="@+id/imageView"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp">
+
+            <EditText
+                android:id="@+id/input_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nombre" />
+        </android.support.design.widget.TextInputLayout>
+
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/view"
+            android:layout_below="@+id/name"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp">
+
+            <EditText
+                android:id="@+id/input_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Contraseña" />
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Iniciar Sesion"
+            android:id="@+id/iniciar"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Registrarse"
+            android:id="@+id/registrarse"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+</RelativeLayout>
