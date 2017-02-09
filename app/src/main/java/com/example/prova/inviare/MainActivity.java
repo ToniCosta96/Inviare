@@ -98,6 +98,15 @@ public class MainActivity extends AppCompatActivity {
                 //Intent -> Acceso directo
                 i= new Intent(getApplicationContext(),ConversacionActivity.class);
                 i.putExtra(getResources().getString(R.string.intent_conversacion_id),USUARIO_ACCESO_DIRECTO);
+                // Se recorre el arrayConversaciones y se selecciona el nombre del contacto que su id coincida con
+                // USUARIO_ACCESO_DIRECTO
+                String nombreContacto="Tú";
+                for(int j=0;j<arrayConversaciones.size();j++){
+                    if(arrayConversaciones.get(j).getId()==USUARIO_ACCESO_DIRECTO){
+                        nombreContacto = arrayConversaciones.get(j).getTitulo();
+                    }
+                }
+                i.putExtra(getResources().getString(R.string.intent_conversacion_titulo),nombreContacto);
                 startActivity(i);
                 return true;
             case R.id.item_perfil:

@@ -7,4 +7,6 @@
         android:title="@string/silenciar" />
     <item android:title="@string/bloquear"
         android:id="@+id/item_bloquear" />
+    <item android:title="@string/eliminar_contacto"
+        android:id="@+id/item_eliminar_contacto" />
 </menu>

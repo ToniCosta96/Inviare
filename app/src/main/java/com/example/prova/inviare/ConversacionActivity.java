@@ -53,7 +53,7 @@ public class ConversacionActivity extends AppCompatActivity{
         dbAdapter = new DBAdapter(getApplicationContext());
         dbAdapter.open();
         arrayMensajes.add(new Alarma("Mensaje","fecha",2,"hora_i","hora_d","dia","frecuencia",Alarma.TAREA_EN_CURSO,null,true));
-        if(id_conversacion==-1) dbAdapter.seleccionarMensaje(arrayMensajes,id_conversacion,DBAdapter.ID_CONTACTO,DBAdapter.TABLE_MENSAJES);
+        dbAdapter.seleccionarMensaje(arrayMensajes,id_conversacion,DBAdapter.ID_CONTACTO,DBAdapter.TABLE_MENSAJES);
         //RecyclerView
         //Adaptador - AdaptadorConversaciones
         adaptador = new AdaptadorChat(arrayMensajes, getApplicationContext());
@@ -132,6 +132,31 @@ public class ConversacionActivity extends AppCompatActivity{
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_contacto, menu);
+        //Si la conversación es del chat personal no se puede silenciar, bloquear ni eliminar
+        if(getIntent().getIntExtra(getResources().getString(R.string.intent_conversacion_id),-2)==getResources().getInteger(R.integer.id_propietario)){
+            menu.removeItem(R.id.item_silenciar);
+            menu.removeItem(R.id.item_bloquear);
+            menu.removeItem(R.id.item_eliminar_contacto);
+        }else{
+            int permisosContactoActual = dbAdapter.seleccionarPermisoContacto(id_conversacion,DBAdapter.ID);
+            switch(permisosContactoActual){
+                case DBAdapter.PERMISOS_TODOS:
+                    //No se hace nada
+                    break;
+                case DBAdapter.PERMISOS_SILENCIADO:
+                    //'Silenciar' pasa a llamarse 'Desactivar silencio'
+                    menu.findItem(R.id.item_silenciar).setTitle(getResources().getString(R.string.menu_desactivar_silencio));
+                    break;
+                case DBAdapter.PERMISOS_BLOQUEADO:
+                    //Se desactiva el item 'Silenciar' y 'Bloquear' pasa a llamarse 'Desactivar bloqueo'
+                    menu.removeItem(R.id.item_silenciar);
+                    menu.findItem(R.id.item_bloquear).setTitle(getResources().getString(R.string.menu_desactivar_bloqueo));
+                    break;
+                default:
+                    //No se hace nada
+                    break;
+            }
+        }
         return true;
     }
 
@@ -150,9 +175,26 @@ public class ConversacionActivity extends AppCompatActivity{
                 dbAdapter.eliminarMensajesPorContacto(id_conversacion);
                 return true;
             case R.id.item_silenciar:
-                //
+                //Se silencia el contacto actual si no estaba silenciado
+                if(dbAdapter.seleccionarPermisoContacto(id_conversacion,DBAdapter.ID)==DBAdapter.PERMISOS_SILENCIADO){
+                    //Se le quita el silencio al contacto
+
+                }else{
+                    //Se silencia el contacto
+
+                }
                 return true;
             case R.id.item_bloquear:
+                //Se bloquea el contacto actual si no estaba bloqueado
+                if(dbAdapter.seleccionarPermisoContacto(id_conversacion,DBAdapter.ID)==DBAdapter.PERMISOS_BLOQUEADO){
+                    //Se le quita el bloqueo al contacto
+
+                }else{
+                    //Se bloquea el contacto
+
+                }
+                return true;
+            case R.id.item_eliminar_contacto:
                 //
                 return true;
             default:

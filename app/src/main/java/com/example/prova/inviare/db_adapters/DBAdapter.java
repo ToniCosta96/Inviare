@@ -29,6 +29,7 @@ public class DBAdapter {
     public static final String TABLE_MENSAJES = "mensajes"; //  _ID - MENSAJE - DATETIME - TIPO - HORA_INICIO - HORA - DIA - FRECUENCIA - ID_CONTACTO
     private static final int DATABASE_VERSION = 1;
 
+    public static final String ID = "_id";
     private static final String NOMBRE = "nombre";
     private static final String TELEFONO = "telefono";
     private static final String EMAIL = "email";
@@ -51,6 +52,11 @@ public class DBAdapter {
     public static final int TIPO_ALARMA_REPETITIVA = 2; //Alarma repetitiva
     public static final int TIPO_ALARMA_PERSISTENTE = 3; //Alarma persistente
     public static final int TIPO_ALARMA_FIJA = 4; //Alarma fija
+
+    public static final int PERMISOS_TODOS = 0; // Contacto sin restricciones
+    public static final int PERMISOS_SILENCIADO = 1; // Contacto silenciado (Sin sonido al recibir notificación)
+    public static final int PERMISOS_BLOQUEADO = 2; // Contacto bloqueado
+    public static final int PERMISOS_ELIMINADO = 3; // Contacto eliminado
 
     private static final String DATABASE_CREATE_CONTACTOS = "CREATE TABLE "+TABLE_CONTACTOS+" (_id integer primary key AUTOINCREMENT, nombre text, estado text, imagen text, permisos integer);";
     private static final String DATABASE_CREATE_MENSAJES = "CREATE TABLE "+TABLE_MENSAJES+
@@ -98,7 +104,7 @@ public class DBAdapter {
                     e.printStackTrace();
                 }
                 //Se averigua si el mensaje es del propietario y el tipo de mensaje
-                final boolean mensajePropietario = cursor.getInt(8) == context.getResources().getInteger(R.integer.id_propietario);
+                final boolean mensajePropietario = cursor.getInt(9) == context.getResources().getInteger(R.integer.id_propietario);
                 if(cursor.getInt(3)==TIPO_TEXTO){
                     arrayElementos.add(new Mensaje(cursor.getString(1),df2.format(dateSegundos),mensajePropietario));
                 }else if(cursor.getInt(3)==TIPO_ALARMA_REPETITIVA || cursor.getInt(3)==TIPO_ALARMA_PERSISTENTE){
@@ -108,6 +114,30 @@ public class DBAdapter {
             } while (cursor.moveToNext());
         }
         cursor.close();
+    }
+
+    /**
+     * Retorna en un int los permisos de un contacto haciendo una consulta de tipo
+     * "SELECT permisos FROM tabla WHERE 'columna'='valor';" o -1 si la consulta no devuelve ningún contacto
+     * @param valor valor de la columna
+     * @param columna nombre de una columna que contenga un valor numérico
+     * @return int Permiso del Contacto seleccionado
+     * <p>PERMISOS_TODOS = 0<br>
+     * PERMISOS_SILENCIADO = 1<br>
+     * PERMISOS_BLOQUEADO = 2<br>
+     * PERMISOS_ELIMINADO = 3</p>
+     */
+    public int seleccionarPermisoContacto(int valor, String columna){
+        String selectQuery = "SELECT "+PERMISOS+" FROM "+TABLE_CONTACTOS+" WHERE "+columna+" = "+valor+";";
+        Cursor cursor= db.rawQuery(selectQuery, null);
+        //Se asigna
+        int permisosContacto=-1;
+        if(cursor.moveToFirst()){
+            //Se guarda el valor int de la consulta en la variable permisosContacto
+            permisosContacto = cursor.getInt(0);
+        }
+        cursor.close();
+        return permisosContacto;
     }
 
     public void seleccionarContactos(ArrayList<Contacto> arrayElementos, String valor, String columna, String tabla){
