@@ -10,14 +10,11 @@ import android.provider.MediaStore;
 import android.widget.Toast;
 
 import com.example.prova.inviare.R;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
-/**
- * Created by user on 19/01/2017.
- */
 
 public class GuardarImagen extends AsyncTask<Uri, Integer, Boolean> {
     private Context context;
@@ -35,10 +32,14 @@ public class GuardarImagen extends AsyncTask<Uri, Integer, Boolean> {
     @Override
     protected Boolean doInBackground(Uri... uris) {
         try{
-            //Si se carga el bitmap se guarda la URI en el SharedPreferences (shared_preferences)
+            // Si se carga el bitmap se guarda la URI en el SharedPreferences (shared_preferences)
             SharedPreferences sharedPref = context.getSharedPreferences(context.getString(R.string.shared_preferences), Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString(context.getString(R.string.preferences_imagen_perfil), saveImageToInternalStorage("perfil.jpg",MediaStore.Images.Media.getBitmap(context.getContentResolver(), uris[0])));
+            // Se guarda la imagen y se recoge su dirección en tipo String
+            final String direccionImagen=saveImageToInternalStorage("perfil.jpg",MediaStore.Images.Media.getBitmap(context.getContentResolver(), uris[0]));
+            editor.putString(context.getString(R.string.preferences_imagen_perfil), direccionImagen);
+            // Se elimina la posible foto anterior de la caché de Picasso
+            Picasso.with(context).invalidate(new File(direccionImagen));
             imagenGuardada = editor.commit();
         } catch (IOException e) {
             e.printStackTrace();

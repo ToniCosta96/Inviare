@@ -55,7 +55,7 @@ public class PerfilActivity extends AppCompatActivity {
 
         //Se carga el SharedPreferences
         SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.shared_preferences), Context.MODE_PRIVATE);
-        String imagenPerfil = sharedPref.getString(getResources().getString(R.string.preferences_imagen_perfil),"");
+        final String imagenPerfil = sharedPref.getString(getResources().getString(R.string.preferences_imagen_perfil),"");
         final String nombrePerfil = sharedPref.getString(getResources().getString(R.string.preferences_nombre_perfil),"");
         final String estadoPerfil = sharedPref.getString(getResources().getString(R.string.preferences_estado_perfil),"");
         final String telefonoPerfil = sharedPref.getString(getResources().getString(R.string.preferences_telefono_perfil),"");
@@ -76,9 +76,7 @@ public class PerfilActivity extends AppCompatActivity {
         });
         if(!imagenPerfil.isEmpty()) {
             //imageViewPerfil.setImageBitmap(BitmapFactory.decodeFile(imagenPerfil,options));
-            File fileImagen= new File(imagenPerfil);
-            Picasso.with(this).invalidate(fileImagen);
-            Picasso.with(getApplicationContext()).load(fileImagen).into(imageViewPerfil);
+            Picasso.with(getApplicationContext()).load(new File(imagenPerfil)).into(imageViewPerfil);
         }
 
         //Boton GUARDAR
