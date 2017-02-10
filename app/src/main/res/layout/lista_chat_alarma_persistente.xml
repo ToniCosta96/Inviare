@@ -81,14 +81,14 @@
             android:id="@+id/layout_alarma_botones">
 
             <Button
-                style="?android:attr/buttonBarButtonStyle"
                 android:text="@string/declinar_tarea"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_declinar_tarea"
                 android:layout_weight="1"
                 android:backgroundTint="@android:color/holo_red_light"
-                android:textColor="@android:color/holo_red_light" />
+                android:textColor="@android:color/holo_red_light"
+                style="?android:attr/buttonBarButtonStyle" />
 
             <Button
                 android:text="@string/tarea_terminada"

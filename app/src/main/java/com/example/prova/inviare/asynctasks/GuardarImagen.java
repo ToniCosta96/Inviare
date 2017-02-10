@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.prova.inviare.R;
@@ -18,10 +19,12 @@ import java.io.IOException;
 
 public class GuardarImagen extends AsyncTask<Uri, Integer, Boolean> {
     private Context context;
+    private View view;
     private boolean imagenGuardada;
 
-    public GuardarImagen(Context c){
-        context=c;
+    public GuardarImagen(Context c, View view){
+        this.context=c;
+        this.view=view;
     }
 
     @Override
@@ -50,6 +53,7 @@ public class GuardarImagen extends AsyncTask<Uri, Integer, Boolean> {
     @Override
     protected void onPostExecute(Boolean imagenGuardada) {
         super.onPostExecute(imagenGuardada);
+        view.setVisibility(View.VISIBLE);
         if(imagenGuardada) Toast.makeText(context, "Imagen guardada", Toast.LENGTH_SHORT).show();
     }
 

@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:label="Perfil"
+    android:label="@string/perfil"
     android:id="@+id/activity_perfil"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -17,35 +17,74 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/perfil_padding_image"
+        android:baselineAligned="false">
 
-        <ImageView
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/unknown"
-            android:id="@+id/imageView_perfil"
-            android:padding="@dimen/perfil_padding_image"
-            android:maxHeight="@dimen/max_size_128"
-            android:maxWidth="@dimen/max_size_128"
-            android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
-            android:minHeight="@dimen/max_size_128"
-            android:minWidth="@dimen/max_size_128"
-            android:layout_weight="4" />
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:paddingStart="@dimen/perfil_padding_image"
+            android:paddingEnd="@dimen/perfil_padding_image">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/unknown"
+                    android:id="@+id/imageView_perfil"
+                    android:maxHeight="@dimen/max_size_128"
+                    android:maxWidth="@dimen/max_size_128"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:minHeight="@dimen/max_size_128"
+                    android:minWidth="@dimen/max_size_128"
+                    android:layout_gravity="center" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_clear_foto_48dp"
+                    android:id="@+id/imageView_eliminar"
+                    android:layout_alignEnd="@+id/imageView_perfil"
+                    android:clickable="true" />
+            </RelativeLayout>
+
+            <Button
+                android:text="@string/galeria"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_imagen_galeria"
+                android:drawableStart="@drawable/ic_photo_library_24dp"
+                style="?android:attr/buttonBarButtonStyle"/>
+            <Button
+                android:text="@string/foto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_imagen_camara"
+                android:drawableStart="@drawable/ic_camera_alt_24dp"
+                style="?android:attr/buttonBarButtonStyle"/>
+        </LinearLayout>
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:paddingTop="@dimen/separacion_perfil_2">
+            android:layout_weight="3">
 
             <TextView
                 android:text="@string/nombre_textview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView_perfil_nombre"
-                android:paddingLeft="@dimen/separacion_perfil_2" />
+                android:paddingLeft="@dimen/separacion_perfil_2"
+                android:paddingRight="@dimen/separacion_perfil_2"/>
 
             <EditText
                 android:layout_width="match_parent"
@@ -60,7 +99,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView_perfil_estado"
-                android:paddingLeft="@dimen/separacion_perfil_2" />
+                android:paddingLeft="@dimen/separacion_perfil_2"
+                android:paddingRight="@dimen/separacion_perfil_2"/>
 
             <EditText
                 android:layout_width="match_parent"
@@ -75,7 +115,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView_perfil_telefono"
-                android:paddingLeft="@dimen/separacion_perfil_2" />
+                android:paddingLeft="@dimen/separacion_perfil_2"
+                android:paddingRight="@dimen/separacion_perfil_2"/>
 
             <EditText
                 android:layout_width="match_parent"
@@ -91,6 +132,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/textView_correo_titulo"
                 android:paddingLeft="@dimen/separacion_perfil_2b"
+                android:paddingRight="@dimen/separacion_perfil_2b"
                 android:paddingBottom="@dimen/separacion_perfil_2" />
 
             <TextView
@@ -98,7 +140,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/textView_correo"
                 android:textAppearance="@android:style/TextAppearance.Material.Subhead"
-                android:paddingLeft="@dimen/separacion_perfil_3" />
+                android:paddingLeft="@dimen/separacion_perfil_3"
+                android:paddingRight="@dimen/separacion_perfil_3" />
         </LinearLayout>
 
     </LinearLayout>

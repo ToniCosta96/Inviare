@@ -27,6 +27,13 @@
     <string name="intent_alarma_dia">dia_alarma</string>
     <string name="intent_alarma_frecuencia">frecuencia</string>
 
+    <!-- Permisos. -->
+    <string name="permisos_sin_permiso">No se ha asignado ningún permiso.</string>
+    <string name="permisos_pedir_contactos">Se necesita acceso a los Contactos</string>
+    <string name="permisos_pedir_lectura">Se necesita acceso al Almacenamiento Externo</string>
+    <string name="permisos_confirma_contactos">Por favor, confirma el acceso los Contactos</string>
+    <string name="permisos_confirma_lectura">Por favor, confirma el acceso al Almacenamiento Externo</string>
+
     <!-- Dialog. -->
     <string name="dialog_eliminar_DB_titulo">¿Realmente desea eliminar todos los datos de la aplicación?</string>
     <string name="dialog_eliminar_DB">Se borrarán todas las conversaciones guardadas en el dispositivo</string>
@@ -91,4 +98,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_registro">RegistroActivity</string>
     <string name="eliminar_contacto">Eliminar contacto</string>
+    <string name="eliminar">Eliminar</string>
+    <string name="galeria">Galería</string>
+    <string name="foto">Foto</string>
 </resources>

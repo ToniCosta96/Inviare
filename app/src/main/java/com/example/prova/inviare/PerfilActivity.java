@@ -1,12 +1,20 @@
 package com.example.prova.inviare;
 
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -22,15 +30,19 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 
 public class PerfilActivity extends AppCompatActivity {
+    private static final int PERMISSION_REQUEST_EXTERNAL_STORAGE = 0;
     int PHOTO_PICK_REQUEST_CODE = 0;
+    int CAMERA_REQUEST_CODE = 1;
     private ImageView imageViewPerfil;
+    private ImageView imageViewEliminarFoto;
+    private String direccionImagenPerfil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perfil);
 
-        //Toolbar
+        // Toolbar
         final Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar_perfil);
         setSupportActionBar(toolbar);
         getWindow().setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark));
@@ -47,15 +59,18 @@ public class PerfilActivity extends AppCompatActivity {
             }
         });
         final Button btnGuardar= (Button) findViewById(R.id.btn_guardar_perfil);
+        imageViewEliminarFoto= (ImageView) findViewById(R.id.imageView_eliminar);
+        final Button btnImagenGaleria= (Button) findViewById(R.id.btn_imagen_galeria);
+        final Button btnImagenFoto= (Button) findViewById(R.id.btn_imagen_camara);
         final EditText editTextNombre= (EditText) findViewById(R.id.editText_perfil_nombre);
         final EditText editTextEstado= (EditText) findViewById(R.id.editText_perfil_estado);
         final EditText editTextTelefono= (EditText) findViewById(R.id.editText_perfil_tlfn);
         final TextView textViewCorreo= (TextView) findViewById(R.id.textView_correo);
         imageViewPerfil= (ImageView) findViewById(R.id.imageView_perfil);
 
-        //Se carga el SharedPreferences
-        SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.shared_preferences), Context.MODE_PRIVATE);
-        final String imagenPerfil = sharedPref.getString(getResources().getString(R.string.preferences_imagen_perfil),"");
+        // Se carga el SharedPreferences
+        final SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.shared_preferences), Context.MODE_PRIVATE);
+        direccionImagenPerfil = sharedPref.getString(getResources().getString(R.string.preferences_imagen_perfil),"");
         final String nombrePerfil = sharedPref.getString(getResources().getString(R.string.preferences_nombre_perfil),"");
         final String estadoPerfil = sharedPref.getString(getResources().getString(R.string.preferences_estado_perfil),"");
         final String telefonoPerfil = sharedPref.getString(getResources().getString(R.string.preferences_telefono_perfil),"");
@@ -65,8 +80,25 @@ public class PerfilActivity extends AppCompatActivity {
         editTextTelefono.setText(telefonoPerfil);
         textViewCorreo.setText(emailPerfil);
 
-        //Se añade el listener al imageView y se carga la imagen del sharedPreferences
-        imageViewPerfil.setOnClickListener(new View.OnClickListener() {
+        // Se añaden los listeners
+        imageViewEliminarFoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                direccionImagenPerfil=sharedPref.getString(getResources().getString(R.string.preferences_imagen_perfil),"");
+                if(new File(direccionImagenPerfil).delete()){
+                    Toast.makeText(getApplicationContext(),"Imagen eliminada correctamente",Toast.LENGTH_SHORT).show();
+                    SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.shared_preferences), Context.MODE_PRIVATE).edit();
+                    editor.remove(getResources().getString(R.string.preferences_imagen_perfil));
+                    editor.apply();
+                    imageViewEliminarFoto.setVisibility(View.GONE);
+                    imageViewPerfil.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.unknown));
+                }else{
+                    Toast.makeText(getApplicationContext(),"Ha habido algún problema en eliminar la imagen",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        // GALERÍA
+        btnImagenGaleria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI); //Intent.ACTION_GET_CONTENT
@@ -74,12 +106,24 @@ public class PerfilActivity extends AppCompatActivity {
                 startActivityForResult(intent, PHOTO_PICK_REQUEST_CODE);
             }
         });
-        if(!imagenPerfil.isEmpty()) {
+        // CÁMARA
+        btnImagenFoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Pide permiso de lectura de almacenamiento enterno si no lo tiene
+                askForReadExternalStorage();
+            }
+        });
+
+        // Se carga en el imageViewPerfil la imagen del sharedPreferences
+        if(direccionImagenPerfil.isEmpty()) {
+            imageViewEliminarFoto.setVisibility(View.GONE);
+        }else{
             //imageViewPerfil.setImageBitmap(BitmapFactory.decodeFile(imagenPerfil,options));
-            Picasso.with(getApplicationContext()).load(new File(imagenPerfil)).into(imageViewPerfil);
+            Picasso.with(getApplicationContext()).load(new File(direccionImagenPerfil)).into(imageViewPerfil);
         }
 
-        //Boton GUARDAR
+        // Boton GUARDAR
         btnGuardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -104,15 +148,86 @@ public class PerfilActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PHOTO_PICK_REQUEST_CODE && resultCode == AppCompatActivity.RESULT_OK) {
-            if (data == null) {
-                //Display an error
-                return;
-            }
+        if(resultCode == AppCompatActivity.RESULT_OK){
+            if (requestCode == PHOTO_PICK_REQUEST_CODE) {
+                if (data == null) {
+                    // Display an error
+                    return;
+                }
+                // Se carga la imagen y se muestra la imagen de eliminar foto
                 Picasso.with(getApplicationContext()).load(data.getData()).into(imageViewPerfil);
-                //Si se carga el bitmap se guarda la URI en el SharedPreferences (shared_preferences)
-                new GuardarImagen(getApplicationContext()).execute(data.getData());
+                // Se guarda la imagen en el almacenamiento interno y la URI en el SharedPreferences (shared_preferences)
+                new GuardarImagen(getApplicationContext(),imageViewEliminarFoto).execute(data.getData());
+            }else if(requestCode == CAMERA_REQUEST_CODE){
+                Picasso.with(getApplicationContext()).load(data.getData()).into(imageViewPerfil);
+                new GuardarImagen(getApplicationContext(),imageViewEliminarFoto).execute(data.getData());
 
+            }
+        }
+    }
+
+    public void askForReadExternalStorage(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                // Should we show an explanation?
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        android.Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle(getResources().getString(R.string.permisos_pedir_lectura));
+                    builder.setPositiveButton(android.R.string.ok, null);
+                    builder.setMessage(getResources().getString(R.string.permisos_confirma_lectura));
+                    builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @TargetApi(Build.VERSION_CODES.M)
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            requestPermissions(
+                                    new String[]
+                                            {android.Manifest.permission.READ_EXTERNAL_STORAGE}
+                                    , PERMISSION_REQUEST_EXTERNAL_STORAGE);
+                        }
+                    });
+                    builder.show();
+                    // Show an expanation to the user *asynchronously* -- don't block
+                    // this thread waiting for the user's response! After the user
+                    // sees the explanation, try again to request the permission.
+                } else {
+                    // No explanation needed, we can request the permission.
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
+                            PERMISSION_REQUEST_EXTERNAL_STORAGE);
+                }
+            }else{
+                cargarCamara();
+            }
+        }
+        else{
+            cargarCamara();
+        }
+    }
+
+    private void cargarCamara(){
+        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    cargarCamara();
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                } else {
+                    Toast.makeText(this, getResources().getString(R.string.permisos_sin_permiso), Toast.LENGTH_SHORT).show();
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+            }
+            // other 'case' lines to check for other
+            // permissions this app might request
         }
     }
 }
