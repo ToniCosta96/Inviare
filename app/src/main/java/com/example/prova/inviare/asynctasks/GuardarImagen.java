@@ -1,6 +1,5 @@
 package com.example.prova.inviare.asynctasks;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.SharedPreferences;
@@ -53,7 +52,7 @@ public class GuardarImagen extends AsyncTask<Uri, Integer, Boolean> {
             Picasso.with(context).invalidate(new File(direccionImagen));
             imagenGuardada = editor.commit();
             //Se añade la direccion de la imagen al activity anterior
-            perfilActivity.anyadirImagenActivityResult(direccionImagen);
+            perfilActivity.anyadirImagenActivityResult(direccionImagen, android.support.v7.app.AppCompatActivity.RESULT_OK);
         } catch (IOException e) {
             e.printStackTrace();
         }

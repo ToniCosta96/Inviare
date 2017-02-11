@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             if(resultCode == AppCompatActivity.RESULT_OK){
                 for(int i=0;i<arrayConversaciones.size();i++){
                     if(arrayConversaciones.get(i).getId()==ID_PROPIETARIO){
-                        arrayConversaciones.get(i).setImagen(data.getExtras().getString(getResources().getString(R.string.preferences_imagen_perfil)));
+                        arrayConversaciones.get(i).setImagen(data.getStringExtra(getResources().getString(R.string.preferences_imagen_perfil)));
                         adaptador.notifyItemChanged(i);
                     }
                 }
@@ -99,10 +99,12 @@ public class MainActivity extends AppCompatActivity {
                 adaptador.notifyDataSetChanged();
             }
         }else if(requestCode == CHAT_REQUEST){
-            final int posicionConversacion = data.getIntExtra(getResources().getString(R.string.intent_conversacion_posicion_array),0);
-            final String ultimaFecha = data.getStringExtra(getResources().getString(R.string.intent_mensaje_fecha));
-            arrayConversaciones.get(posicionConversacion).setInfoExtra(ultimaFecha);
-            adaptador.notifyItemChanged(posicionConversacion);
+            if(resultCode == AppCompatActivity.RESULT_OK){
+                final int posicionConversacion = data.getIntExtra(getResources().getString(R.string.intent_conversacion_posicion_array),0);
+                final String ultimaFecha = data.getStringExtra(getResources().getString(R.string.intent_mensaje_fecha));
+                arrayConversaciones.get(posicionConversacion).setInfoExtra(ultimaFecha);
+                adaptador.notifyItemChanged(posicionConversacion);
+            }
         }
     }
 

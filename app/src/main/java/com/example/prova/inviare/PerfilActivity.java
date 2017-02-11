@@ -38,7 +38,7 @@ public class PerfilActivity extends AppCompatActivity {
     private ImageView imageViewPerfil;
     private ImageView imageViewEliminarFoto;
     private String direccionImagenPerfil;
-    private Intent returnIntent;
+    private int intentImagenCambiada=AppCompatActivity.RESULT_CANCELED;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +107,8 @@ public class PerfilActivity extends AppCompatActivity {
                         imageViewPerfil.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.unknown));
                         // Devuelve la dirección de la imagen cambiada al activity anterior
                         direccionImagenPerfil=null;
-                        anyadirImagenActivityResult(null);
+                        intentImagenCambiada=AppCompatActivity.RESULT_OK;
+                        anyadirImagenActivityResult(null,AppCompatActivity.RESULT_OK);
                     }else{
                         Toast.makeText(getApplicationContext(),"Ha habido algún problema en eliminar la imagen",Toast.LENGTH_SHORT).show();
                     }
@@ -121,6 +122,7 @@ public class PerfilActivity extends AppCompatActivity {
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI); //Intent.ACTION_GET_CONTENT
                 intent.setType("image/*");
                 startActivityForResult(intent, PHOTO_PICK_REQUEST_CODE);
+                intentImagenCambiada=AppCompatActivity.RESULT_OK;
             }
         });
         // CÁMARA
@@ -129,6 +131,7 @@ public class PerfilActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // Pide permiso de lectura de almacenamiento externo si no lo tiene
                 askForReadExternalStorage();
+                intentImagenCambiada=AppCompatActivity.RESULT_OK;
             }
         });
         // Botón GUARDAR
@@ -155,24 +158,26 @@ public class PerfilActivity extends AppCompatActivity {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if(returnIntent!=null) outState.putString(getResources().getString(R.string.preferences_imagen_perfil), returnIntent.getStringExtra(getResources().getString(R.string.preferences_imagen_perfil)));
+        Intent returnIntent= getIntent();
+        outState.putString(getResources().getString(R.string.preferences_imagen_perfil), returnIntent.getStringExtra(getResources().getString(R.string.preferences_imagen_perfil)));
+        outState.putInt("imagenCambiada", intentImagenCambiada);
         super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         direccionImagenPerfil= savedInstanceState.getString(getResources().getString(R.string.preferences_imagen_perfil),null);
-        anyadirImagenActivityResult(direccionImagenPerfil);
+        anyadirImagenActivityResult(direccionImagenPerfil,savedInstanceState.getInt("imagenCambiada"));
         super.onRestoreInstanceState(savedInstanceState);
     }
 
     /**
      * Devuelve la dirección de la nueva imagen al activity anterior
      */
-    public void anyadirImagenActivityResult(String direccionImagenPerfil){
-        returnIntent = new Intent();
+    public void anyadirImagenActivityResult(String direccionImagenPerfil, int resultado){
+        Intent returnIntent = getIntent();
         returnIntent.putExtra(getResources().getString(R.string.preferences_imagen_perfil),direccionImagenPerfil);
-        setResult(AppCompatActivity.RESULT_OK,returnIntent);
+        setResult(resultado,returnIntent);
     }
 
     @Override
