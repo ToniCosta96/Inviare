@@ -3,15 +3,19 @@ package com.example.prova.inviare.adapters;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.prova.inviare.ConversacionActivity;
 import com.example.prova.inviare.R;
 import com.example.prova.inviare.elementos.Contacto;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class AdaptadorConversaciones extends RecyclerView.Adapter<AdaptadorConversaciones.ListaViewHolder>{
@@ -43,7 +47,7 @@ public class AdaptadorConversaciones extends RecyclerView.Adapter<AdaptadorConve
             }
         });
         //Método bindLista de la clase ListaViewHolder
-        holder.bindLlista(item);
+        holder.bindLlista(item, activity);
     }
 
     @Override
@@ -56,6 +60,7 @@ public class AdaptadorConversaciones extends RecyclerView.Adapter<AdaptadorConve
         private TextView textViewTitulo;
         private TextView textViewSubtitulo;
         private TextView textViewInfoExtra;
+        private ImageView imageViewContacto;
 
         public ListaViewHolder(View itemView) {
             super(itemView);
@@ -63,12 +68,20 @@ public class AdaptadorConversaciones extends RecyclerView.Adapter<AdaptadorConve
             textViewTitulo = (TextView) itemView.findViewById(R.id.textViewTitulo);
             textViewSubtitulo = (TextView) itemView.findViewById(R.id.textViewSubtitulo);
             textViewInfoExtra = (TextView) itemView.findViewById(R.id.textViewInfoExtra);
+            imageViewContacto = (ImageView) itemView.findViewById(R.id.imageViewContacto);
         }
 
-        public void bindLlista(Contacto elementLlista) {
+        public void bindLlista(Contacto elementLlista, Activity activity) {
             textViewTitulo.setText(elementLlista.getTitulo());
             textViewSubtitulo.setText(elementLlista.getSubtitulo());
             textViewInfoExtra.setText(elementLlista.getInfoExtra());
+            String imagen;
+            if((imagen=elementLlista.getImagen())==null){
+                // Imagen predeterminada
+                imageViewContacto.setImageDrawable(android.support.v4.content.ContextCompat.getDrawable(activity, R.drawable.unknown));
+            }else{
+                Picasso.with(activity).load(new File(imagen)).into(imageViewContacto);
+            }
         }
     }
 }

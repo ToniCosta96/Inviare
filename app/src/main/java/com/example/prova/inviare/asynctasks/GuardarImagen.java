@@ -1,5 +1,6 @@
 package com.example.prova.inviare.asynctasks;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.SharedPreferences;
@@ -10,6 +11,7 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.prova.inviare.PerfilActivity;
 import com.example.prova.inviare.R;
 import com.squareup.picasso.Picasso;
 
@@ -18,18 +20,24 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class GuardarImagen extends AsyncTask<Uri, Integer, Boolean> {
+    private PerfilActivity perfilActivity;
     private Context context;
-    private View view;
+    private View viewEliminarFoto;
+    private View viewBotonGuardar;
     private boolean imagenGuardada;
 
-    public GuardarImagen(Context c, View view){
-        this.context=c;
-        this.view=view;
+    public GuardarImagen(PerfilActivity perfilActivity, View viewEliminarFoto, View viewBotonGuardar){
+        this.perfilActivity=perfilActivity;
+        this.context=perfilActivity.getApplicationContext();
+        this.viewEliminarFoto=viewEliminarFoto;
+        this.viewBotonGuardar=viewBotonGuardar;
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
+        viewBotonGuardar.setClickable(false);
+        viewBotonGuardar.setAlpha(0.5f);
     }
 
     @Override
@@ -44,6 +52,8 @@ public class GuardarImagen extends AsyncTask<Uri, Integer, Boolean> {
             // Se elimina la posible foto anterior de la caché de Picasso
             Picasso.with(context).invalidate(new File(direccionImagen));
             imagenGuardada = editor.commit();
+            //Se añade la direccion de la imagen al activity anterior
+            perfilActivity.anyadirImagenActivityResult(direccionImagen);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -53,7 +63,9 @@ public class GuardarImagen extends AsyncTask<Uri, Integer, Boolean> {
     @Override
     protected void onPostExecute(Boolean imagenGuardada) {
         super.onPostExecute(imagenGuardada);
-        view.setVisibility(View.VISIBLE);
+        viewEliminarFoto.setVisibility(View.VISIBLE);
+        viewBotonGuardar.setAlpha(1);
+        viewBotonGuardar.setClickable(true);
         if(imagenGuardada) Toast.makeText(context, "Imagen guardada", Toast.LENGTH_SHORT).show();
     }
 

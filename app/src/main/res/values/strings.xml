@@ -101,4 +101,5 @@
     <string name="eliminar">Eliminar</string>
     <string name="galeria">Galería</string>
     <string name="foto">Foto</string>
+    <string name="contentDescription_imageViewContacto">Imagen de perfil del contacto</string>
 </resources>

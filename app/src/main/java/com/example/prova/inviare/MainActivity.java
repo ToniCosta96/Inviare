@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,10 +18,13 @@ import com.example.prova.inviare.elementos.Contacto;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    private static final int AJUSTES_REQUEST=0;
+    private static final int PERFIL_REQUEST=0;
+    private static final int AJUSTES_REQUEST=1;
     private ArrayList<Contacto> arrayConversaciones;
     private AdaptadorConversaciones adaptador;
     private static int USUARIO_ACCESO_DIRECTO;
+
+    private String direccionImagenPropietario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,25 +33,27 @@ public class MainActivity extends AppCompatActivity {
 
         // Se carga el SharedPreferences
         final int ID_PROPIETARIO=getResources().getInteger(R.integer.id_propietario);
-        SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.shared_preferences), Context.MODE_PRIVATE);
+        final SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.shared_preferences), Context.MODE_PRIVATE);
         //Si NO has iniciado sesión se carga el activity de inicio de sesión.
         /*if(!sharedPref.getBoolean(getResources().getString(R.string.preferences_sesion_iniciada),false)){
             startActivity(new Intent(getApplicationContext(),LoginActivity.class));
             finish();
         }*/
         USUARIO_ACCESO_DIRECTO = sharedPref.getInt(getResources().getString(R.string.preferences_usuario_acceso_directo),ID_PROPIETARIO);
+        direccionImagenPropietario=sharedPref.getString(getResources().getString(R.string.preferences_imagen_perfil),null);
         final int posicionChatPersonal = sharedPref.getInt(getResources().getString(R.string.preferences_anclar_chat_personal),ID_PROPIETARIO);
 
         final RecyclerView recyclerView= (RecyclerView) findViewById(R.id.recycler_view_conversaciones);
 
         arrayConversaciones= new ArrayList<>();
+
         if(posicionChatPersonal==ID_PROPIETARIO){
             // Se añade primero el chat personal y luego el resto de chats
-            arrayConversaciones.add(new Contacto(ID_PROPIETARIO,"Tú","chat contigo","último uso"));
+            arrayConversaciones.add(new Contacto(ID_PROPIETARIO,"Tú","chat contigo","último uso",direccionImagenPropietario));
         }else{
             // Se añaden los chats y se intercala el chat personal en la posición correspondiente
-            arrayConversaciones.add(new Contacto(ID_PROPIETARIO,"Tú","chat contigo","último uso"));
-            arrayConversaciones.add(new Contacto(arrayConversaciones.size(),"Conversacion2","sub2","2"));
+            arrayConversaciones.add(new Contacto(ID_PROPIETARIO,"Tú","chat contigo","último uso",direccionImagenPropietario));
+            arrayConversaciones.add(new Contacto(arrayConversaciones.size(),"Conversacion2","sub2","2",null));
         }
 
         // Especificar un adaptador para el RecyclerView
@@ -60,17 +66,30 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == AJUSTES_REQUEST) {
+        // ID_PROPIETARIO = -1 <-> Id del propietario del dispositivo
+        final int ID_PROPIETARIO=getResources().getInteger(R.integer.id_propietario);
+
+        if (requestCode == PERFIL_REQUEST) {
             if(resultCode == AppCompatActivity.RESULT_OK){
+                for(int i=0;i<arrayConversaciones.size();i++){
+                    if(arrayConversaciones.get(i).getId()==ID_PROPIETARIO){
+                        arrayConversaciones.get(i).setImagen(data.getExtras().getString(getResources().getString(R.string.preferences_imagen_perfil)));
+                        adaptador.notifyItemChanged(i);
+                    }
+                }
+            }
+        }else if(requestCode == AJUSTES_REQUEST){
+            if(resultCode == AppCompatActivity.RESULT_OK){
+                // Se vacía el arrayConversaciones
                 arrayConversaciones.clear();
-                final int ID_PROPIETARIO=getResources().getInteger(R.integer.id_propietario);
+
                 if(data.getIntExtra(getApplicationContext().getString(R.string.preferences_anclar_chat_personal),ID_PROPIETARIO)==ID_PROPIETARIO){
                     //Se añade primero el chat personal y luego el resto de chats
-                    arrayConversaciones.add(new Contacto(ID_PROPIETARIO,"Tú","chat contigo","último uso"));
+                    arrayConversaciones.add(new Contacto(ID_PROPIETARIO,"Tú","chat contigo","último uso",direccionImagenPropietario));
                 }else{
                     //Se añaden los chats y se intercala el chat personal en la posición correspondiente
-                    arrayConversaciones.add(new Contacto(ID_PROPIETARIO,"Tú","chat contigo","último uso"));
-                    arrayConversaciones.add(new Contacto(arrayConversaciones.size(),"Conversacion2","sub2","2"));
+                    arrayConversaciones.add(new Contacto(ID_PROPIETARIO,"Tú","chat contigo","último uso",direccionImagenPropietario));
+                    arrayConversaciones.add(new Contacto(arrayConversaciones.size(),"Conversacion2","sub2","2",null));
                 }
                 //Se le notifican los cambios al adaptador (AdaptadorContactos)
                 adaptador.notifyDataSetChanged();
@@ -90,16 +109,15 @@ public class MainActivity extends AppCompatActivity {
         Intent i;
         switch (item.getItemId()) {
             case R.id.item_add:
-                //Intent -> Añadir nuevo contacto
+                // Intent -> Añadir nuevo contacto
                 i= new Intent(getApplicationContext(),ContactosActivity.class);
                 startActivity(i);
                 return true;
             case R.id.item_acceso_directo:
-                //Intent -> Acceso directo
+                // Intent -> Acceso directo
                 i= new Intent(getApplicationContext(),ConversacionActivity.class);
                 i.putExtra(getResources().getString(R.string.intent_conversacion_id),USUARIO_ACCESO_DIRECTO);
-                // Se recorre el arrayConversaciones y se selecciona el nombre del contacto que su id coincida con
-                // USUARIO_ACCESO_DIRECTO
+                // Se recorre el arrayConversaciones y se selecciona el nombre del contacto que su id coincida con USUARIO_ACCESO_DIRECTO
                 String nombreContacto="Tú";
                 for(int j=0;j<arrayConversaciones.size();j++){
                     if(arrayConversaciones.get(j).getId()==USUARIO_ACCESO_DIRECTO){
@@ -110,12 +128,12 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
                 return true;
             case R.id.item_perfil:
-                //Intent -> Perfil
+                // Intent -> Perfil
                 i= new Intent(getApplicationContext(),PerfilActivity.class);
-                startActivity(i);
+                startActivityForResult(i, PERFIL_REQUEST);
                 return true;
             case R.id.item_ajustes:
-                //Intent -> Ajustes
+                // Intent -> Ajustes
                 i= new Intent(getApplicationContext(),AjustesActivity.class);
                 startActivityForResult(i, AJUSTES_REQUEST);
                 return true;

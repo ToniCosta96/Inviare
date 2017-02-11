@@ -33,6 +33,7 @@ public class PerfilActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_EXTERNAL_STORAGE = 0;
     int PHOTO_PICK_REQUEST_CODE = 0;
     int CAMERA_REQUEST_CODE = 1;
+    private Button btnGuardar;
     private ImageView imageViewPerfil;
     private ImageView imageViewEliminarFoto;
     private String direccionImagenPerfil;
@@ -55,10 +56,10 @@ public class PerfilActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                if (btnGuardar.isClickable()) finish();
             }
         });
-        final Button btnGuardar= (Button) findViewById(R.id.btn_guardar_perfil);
+        btnGuardar= (Button) findViewById(R.id.btn_guardar_perfil);
         imageViewEliminarFoto= (ImageView) findViewById(R.id.imageView_eliminar);
         final Button btnImagenGaleria= (Button) findViewById(R.id.btn_imagen_galeria);
         final Button btnImagenFoto= (Button) findViewById(R.id.btn_imagen_camara);
@@ -80,20 +81,33 @@ public class PerfilActivity extends AppCompatActivity {
         editTextTelefono.setText(telefonoPerfil);
         textViewCorreo.setText(emailPerfil);
 
+        // Se carga en el imageViewPerfil la imagen del sharedPreferences
+        if(direccionImagenPerfil.isEmpty()) {
+            imageViewEliminarFoto.setVisibility(View.GONE);
+        }else{
+            //imageViewPerfil.setImageBitmap(BitmapFactory.decodeFile(imagenPerfil,options));
+            Picasso.with(getApplicationContext()).load(new File(direccionImagenPerfil)).into(imageViewPerfil);
+        }
+
         // Se añaden los listeners
         imageViewEliminarFoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                direccionImagenPerfil=sharedPref.getString(getResources().getString(R.string.preferences_imagen_perfil),"");
-                if(new File(direccionImagenPerfil).delete()){
-                    Toast.makeText(getApplicationContext(),"Imagen eliminada correctamente",Toast.LENGTH_SHORT).show();
-                    SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.shared_preferences), Context.MODE_PRIVATE).edit();
-                    editor.remove(getResources().getString(R.string.preferences_imagen_perfil));
-                    editor.apply();
-                    imageViewEliminarFoto.setVisibility(View.GONE);
-                    imageViewPerfil.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.unknown));
-                }else{
-                    Toast.makeText(getApplicationContext(),"Ha habido algún problema en eliminar la imagen",Toast.LENGTH_SHORT).show();
+                direccionImagenPerfil=sharedPref.getString(getResources().getString(R.string.preferences_imagen_perfil),null);
+                if(direccionImagenPerfil!=null){
+                    if(new File(direccionImagenPerfil).delete()){
+                        Toast.makeText(getApplicationContext(),"Imagen eliminada correctamente",Toast.LENGTH_SHORT).show();
+                        SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.shared_preferences), Context.MODE_PRIVATE).edit();
+                        editor.remove(getResources().getString(R.string.preferences_imagen_perfil));
+                        editor.apply();
+                        imageViewEliminarFoto.setVisibility(View.GONE);
+                        // Establece una imagen predeterminada como Drawable de 'imageViewPerfil'
+                        imageViewPerfil.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.unknown));
+                        // Devuelve la dirección de la imagen cambiada al activity anterior
+                        anyadirImagenActivityResult(null);
+                    }else{
+                        Toast.makeText(getApplicationContext(),"Ha habido algún problema en eliminar la imagen",Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -110,20 +124,11 @@ public class PerfilActivity extends AppCompatActivity {
         btnImagenFoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Pide permiso de lectura de almacenamiento enterno si no lo tiene
+                // Pide permiso de lectura de almacenamiento externo si no lo tiene
                 askForReadExternalStorage();
             }
         });
-
-        // Se carga en el imageViewPerfil la imagen del sharedPreferences
-        if(direccionImagenPerfil.isEmpty()) {
-            imageViewEliminarFoto.setVisibility(View.GONE);
-        }else{
-            //imageViewPerfil.setImageBitmap(BitmapFactory.decodeFile(imagenPerfil,options));
-            Picasso.with(getApplicationContext()).load(new File(direccionImagenPerfil)).into(imageViewPerfil);
-        }
-
-        // Boton GUARDAR
+        // Botón GUARDAR
         btnGuardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -145,6 +150,15 @@ public class PerfilActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Devuelve la dirección de la nueva imagen al activity anterior
+     */
+    public void anyadirImagenActivityResult(String direccionImagenPerfil){
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra(getResources().getString(R.string.preferences_imagen_perfil),direccionImagenPerfil);
+        setResult(AppCompatActivity.RESULT_OK,returnIntent);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -156,13 +170,12 @@ public class PerfilActivity extends AppCompatActivity {
                 }
                 // Se carga la imagen y se muestra la imagen de eliminar foto
                 Picasso.with(getApplicationContext()).load(data.getData()).into(imageViewPerfil);
-                // Se guarda la imagen en el almacenamiento interno y la URI en el SharedPreferences (shared_preferences)
-                new GuardarImagen(getApplicationContext(),imageViewEliminarFoto).execute(data.getData());
             }else if(requestCode == CAMERA_REQUEST_CODE){
+                // Se carga la imagen y se muestra la imagen de eliminar foto
                 Picasso.with(getApplicationContext()).load(data.getData()).into(imageViewPerfil);
-                new GuardarImagen(getApplicationContext(),imageViewEliminarFoto).execute(data.getData());
-
             }
+            // Se guarda la imagen en el almacenamiento interno y la URI en el SharedPreferences (shared_preferences)
+            new GuardarImagen(this, imageViewEliminarFoto, btnGuardar).execute(data.getData());
         }
     }
 
@@ -229,5 +242,11 @@ public class PerfilActivity extends AppCompatActivity {
             // other 'case' lines to check for other
             // permissions this app might request
         }
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        if (btnGuardar.isClickable()) finish();
     }
 }

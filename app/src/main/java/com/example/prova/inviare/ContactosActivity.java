@@ -67,7 +67,7 @@ public class ContactosActivity extends AppCompatActivity {
             while (phones.moveToNext()) {
                 String name=phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
                 String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                arrayContactos.add(new Contacto(arrayContactos.size(),name,phoneNumber,"MÓVIL¿?"));
+                arrayContactos.add(new Contacto(arrayContactos.size(),name,phoneNumber,"MÓVIL¿?",null));
             }
             phones.close();
         }

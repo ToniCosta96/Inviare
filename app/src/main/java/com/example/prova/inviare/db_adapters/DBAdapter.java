@@ -18,10 +18,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-/**
- * Created by 2dam on 17/01/2017.
- */
-
 public class DBAdapter {
     private static final String DATABASE_NAME = "db_inviare.db";
     //private static final String TABLE_PERFIL = "perfil"; // ID - NOMBRE - TELEFONO - EMAIL - ESTADO - IMAGE
@@ -148,7 +144,7 @@ public class DBAdapter {
         if(cursor.moveToFirst()){
             do {
                 //Se crea un objeto 'Elemento' con los datos de la DB recogidos por el cursor
-                arrayElementos.add(new Contacto(cursor.getInt(0),cursor.getString(1),cursor.getString(2),cursor.getString(3)));
+                arrayElementos.add(new Contacto(cursor.getInt(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),null));
             } while (cursor.moveToNext());
         }
         cursor.close();
