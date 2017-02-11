@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.prova.inviare.ConversacionActivity;
+import com.example.prova.inviare.MainActivity;
 import com.example.prova.inviare.R;
 import com.example.prova.inviare.elementos.Contacto;
 import com.squareup.picasso.Picasso;
@@ -19,11 +20,12 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class AdaptadorConversaciones extends RecyclerView.Adapter<AdaptadorConversaciones.ListaViewHolder>{
-    private Activity activity;
+    private static final int CHAT_REQUEST=2;
+    private MainActivity activity;
     private ArrayList<Contacto> listData;
 
-    public AdaptadorConversaciones(Activity a, ArrayList<Contacto> listData) {
-        this.activity=a;
+    public AdaptadorConversaciones(MainActivity mainActivity, ArrayList<Contacto> listData) {
+        this.activity=mainActivity;
         this.listData = listData;
     }
 
@@ -40,10 +42,11 @@ public class AdaptadorConversaciones extends RecyclerView.Adapter<AdaptadorConve
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i= new Intent(activity.getApplicationContext(), ConversacionActivity.class);
+                Intent i= new Intent(activity, ConversacionActivity.class);
+                i.putExtra(activity.getResources().getString(R.string.intent_conversacion_posicion_array),position);
                 i.putExtra(activity.getResources().getString(R.string.intent_conversacion_id),item.getId());
                 i.putExtra(activity.getResources().getString(R.string.intent_conversacion_titulo),item.getTitulo());
-                activity.startActivity(i);
+                activity.startActivityForResult(i,CHAT_REQUEST);
             }
         });
         //Método bindLista de la clase ListaViewHolder

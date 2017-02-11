@@ -52,6 +52,7 @@ public class ConversacionActivity extends AppCompatActivity{
         }
         dbAdapter = new DBAdapter(getApplicationContext());
         dbAdapter.open();
+        //Alarma de prueba(BORRAR)
         arrayMensajes.add(new Alarma("Mensaje","fecha",2,"hora_i","hora_d","dia","frecuencia",Alarma.TAREA_EN_CURSO,null,true));
         dbAdapter.seleccionarMensaje(arrayMensajes,id_conversacion,DBAdapter.ID_CONTACTO,DBAdapter.TABLE_MENSAJES);
         //RecyclerView
@@ -107,7 +108,7 @@ public class ConversacionActivity extends AppCompatActivity{
                     //Enviar mensaje
                     //Guardar en la base de datos local
                     SimpleDateFormat dfDataBase = new SimpleDateFormat(getResources().getString(R.string.simple_date_format_DB), java.util.Locale.getDefault());
-                    SimpleDateFormat dfMuestra = new SimpleDateFormat(getResources().getString(R.string.simple_date_format_INTERFAZ), java.util.Locale.getDefault());
+                    SimpleDateFormat dfMuestra = new SimpleDateFormat(getResources().getString(R.string.simple_date_format_MENSAJE), java.util.Locale.getDefault());
                     Date horaActual = Calendar.getInstance().getTime();
                     String date = dfDataBase.format(horaActual);
                     String dateMuestra = dfMuestra.format(horaActual);
@@ -166,7 +167,7 @@ public class ConversacionActivity extends AppCompatActivity{
         switch (item.getItemId()) {
             case android.R.id.home:
                 //Tornar al activity anterior.
-                finish();
+                retornarActivityAnterior();
                 return true;
             case R.id.item_eliminar_mensajes:
                 //Se eliminan todos los mensajes de la base de datos (DBAdapter) y del arrayMensajes.
@@ -200,5 +201,22 @@ public class ConversacionActivity extends AppCompatActivity{
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        retornarActivityAnterior();
+        super.onBackPressed();
+    }
+
+    private void retornarActivityAnterior(){
+        // Al volver al activity anterior se guardan los datos del ID del contacto y la fecha del último mensaje en un Intent
+        DBAdapter dbAdapter= new DBAdapter(getApplicationContext());
+        dbAdapter.open();
+        final String ultimaFechaContacto = dbAdapter.seleccionarUltimaFechaContacto(id_conversacion,DBAdapter.ID_CONTACTO,getResources().getString(R.string.simple_date_format_CONTACTO));
+        Intent returnIntent= getIntent();
+        returnIntent.putExtra(getResources().getString(R.string.intent_mensaje_fecha),ultimaFechaContacto);
+        setResult(RESULT_OK,returnIntent);
+        finish();
     }
 }

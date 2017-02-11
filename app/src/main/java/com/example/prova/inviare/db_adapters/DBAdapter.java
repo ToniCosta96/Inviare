@@ -92,7 +92,7 @@ public class DBAdapter {
             do {
                 //Se crea un objeto 'Elemento' con los datos de la DB recogidos por el cursor
                 SimpleDateFormat df = new SimpleDateFormat(context.getResources().getString(R.string.simple_date_format_DB), java.util.Locale.getDefault());
-                SimpleDateFormat df2 = new SimpleDateFormat(context.getResources().getString(R.string.simple_date_format_INTERFAZ), java.util.Locale.getDefault());
+                SimpleDateFormat df2 = new SimpleDateFormat(context.getResources().getString(R.string.simple_date_format_MENSAJE), java.util.Locale.getDefault());
                 Date dateSegundos=null;
                 try {
                     dateSegundos = df.parse(cursor.getString(2));
@@ -101,10 +101,11 @@ public class DBAdapter {
                 }
                 //Se averigua si el mensaje es del propietario y el tipo de mensaje
                 final boolean mensajePropietario = cursor.getInt(9) == context.getResources().getInteger(R.integer.id_propietario);
+                final String fechaFinal=df2.format(dateSegundos);
                 if(cursor.getInt(3)==TIPO_TEXTO){
-                    arrayElementos.add(new Mensaje(cursor.getString(1),df2.format(dateSegundos),mensajePropietario));
+                    arrayElementos.add(new Mensaje(cursor.getString(1),fechaFinal,mensajePropietario));
                 }else if(cursor.getInt(3)==TIPO_ALARMA_REPETITIVA || cursor.getInt(3)==TIPO_ALARMA_PERSISTENTE){
-                    arrayElementos.add(new Alarma(cursor.getString(1),cursor.getString(2),cursor.getInt(3),cursor.getString(4),cursor.getString(5),cursor.getString(6),cursor.getString(7),cursor.getString(8),cursor.getString(9),mensajePropietario));
+                    arrayElementos.add(new Alarma(cursor.getString(1),fechaFinal,cursor.getInt(3),cursor.getString(4),cursor.getString(5),cursor.getString(6),cursor.getString(7),cursor.getString(8),cursor.getString(9),mensajePropietario));
                 }
 
             } while (cursor.moveToNext());
@@ -114,7 +115,7 @@ public class DBAdapter {
 
     /**
      * Retorna en un int los permisos de un contacto haciendo una consulta de tipo
-     * "SELECT permisos FROM tabla WHERE 'columna'='valor';" o -1 si la consulta no devuelve ningún contacto
+     * "SELECT permisos FROM tabla WHERE 'columna'='valor';" o -1 si la consulta no devuelve ningún contacto.
      * @param valor valor de la columna
      * @param columna nombre de una columna que contenga un valor numérico
      * @return int Permiso del Contacto seleccionado
@@ -134,6 +135,37 @@ public class DBAdapter {
         }
         cursor.close();
         return permisosContacto;
+    }
+
+    /**
+     * Retorna en un String la fecha del último mensaje del Contacto seleccionado mediante una consulta
+     * de tipo "SELECT MAX(fecha) FROM mensajes WHERE columna = 'valor';". Si no hay ningún mensaje este método retornará null.
+     * @param valor valor de la cláusula WHERE
+     * @param columna columna a seleccionar de la tabla 'mensajes'
+     * @param formatoFecha formato de la fecha en string (Ej.: "dd MMMM yyyy, HH:mm")
+     * @return String - Fecha del último mensaje recibido
+     */
+    public String seleccionarUltimaFechaContacto(int valor, String columna, String formatoFecha){
+        //Se introducen los contactos de la base de datos en el arrayElementos y se intercala Contacto si no es null
+        String ultimaFecha=null;
+        String selectQuery = "SELECT MAX(fecha) FROM "+TABLE_MENSAJES+" WHERE "+columna+" = "+valor+";";
+        Cursor cursor= db.rawQuery(selectQuery, null);
+        if(cursor.moveToFirst()){
+            SimpleDateFormat df = new SimpleDateFormat(context.getResources().getString(R.string.simple_date_format_DB), java.util.Locale.getDefault());
+            SimpleDateFormat df2 = new SimpleDateFormat(formatoFecha, java.util.Locale.getDefault());
+            Date dateSegundos;
+            final String parsearFecha=cursor.getString(0);
+            if(parsearFecha!=null) {
+                try {
+                    dateSegundos = df.parse(parsearFecha);
+                    ultimaFecha = df2.format(dateSegundos);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        cursor.close();
+        return ultimaFecha;
     }
 
     public void seleccionarContactos(ArrayList<Contacto> arrayElementos, String valor, String columna, String tabla){

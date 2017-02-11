@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.example.prova.inviare.adapters.AdaptadorConversaciones;
+import com.example.prova.inviare.db_adapters.DBAdapter;
 import com.example.prova.inviare.elementos.Contacto;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     private static final int PERFIL_REQUEST=0;
     private static final int AJUSTES_REQUEST=1;
+    private static final int CHAT_REQUEST=2;
     private ArrayList<Contacto> arrayConversaciones;
     private AdaptadorConversaciones adaptador;
     private static int USUARIO_ACCESO_DIRECTO;
@@ -49,7 +51,10 @@ public class MainActivity extends AppCompatActivity {
 
         if(posicionChatPersonal==ID_PROPIETARIO){
             // Se añade primero el chat personal y luego el resto de chats
-            arrayConversaciones.add(new Contacto(ID_PROPIETARIO,"Tú","chat contigo","último uso",direccionImagenPropietario));
+            DBAdapter dbAdapter= new DBAdapter(getApplicationContext());
+            dbAdapter.open();
+            final String ultimaFechaContacto = dbAdapter.seleccionarUltimaFechaContacto(getResources().getInteger(R.integer.id_propietario),DBAdapter.ID_CONTACTO,getResources().getString(R.string.simple_date_format_CONTACTO));
+            arrayConversaciones.add(new Contacto(ID_PROPIETARIO,"Tú","chat contigo",ultimaFechaContacto,direccionImagenPropietario));
         }else{
             // Se añaden los chats y se intercala el chat personal en la posición correspondiente
             arrayConversaciones.add(new Contacto(ID_PROPIETARIO,"Tú","chat contigo","último uso",direccionImagenPropietario));
@@ -68,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         // ID_PROPIETARIO = -1 <-> Id del propietario del dispositivo
         final int ID_PROPIETARIO=getResources().getInteger(R.integer.id_propietario);
-
         if (requestCode == PERFIL_REQUEST) {
             if(resultCode == AppCompatActivity.RESULT_OK){
                 for(int i=0;i<arrayConversaciones.size();i++){
@@ -94,6 +98,11 @@ public class MainActivity extends AppCompatActivity {
                 //Se le notifican los cambios al adaptador (AdaptadorContactos)
                 adaptador.notifyDataSetChanged();
             }
+        }else if(requestCode == CHAT_REQUEST){
+            final int posicionConversacion = data.getIntExtra(getResources().getString(R.string.intent_conversacion_posicion_array),0);
+            final String ultimaFecha = data.getStringExtra(getResources().getString(R.string.intent_mensaje_fecha));
+            arrayConversaciones.get(posicionConversacion).setInfoExtra(ultimaFecha);
+            adaptador.notifyItemChanged(posicionConversacion);
         }
     }
 
