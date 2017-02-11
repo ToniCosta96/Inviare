@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -37,6 +38,7 @@ public class PerfilActivity extends AppCompatActivity {
     private ImageView imageViewPerfil;
     private ImageView imageViewEliminarFoto;
     private String direccionImagenPerfil;
+    private Intent returnIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +106,7 @@ public class PerfilActivity extends AppCompatActivity {
                         // Establece una imagen predeterminada como Drawable de 'imageViewPerfil'
                         imageViewPerfil.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.unknown));
                         // Devuelve la dirección de la imagen cambiada al activity anterior
+                        direccionImagenPerfil=null;
                         anyadirImagenActivityResult(null);
                     }else{
                         Toast.makeText(getApplicationContext(),"Ha habido algún problema en eliminar la imagen",Toast.LENGTH_SHORT).show();
@@ -150,11 +153,24 @@ public class PerfilActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if(returnIntent!=null) outState.putString(getResources().getString(R.string.preferences_imagen_perfil), returnIntent.getStringExtra(getResources().getString(R.string.preferences_imagen_perfil)));
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        direccionImagenPerfil= savedInstanceState.getString(getResources().getString(R.string.preferences_imagen_perfil),null);
+        anyadirImagenActivityResult(direccionImagenPerfil);
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
     /**
      * Devuelve la dirección de la nueva imagen al activity anterior
      */
     public void anyadirImagenActivityResult(String direccionImagenPerfil){
-        Intent returnIntent = new Intent();
+        returnIntent = new Intent();
         returnIntent.putExtra(getResources().getString(R.string.preferences_imagen_perfil),direccionImagenPerfil);
         setResult(AppCompatActivity.RESULT_OK,returnIntent);
     }
