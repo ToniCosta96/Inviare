@@ -10,8 +10,8 @@
         android:padding="10dp">
 
         <TextView
-            android:id="@+id/textView_titulo_AP"
-            android:text="Tipo de alarma"
+            android:id="@+id/textView_titulo_AF"
+            android:text="Alarma fija"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@android:style/TextAppearance.Material.Subhead" />
@@ -26,29 +26,10 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/separacion_alarma_V1">
-
-            <TextView
-                android:text="@string/hora_inicio_t"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView_horaInicio_APt" />
-
-            <TextView
-                android:text="TextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView_horaInicio_AP" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                android:text="@string/hora_duracion_t"
+                android:text="@string/fecha_"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView_horaDuracion_At" />
@@ -59,12 +40,6 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/textView_horaDuracion_A" />
         </LinearLayout>
-
-        <TextView
-            android:text="Frecuencia"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView_frecuencia_AP" />
 
         <TextView
             android:text="Hora"

@@ -53,7 +53,9 @@ public class ConversacionActivity extends AppCompatActivity{
         dbAdapter = new DBAdapter(getApplicationContext());
         dbAdapter.open();
         //Alarma de prueba(BORRAR)
-        arrayMensajes.add(new Alarma("Mensaje","fecha",2,"hora_i","hora_d","dia","frecuencia",Alarma.TAREA_EN_CURSO,null,true));
+        arrayMensajes.add(new Alarma("Mensaje","fecha",2,"hora_i","hora_d","frecuencia",Alarma.TAREA_EN_CURSO,null,true));
+        arrayMensajes.add(new Alarma("Mensaje de una alarma repetitiva","fecha2",3,"hora_in","25-210-2017","5 min",Alarma.TAREA_EN_CURSO,null,true));
+        arrayMensajes.add(new Alarma("Mensaje de una alarma fija","fecha2",4,"hora_in","25-210-2017","frecuencia",Alarma.TAREA_EN_CURSO,null,true));
         dbAdapter.seleccionarMensaje(arrayMensajes,id_conversacion,DBAdapter.ID_CONTACTO,DBAdapter.TABLE_MENSAJES);
         //RecyclerView
         //Adaptador - AdaptadorConversaciones
@@ -112,7 +114,7 @@ public class ConversacionActivity extends AppCompatActivity{
                     Date horaActual = Calendar.getInstance().getTime();
                     String date = dfDataBase.format(horaActual);
                     String dateMuestra = dfMuestra.format(horaActual);
-                    dbAdapter.insertarMensaje(editTextConversacion.getText().toString(),date,DBAdapter.TIPO_TEXTO,null,null,null,null,null,id_conversacion);
+                    dbAdapter.insertarMensaje(editTextConversacion.getText().toString(),date,DBAdapter.TIPO_TEXTO,null,null,null,null,id_conversacion);
                     //Mostrar por pantalla (A la derecha si es propietario [-1])
                     boolean propietario=false;
                     if(id_conversacion==getResources().getInteger(R.integer.id_propietario)) propietario=true;

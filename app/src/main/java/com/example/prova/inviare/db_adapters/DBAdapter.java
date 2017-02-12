@@ -37,8 +37,7 @@ public class DBAdapter {
     private static final String DATE_TIME = "fecha";
     private static final String TIPO = "tipo";
     private static final String HORA_INICIO = "hora_inicio";
-    private static final String HORA = "hora_duracion";
-    private static final String DIA = "dia_alarma";
+    private static final String HORA_DURACION = "hora_duracion";
     private static final String FRECUENCIA = "frecuencia";
     private static final String CURSO_TAREA = "curso_tarea";
     public static final String ID_CONTACTO = "contacto_id";
@@ -56,7 +55,7 @@ public class DBAdapter {
 
     private static final String DATABASE_CREATE_CONTACTOS = "CREATE TABLE "+TABLE_CONTACTOS+" (_id integer primary key AUTOINCREMENT, nombre text, estado text, imagen text, permisos integer);";
     private static final String DATABASE_CREATE_MENSAJES = "CREATE TABLE "+TABLE_MENSAJES+
-            " (_id integer primary key AUTOINCREMENT, mensaje text, fecha text, tipo integer, hora_inicio text, hora_duracion text, dia_alarma text, frecuencia text, curso_tarea text, contacto_id integer, FOREIGN KEY(contacto_id) REFERENCES contactos(_id));";
+            " (_id integer primary key AUTOINCREMENT, mensaje text, fecha text, tipo integer, hora_inicio text, hora_duracion text, frecuencia text, curso_tarea text, contacto_id integer, FOREIGN KEY(contacto_id) REFERENCES contactos(_id));";
 
     private static final String DATABASE_DROP_CONTACTOS = "DROP TABLE IF EXISTS "+TABLE_CONTACTOS+";";
     private static final String DATABASE_DROP_MENSAJES = "DROP TABLE IF EXISTS "+TABLE_MENSAJES+";";
@@ -105,7 +104,7 @@ public class DBAdapter {
                 if(cursor.getInt(3)==TIPO_TEXTO){
                     arrayElementos.add(new Mensaje(cursor.getString(1),fechaFinal,mensajePropietario));
                 }else if(cursor.getInt(3)==TIPO_ALARMA_REPETITIVA || cursor.getInt(3)==TIPO_ALARMA_PERSISTENTE){
-                    arrayElementos.add(new Alarma(cursor.getString(1),fechaFinal,cursor.getInt(3),cursor.getString(4),cursor.getString(5),cursor.getString(6),cursor.getString(7),cursor.getString(8),cursor.getString(9),mensajePropietario));
+                    arrayElementos.add(new Alarma(cursor.getString(1),fechaFinal,cursor.getInt(3),cursor.getString(4),cursor.getString(5),cursor.getString(6),cursor.getString(7),cursor.getString(8),mensajePropietario));
                 }
 
             } while (cursor.moveToNext());
@@ -228,7 +227,7 @@ public class DBAdapter {
         cursor.close();
         db.execSQL(insertQuery.toString());
     }*/
-    public void insertarMensaje(String m, String dt, int tipo, String h_i, String h, String d, String f, String ct, int contacto_id){
+    public void insertarMensaje(String m, String dt, int tipo, String h_i, String h_d, String f, String ct, int contacto_id){
         //Creamos un nuevo registro de valores a insertar
         ContentValues newValues = new ContentValues();
         //Asignamos los valores de cada campo
@@ -236,8 +235,7 @@ public class DBAdapter {
         newValues.put(DATE_TIME,dt);
         newValues.put(TIPO,tipo);
         newValues.put(HORA_INICIO,h_i);
-        newValues.put(HORA,h);
-        newValues.put(DIA,d);
+        newValues.put(HORA_DURACION,h_d);
         newValues.put(FRECUENCIA,f);
         newValues.put(CURSO_TAREA,ct);
         newValues.put(ID_CONTACTO,contacto_id);

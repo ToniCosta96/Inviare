@@ -44,12 +44,13 @@ public class AdaptadorChat extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 viewHolder = new AdaptadorChat.ViewHolderMensaje(v1);
                 break;
             case DBAdapter.TIPO_ALARMA_REPETITIVA:
+            case DBAdapter.TIPO_ALARMA_PERSISTENTE:
                 View v2 = inflater.inflate(R.layout.lista_chat_alarma_persistente, parent, false);
                 viewHolder = new AdaptadorChat.ViewHolderAlarmaPersistente(v2);
                 break;
-            case DBAdapter.TIPO_ALARMA_PERSISTENTE:
-                View v3 = inflater.inflate(R.layout.lista_chat_alarma_persistente, parent, false);
-                viewHolder = new AdaptadorChat.ViewHolderAlarmaPersistente(v3);
+            case DBAdapter.TIPO_ALARMA_FIJA:
+                View v3 = inflater.inflate(R.layout.lista_chat_alarma_fija, parent, false);
+                viewHolder = new AdaptadorChat.ViewHolderAlarmaFija(v3);
                 break;
             default:
                 //View v = inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
@@ -71,8 +72,13 @@ public class AdaptadorChat extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             case DBAdapter.TIPO_ALARMA_REPETITIVA:
             case DBAdapter.TIPO_ALARMA_PERSISTENTE:
                 Alarma alarma1 = (Alarma) listData.get(position);
-                ((ViewHolderAlarmaPersistente)holder).bindLlista(alarma1);
-                addClickListener(((ViewHolderAlarmaPersistente)holder),position);
+                ((ViewHolderAlarma)holder).bindLlista(alarma1);
+                addClickListener(((ViewHolderAlarma)holder),position);
+                break;
+            case DBAdapter.TIPO_ALARMA_FIJA:
+                Alarma alarma3 = (Alarma) listData.get(position);
+                ((ViewHolderAlarma)holder).bindLlista(alarma3);
+                addClickListener(((ViewHolderAlarma)holder),position);
                 break;
             default:
                 //RecyclerViewSimpleTextViewHolder vh = (RecyclerViewSimpleTextViewHolder) viewHolder;
@@ -97,7 +103,7 @@ public class AdaptadorChat extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return listData.size();
     }
 
-    private void addClickListener(final ViewHolderAlarmaPersistente holder, final int position){
+    private void addClickListener(final ViewHolderAlarma holder, final int position){
         //Se actualiza el estado de la alarma y se envia por Firebase
         holder.btnDeclinar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,7 +130,7 @@ public class AdaptadorChat extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         String contestacion=input.getText().toString();
                         //Actualizar interfaz
                         holder.textViewContestacion.setText(contestacion);
-                        holder.layoutAlarma.setVisibility(View.GONE);
+                        holder.layoutAlarmaBotones.setVisibility(View.GONE);
                         holder.textViewContestacion.setVisibility(View.VISIBLE);
                         holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, android.R.color.holo_red_light));
                         //Actualizar array
@@ -162,7 +168,7 @@ public class AdaptadorChat extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                                 final String textoTareaRealizada= context.getResources().getString(R.string.tarea_realizada);
                                 //Actualizar interfaz
                                 holder.textViewContestacion.setText(textoTareaRealizada);
-                                holder.layoutAlarma.setVisibility(View.GONE);
+                                holder.layoutAlarmaBotones.setVisibility(View.GONE);
                                 holder.textViewContestacion.setVisibility(View.VISIBLE);
                                 holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, android.R.color.holo_green_dark));
                                 //Actualizar array
@@ -189,7 +195,7 @@ public class AdaptadorChat extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         });
     }
 
-    public static class ViewHolderMensaje extends RecyclerView.ViewHolder{
+    private class ViewHolderMensaje extends RecyclerView.ViewHolder{
         //Datos del view
         private TextView textViewMensaje;
         private TextView textViewHora;
@@ -207,73 +213,64 @@ public class AdaptadorChat extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             textViewMensaje.setText(elementLlista.getMensaje());
             textViewHora.setText(elementLlista.getHora());
 
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-            if(elementLlista.isPropietario()){
-                int margin = this.itemView.getResources().getDimensionPixelSize(R.dimen.chat_margin1);
-                layoutParams.setMargins(dpToPixel(60), margin, margin, dpToPixel(5));
-            }else{
-                int margin = this.itemView.getResources().getDimensionPixelSize(R.dimen.chat_margin1);
-                layoutParams.setMargins(margin, margin, dpToPixel(60), dpToPixel(5));
-            }
-            cardView.setLayoutParams(layoutParams);
-        }
-
-        private int dpToPixel(float dp){
-            DisplayMetrics displayMetrics = this.itemView.getResources().getDisplayMetrics();
-            return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+            cambiarVista(cardView, elementLlista.isPropietario());
         }
     }
 
-    public class ViewHolderAlarmaPersistente extends RecyclerView.ViewHolder {
-        private TextView textViewTitulo,textViewMensaje,textViewHoraInicio,textViewHoraDuracion,textViewFrecuencia, textViewContestacion;
-        private Button btnDeclinar,btnTareaRealizada;
-        private CardView cardView;
-        private LinearLayout layoutAlarma;
+    private abstract class ViewHolderAlarma extends RecyclerView.ViewHolder{
+        TextView textViewMensaje,textViewHoraDuracion,textViewContestacion,textVewHora;
+        Button btnDeclinar,btnTareaRealizada;
+        CardView cardView;
+        LinearLayout layoutAlarmaBotones;
+
+        public ViewHolderAlarma(View itemView) {
+            super(itemView);
+
+            textViewMensaje = (TextView) itemView.findViewById(R.id.textView_mensaje_A);
+            textViewHoraDuracion = (TextView) itemView.findViewById(R.id.textView_horaDuracion_A);
+            textViewContestacion = (TextView) itemView.findViewById(R.id.textView_contestacion_A);
+            textVewHora = (TextView) itemView.findViewById(R.id.textView_hora_A);
+            btnDeclinar = (Button) itemView.findViewById(R.id.btn_declinar_tarea);
+            btnTareaRealizada = (Button) itemView.findViewById(R.id.btn_tareaRealizada);
+            cardView= (CardView) itemView.findViewById(R.id.card_view_A);
+            layoutAlarmaBotones= (LinearLayout) itemView.findViewById(R.id.layout_alarma_botones);
+        }
+
+        abstract public void bindLlista(Alarma elementLlista);
+    }
+
+    private class ViewHolderAlarmaPersistente extends ViewHolderAlarma {
+        private TextView textViewTitulo,textViewHoraInicio,textViewFrecuencia;
 
         public ViewHolderAlarmaPersistente(View itemView) {
             super(itemView);
-
             textViewTitulo = (TextView) itemView.findViewById(R.id.textView_titulo_AP);
-            textViewMensaje = (TextView) itemView.findViewById(R.id.textView_mensaje_AP);
             textViewHoraInicio = (TextView) itemView.findViewById(R.id.textView_horaInicio_AP);
-            textViewHoraDuracion = (TextView) itemView.findViewById(R.id.textView_horaDuracion_AP);
             textViewFrecuencia = (TextView) itemView.findViewById(R.id.textView_frecuencia_AP);
-            textViewContestacion = (TextView) itemView.findViewById(R.id.textView_contestacion_AP);
-            btnDeclinar = (Button) itemView.findViewById(R.id.btn_declinar_tarea);
-            btnTareaRealizada = (Button) itemView.findViewById(R.id.btn_tareaRealizada);
-            cardView= (CardView) itemView.findViewById(R.id.card_view_AP);
-            layoutAlarma= (LinearLayout) itemView.findViewById(R.id.layout_alarma_botones);
         }
 
         public void bindLlista(Alarma elementLlista) {
             if (elementLlista.getTipo() == DBAdapter.TIPO_ALARMA_REPETITIVA) {
-                textViewTitulo.setText("Alarma repetitiva");
+                textViewTitulo.setText(context.getResources().getString(R.string.tipo_alarma_repetitiva));
             } else if (elementLlista.getTipo() == DBAdapter.TIPO_ALARMA_PERSISTENTE) {
-                textViewTitulo.setText("Alarma persistente");
+                textViewTitulo.setText(context.getResources().getString(R.string.tipo_alarma_persistente));
             }
             textViewMensaje.setText(elementLlista.getMensaje());
             textViewHoraInicio.setText(elementLlista.getHora_inicio());
             textViewHoraDuracion.setText(elementLlista.getHora_duracion());
-            textViewFrecuencia.setText(elementLlista.getFrecuencia());
+            if(elementLlista.getTipo()==DBAdapter.TIPO_ALARMA_REPETITIVA){
+                textViewFrecuencia.setText(elementLlista.getFrecuencia());
+            }else{
+                textViewFrecuencia.setVisibility(View.GONE);
+            }
+            textVewHora.setText(elementLlista.getFecha());
             textViewContestacion.setText(elementLlista.getContestacion());
 
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-            if (elementLlista.isPropietario()) {
-                int margin = context.getResources().getDimensionPixelSize(R.dimen.chat_margin1);
-                layoutParams.setMargins(dpToPixel(60), margin, margin, dpToPixel(5));
-            } else {
-                int margin = context.getResources().getDimensionPixelSize(R.dimen.chat_margin1);
-                layoutParams.setMargins(margin, margin, dpToPixel(60), dpToPixel(5));
-            }
-            cardView.setLayoutParams(layoutParams);
+            cambiarVista(cardView, elementLlista.isPropietario());
 
             //Hacer cambios en el View de la alarma en función del curso de la tarea (CursoTarea)
             if (elementLlista.getCursoTarea().compareTo(Alarma.TAREA_EN_CURSO) != 0) {
-                layoutAlarma.setVisibility(View.GONE);
+                layoutAlarmaBotones.setVisibility(View.GONE);
                 textViewContestacion.setVisibility(View.VISIBLE);
                 if (elementLlista.getCursoTarea().compareTo(Alarma.TAREA_RECHAZADA) == 0) {
                     cardView.setCardBackgroundColor(ContextCompat.getColor(context, android.R.color.holo_red_light));
@@ -283,10 +280,55 @@ public class AdaptadorChat extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             }
         }
 
+    }
 
-        private int dpToPixel(float dp){
-            DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-            return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+    private class ViewHolderAlarmaFija extends ViewHolderAlarma {
+
+        public ViewHolderAlarmaFija(View itemView) {
+            super(itemView);
         }
+
+        public void bindLlista(Alarma elementLlista) {
+            textViewMensaje.setText(elementLlista.getMensaje());
+            textViewHoraDuracion.setText(elementLlista.getHora_duracion());
+            textVewHora.setText(elementLlista.getFecha());
+            textViewContestacion.setText(elementLlista.getContestacion());
+
+            cambiarVista(cardView, elementLlista.isPropietario());
+
+            //Hacer cambios en el View de la alarma en función del curso de la tarea (CursoTarea)
+            if (elementLlista.getCursoTarea().compareTo(Alarma.TAREA_EN_CURSO) != 0) {
+                layoutAlarmaBotones.setVisibility(View.GONE);
+                textViewContestacion.setVisibility(View.VISIBLE);
+                if (elementLlista.getCursoTarea().compareTo(Alarma.TAREA_RECHAZADA) == 0) {
+                    cardView.setCardBackgroundColor(ContextCompat.getColor(context, android.R.color.holo_red_light));
+                } else if (elementLlista.getCursoTarea().compareTo(Alarma.TAREA_REALIZADA) == 0) {
+                    cardView.setCardBackgroundColor(ContextCompat.getColor(context, android.R.color.holo_green_dark));
+                }
+            }
+        }
+    }
+
+    /**
+     * Se alinea la vista a izquierda o derecha dependiendo de si es del usuario propietario o no.
+     * @param view vista que se desea alinear
+     * @param esPropietario 'true' si la vista es del propietario o 'false' si no lo es
+     */
+    private void cambiarVista(View view, boolean esPropietario){
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        if (esPropietario) {
+            int margin = context.getResources().getDimensionPixelSize(R.dimen.chat_margin1);
+            layoutParams.setMargins(dpToPixel(60), margin, margin, dpToPixel(5));
+        } else {
+            int margin = context.getResources().getDimensionPixelSize(R.dimen.chat_margin1);
+            layoutParams.setMargins(margin, margin, dpToPixel(60), dpToPixel(5));
+        }
+        view.setLayoutParams(layoutParams);
+    }
+
+    private int dpToPixel(float dp){
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 }
