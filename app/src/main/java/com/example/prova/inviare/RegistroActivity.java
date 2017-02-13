@@ -70,10 +70,10 @@ public class RegistroActivity extends AppCompatActivity {
         aceptar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String name = _nombreText.getText().toString();
-                String email = _emailText.getText().toString();
-                String pass = _contraText.getText().toString();
-                String tel = _telefonoText.getText().toString();
+                final String name = _nombreText.getText().toString();
+                final String email = _emailText.getText().toString();
+                final String pass = _contraText.getText().toString();
+                final String tel = _telefonoText.getText().toString();
 
                 if (name.isEmpty() || email.isEmpty() || pass.isEmpty() || tel.isEmpty()){
                     Snackbar.make(activity_reg, R.string.campos_vacios, Snackbar.LENGTH_SHORT).show();
@@ -116,23 +116,27 @@ public class RegistroActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void registro(String nombre, String email, String contrasena, int telefono){
+    private void registro(final String nombre, final String email, final String contrasena, final int telefono){
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, contrasena).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
-                    Log.i("TestInvi", "Añadido a autentificación de BBDD");
+
+                    final DatabaseReference tutorialRef = database.getReference(TABLE_CONTACTOS);
+                    //añadir contactos a la bbdd
+
+                    Usuario usuario = new Usuario(nombre, email, telefono);
+                    tutorialRef.push().setValue(usuario);
+
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+
+                    finish();
                 }else {
                     Log.i("TestInvi", task.getException().getMessage()+"");
+                    Snackbar.make(activity_reg, R.string.error_login, Snackbar.LENGTH_SHORT).show();
                 }
             }
         });
-
-        final DatabaseReference tutorialRef = database.getReference(TABLE_CONTACTOS);
-
-        //añadir contactos a la bbdd
-
-        Usuario usuario = new Usuario(nombre, email, contrasena, telefono);
-        tutorialRef.push().setValue(usuario);
     }
 }

@@ -9,7 +9,7 @@ public class Usuario {
     public Usuario() {
     }
 
-    public Usuario(String nombre, String email, String estado, int telefono) {
+    public Usuario(String nombre, String email, int telefono) {
         this.nombre = nombre;
         this.email = email;
         this.estado = estado;
