@@ -26,6 +26,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import com.example.prova.inviare.adapters.AdaptadorAlarmas;
+import com.example.prova.inviare.db_adapters.DBAdapter;
 import com.example.prova.inviare.elementos.Alarma;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -35,7 +36,7 @@ import static android.content.ContentValues.TAG;
 
 public class AlarmasActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener{
     private ArrayList listaAlarmas;
-    private RecyclerView rvA;
+    private RecyclerView recyclerViewA;
     private CheckBox chkInstante;
     private Calendar c = Calendar.getInstance();
     private Spinner tipoAlarmas;
@@ -50,7 +51,6 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
     private EditText mensaje;
     private Spinner spnh_i;
     private TextView dur;
-    private String duracion_spiner;
     private String freq_spiner;
     private String resultadoDia="";
     private TextView freq;
@@ -59,8 +59,6 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
     private LinearLayout layoutH;
     private LinearLayout layoutD;
     private int contadorTipo=0;
-    private int year, month, day, hour, minute;
-    private int yearFinal, monthFinal, dayFinal, hourFinal, minuteFinal;
 
 
     @Override
@@ -98,7 +96,7 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
         FAB = (FloatingActionButton) findViewById(R.id.fab);
         spn_Duracion = (Spinner) findViewById(R.id.spinnerDuracion);
         spnh_i = (Spinner) findViewById(R.id.spinnerInicio);
-        rvA = (RecyclerView) findViewById(R.id.recyclerAlarmas);
+        recyclerViewA = (RecyclerView) findViewById(R.id.recyclerAlarmas);
 
         adapterHoraInicioDuracion = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, hora_inicio_duracion);
@@ -127,9 +125,9 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
 
         rvLM = new LinearLayoutManager(this);
         apdAlarmas = new AdaptadorAlarmas(listaAlarmas, AlarmasActivity.this);
-        rvA.setLayoutManager(rvLM);
-        rvA.setAdapter(apdAlarmas);
-        rvA.setNestedScrollingEnabled(false);
+        recyclerViewA.setLayoutManager(rvLM);
+        recyclerViewA.setAdapter(apdAlarmas);
+        recyclerViewA.setNestedScrollingEnabled(false);
 
 
         //Es el listener del checkBox.
@@ -155,9 +153,9 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
         btnDia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                year = c.get(Calendar.YEAR);
-                month = c.get(Calendar.MONTH);
-                day = c.get(Calendar.DAY_OF_MONTH);
+                int year = c.get(Calendar.YEAR);
+                int month = c.get(Calendar.MONTH);
+                int day = c.get(Calendar.DAY_OF_MONTH);
 
                 DatePickerDialog datePicker = new DatePickerDialog(AlarmasActivity.this, AlarmasActivity.this, year, month, day);
                 datePicker.show();
@@ -169,8 +167,8 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
             @Override
             public void onClick(View v) {
                 Calendar c = Calendar.getInstance();
-                hour = c.get(Calendar.HOUR_OF_DAY);
-                minute = c.get(Calendar.MINUTE);
+                int hour = c.get(Calendar.HOUR_OF_DAY);
+                int minute = c.get(Calendar.MINUTE);
 
                 TimePickerDialog timePicker = new TimePickerDialog(AlarmasActivity.this, AlarmasActivity.this, hour, minute, DateFormat.is24HourFormat(getApplicationContext()));
                 timePicker.show();
@@ -246,99 +244,29 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
 
             }
         });
-        //Listener del spinner de duracion.
-        spn_Duracion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            //Cuando se selecciona un item del spinner entra aqui
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                duracion_spiner = adapterView.getItemAtPosition(i).toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-        //Listener del spinner de frecuencia
-        frecuencia.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            //Cuando se selecciona un item del spinner entra aqui
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                freq_spiner = adapterView.getItemAtPosition(i).toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
 
         //Cuando se pulsa el FAB entra
         FAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent();
-                Bundle b = new Bundle();
+                i.putExtra(getResources().getString(R.string.intent_alarma_mensaje),mensaje.getText().toString());
+                i.putExtra(getResources().getString(R.string.intent_alarma_fecha),resultadoDia);
+                i.putExtra(getResources().getString(R.string.intent_alarma_hora_duracion),spn_Duracion.getSelectedItem().toString());
+                i.putExtra(getResources().getString(R.string.intent_alarma_frecuencia),frecuencia.getSelectedItem().toString());
+
                 if (selected.equals(getString(R.string.tipo_fija))){
-                    b.putString("fecha", resultadoDia);
-                    b.putInt("tipo", contadorTipo+1);
-                    b.putString("hora_inicial", resultado);
-                    b.putString("hora_duracion", "");
-                    b.putString("frecuencia", "");
-                    Log.d("Hola" , mensaje.getText().toString()+ " "+ resultadoDia);
-                    i.putExtras(b);
-                    setResult(RESULT_OK, i);
-                    finish();
-
+                    i.putExtra(getResources().getString(R.string.intent_alarma_tipo), DBAdapter.TIPO_ALARMA_FIJA);
+                    i.putExtra(getResources().getString(R.string.intent_alarma_hora_inicio),btnHora.getText().toString());
+                }else if(selected.equals(getString(R.string.tipo_repetitiva))){
+                    i.putExtra(getResources().getString(R.string.intent_alarma_tipo),DBAdapter.TIPO_ALARMA_REPETITIVA);
+                    i.putExtra(getResources().getString(R.string.intent_alarma_hora_inicio),resultado);
+                }else if(selected.equals(getString(R.string.tipo_persistente))){
+                    i.putExtra(getResources().getString(R.string.intent_alarma_tipo),DBAdapter.TIPO_ALARMA_PERSISTENTE);
+                    i.putExtra(getResources().getString(R.string.intent_alarma_hora_inicio),resultado);
                 }
-                if (selected.equals(getString(R.string.tipo_repetitiva))){
-                    if (chClicked==false) {
-                        b.putString("mensaje", mensaje.getText().toString());
-                        b.putString("fecha", "");
-                        b.putInt("tipo", contadorTipo+1);
-                        b.putString("hora_inicial", "");
-                        b.putString("hora_duracion", duracion_spiner);
-                        b.putString("frecuencia", freq_spiner);
-                        i.putExtras(b);
-                        Log.d("Hola" , mensaje + " "+frecuencia);
-                        setResult(RESULT_OK, i);
-                        finish();
-                    }else{
-                        b.putString("mensaje", mensaje.getText().toString());
-                        b.putString("fecha", "");
-                        b.putInt("tipo", contadorTipo+1);
-                        b.putString("hora_inicial", h_inicial);
-                        b.putString("hora_duracion", duracion_spiner);
-                        b.putString("frecuencia", freq_spiner);
-                        i.putExtras(b);
-                        setResult(RESULT_OK, i);
-                        finish();
-                    }
-                }
-                if (selected.equals(getString(R.string.tipo_persistente))){
-                    if (chClicked==false) {
-                        b.putString("mensaje", mensaje.getText().toString());
-                        b.putString("fecha", "");
-                        b.putInt("tipo", contadorTipo+1);
-                        b.putString("hora_inicial", "");
-                        b.putString("hora_duracion", duracion_spiner);
-                        b.putString("frecuencia", "");
-                        i.putExtras(b);
-                        setResult(RESULT_OK, i);
-                        finish();
-                    }else{
-                        b.putString("mensaje", mensaje.getText().toString());
-                        b.putString("fecha", "");
-                        b.putInt("tipo", contadorTipo+1);
-                        b.putString("hora_inicial", h_inicial);
-                        b.putString("hora_duracion", duracion_spiner);
-                        b.putString("frecuencia", "");
-                        i.putExtras(b);
-
-                        setResult(RESULT_OK, i);
-                        finish();
-                    }
-                }
+                setResult(RESULT_OK, i);
+                finish();
             }
         });
 
@@ -359,13 +287,11 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
         }*/
     }
 
+    @Override
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-        yearFinal=i;
-        monthFinal=i1 + 1;
-        dayFinal=i2;
-        GregorianCalendar GregorianCalendar = new GregorianCalendar(yearFinal, monthFinal, dayFinal-1);
+        GregorianCalendar gregorianCalendar = new GregorianCalendar(i, i1 + 1, i2-1);
 
-        int dayOfWeek=GregorianCalendar.get(GregorianCalendar.DAY_OF_WEEK);
+        int dayOfWeek=gregorianCalendar.get(GregorianCalendar.DAY_OF_WEEK);
 
         switch (dayOfWeek){
             case 1:
@@ -397,8 +323,8 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
 
     @Override
     public void onTimeSet(TimePicker timePicker, int i, int i1) {
-        hourFinal = i;
-        minuteFinal = i1;
+        int hourFinal = i;
+        int minuteFinal = i1;
 
         String resultadoHora=String.valueOf(hourFinal);
         String resultadoMinutos =String.valueOf(minuteFinal);

@@ -1,7 +1,6 @@
 package com.example.prova.inviare;
 
 import android.content.Intent;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +8,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,6 +26,7 @@ import java.util.Date;
 
 public class ConversacionActivity extends AppCompatActivity{
     private static final int ALARMA_REQUEST=0;
+    private RecyclerView recyclerView;
     private DBAdapter dbAdapter;
     private int id_conversacion;
     private ArrayList<Object> arrayMensajes;
@@ -41,9 +40,9 @@ public class ConversacionActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversacion);
 
-        final RecyclerView recyclerView= (RecyclerView) findViewById(R.id.recycler_view_conversacion);
         final EditText editTextConversacion= (EditText) findViewById(R.id.editTextConversacion);
         final FloatingActionButton floatingActionButton= (FloatingActionButton) findViewById(R.id.floatingActionButton);
+        recyclerView= (RecyclerView) findViewById(R.id.recycler_view_conversacion);
         arrayMensajes= new ArrayList<>();
 
         // Se obtiene el ID de la conversación y se carga de la base de datos ([-2] no carga nada).
@@ -107,29 +106,29 @@ public class ConversacionActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 if(seleccionarAlarma){
-                    //Seleccionar alarma - Intent-> ID del contacto de este chat
+                    // SELECCIONAR ALARMA - Intent-> ID del contacto de este chat
                     Intent returnIntent = new Intent(getApplicationContext(),AlarmasActivity.class);
                     returnIntent.putExtra(getResources().getString(R.string.intent_conversacion_id),id_conversacion);
                     startActivityForResult(returnIntent, ALARMA_REQUEST);
                 }else{
-                    //Enviar mensaje
-                    //Guardar en la base de datos local
+                    // ENVIAR MENSAJE
+                    // Guardar mensaje en la base de datos local
                     SimpleDateFormat dfDataBase = new SimpleDateFormat(getResources().getString(R.string.simple_date_format_DB), java.util.Locale.getDefault());
                     SimpleDateFormat dfMuestra = new SimpleDateFormat(getResources().getString(R.string.simple_date_format_MENSAJE), java.util.Locale.getDefault());
                     Date horaActual = Calendar.getInstance().getTime();
                     String date = dfDataBase.format(horaActual);
                     String dateMuestra = dfMuestra.format(horaActual);
                     dbAdapter.insertarMensaje(editTextConversacion.getText().toString(),date,DBAdapter.TIPO_TEXTO,null,null,null,null,id_conversacion);
-                    //Mostrar por pantalla (A la derecha si es propietario [-1])
+                    // Mostrar por pantalla (A la derecha si es propietario [-1])
                     boolean propietario=false;
                     if(id_conversacion==getResources().getInteger(R.integer.id_propietario)) propietario=true;
                     arrayMensajes.add(new Mensaje(editTextConversacion.getText().toString(),dateMuestra, propietario));
-                    //Notificar cambios a la interfaz
+                    // Notificar cambios a la interfaz
                     adaptador.notifyItemInserted(arrayMensajes.size()-1);
                     recyclerView.scrollToPosition(arrayMensajes.size()-1);
-                    //Eliminar del editText
+                    // Eliminar del editText
                     editTextConversacion.setText("");
-                    //Enviar a FireBbase
+                    // Enviar a FireBbase
 
                 }
             }
@@ -139,19 +138,20 @@ public class ConversacionActivity extends AppCompatActivity{
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        if(requestCode==RESULT_OK){
-            if(resultCode==ALARMA_REQUEST){
-                String mensaje = data.getStringExtra(getResources().getString(R.string.intent_alarma_mensaje));
-                String fecha = data.getStringExtra(getResources().getString(R.string.intent_alarma_fecha));
-                int tipo = data.getIntExtra(getResources().getString(R.string.intent_alarma_tipo),0);
-                String hora_inicial = data.getStringExtra(getResources().getString(R.string.intent_alarma_hora_inicio));
-                String hora_duracion = data.getStringExtra(getResources().getString(R.string.intent_alarma_hora_duracion));
-                String frecuencia = data.getStringExtra(getResources().getString(R.string.intent_alarma_frecuencia));
+        if(resultCode==RESULT_OK){
+            if(requestCode==ALARMA_REQUEST){
+                final String mensaje = data.getStringExtra(getResources().getString(R.string.intent_alarma_mensaje));
+                final String fecha = data.getStringExtra(getResources().getString(R.string.intent_alarma_fecha));
+                final int tipo = data.getIntExtra(getResources().getString(R.string.intent_alarma_tipo),0);
+                final String hora_inicial = data.getStringExtra(getResources().getString(R.string.intent_alarma_hora_inicio));
+                final String hora_duracion = data.getStringExtra(getResources().getString(R.string.intent_alarma_hora_duracion));
+                final String frecuencia = data.getStringExtra(getResources().getString(R.string.intent_alarma_frecuencia));
 
 
                 arrayMensajes.add(new Alarma(mensaje,fecha,tipo,hora_inicial,hora_duracion,frecuencia,Alarma.TAREA_EN_CURSO,null,true));
+                // Notificar cambios a la interfaz
                 adaptador.notifyItemInserted(arrayMensajes.size()-1);
+                recyclerView.scrollToPosition(arrayMensajes.size()-1);
             }
         }
     }
