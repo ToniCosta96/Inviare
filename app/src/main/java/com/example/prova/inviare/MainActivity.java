@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,7 +19,6 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
@@ -48,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
         // FIREBASE
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
+        /*mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {//cuando cambiamos la sesión
                 FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -63,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.i("TestInvi", "Sesión iniciada");
                 }
             }
-        };
+        };*/
 
         USUARIO_ACCESO_DIRECTO = sharedPref.getInt(getResources().getString(R.string.preferences_usuario_acceso_directo),ID_PROPIETARIO);
         direccionImagenPropietario=sharedPref.getString(getResources().getString(R.string.preferences_imagen_perfil),null);
@@ -194,14 +192,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        FirebaseAuth.getInstance().addAuthStateListener(mAuthListener);
+        //FirebaseAuth.getInstance().addAuthStateListener(mAuthListener);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         if (mAuthListener != null){
-            FirebaseAuth.getInstance().removeAuthStateListener(mAuthListener);
+            //FirebaseAuth.getInstance().removeAuthStateListener(mAuthListener);
         }
     }
 }
