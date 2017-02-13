@@ -111,4 +111,10 @@
     <string name="foto">Foto</string>
     <string name="contentDescription_imageViewContacto">Imagen de perfil del contacto</string>
     <string name="fecha_">Fecha:</string>
+
+    <!--Mensajes registro-->
+    <string name="campos_vacios">Por favor, rellena los campos vacios</string>
+
+    <string name="cerrar_sesion">Cerrar sesión</string>
+
 </resources>
