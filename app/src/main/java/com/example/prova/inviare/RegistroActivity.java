@@ -1,20 +1,35 @@
 package com.example.prova.inviare;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
+import com.example.prova.inviare.elementos.Contacto;
+import com.example.prova.inviare.elementos_firebase.Usuario;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+
+import static com.example.prova.inviare.R.layout.activity_registro;
 
 public class RegistroActivity extends AppCompatActivity {
 
@@ -29,10 +44,14 @@ public class RegistroActivity extends AppCompatActivity {
     Button aceptar;
     Button cancelar;
 
+    RelativeLayout activity_reg;
+    FirebaseDatabase database;
+    public static final String TABLE_CONTACTOS = "contactos";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registro);
+        setContentView(activity_registro);
 
         ButterKnife.inject(this);
         ImageView back_image = (ImageView) findViewById(R.id.back_image);
@@ -40,7 +59,32 @@ public class RegistroActivity extends AppCompatActivity {
         aceptar=(Button)findViewById(R.id.aceptar);
         cancelar=(Button)findViewById(R.id.cancelar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
+        if (actionBar != null)actionBar.hide();
+
+
+        activity_reg = (RelativeLayout) findViewById(R.id.activity_registro);
+        database = FirebaseDatabase.getInstance();
+        _nombreText = (EditText) findViewById(R.id.input_nombre);
+        _emailText = (EditText) findViewById(R.id.input_email);
+        _contraText = (EditText) findViewById(R.id.input_contra);
+        _telefonoText = (EditText) findViewById(R.id.input_telefono);
+
+        aceptar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String name = _nombreText.getText().toString();
+                String email = _emailText.getText().toString();
+                String pass = _contraText.getText().toString();
+                String tel = _telefonoText.getText().toString();
+
+                if (name.isEmpty() || email.isEmpty() || pass.isEmpty() || tel.isEmpty()){
+                    Snackbar.make(activity_reg, R.string.campos_vacios, Snackbar.LENGTH_SHORT).show();
+                }else {
+                    registro(name, email, pass, Integer.parseInt(tel));
+                }
+            }
+        });
+
 
         cancelar.setOnClickListener(new View.OnClickListener() {
 
@@ -72,5 +116,25 @@ public class RegistroActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void registro(String nombre, String email, String contrasena, int telefono){
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, contrasena).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()){
+                    Log.i("TestInvi", "Añadido a autentificación de BBDD");
+                }else {
+                    Log.i("TestInvi", task.getException().getMessage()+"");
+                }
+            }
+        });
+
+        final DatabaseReference tutorialRef = database.getReference(TABLE_CONTACTOS);
+
+        //añadir contactos a la bbdd
+
+        Usuario usuario = new Usuario(nombre, email, contrasena, telefono);
+        tutorialRef.push().setValue(usuario);
     }
 }

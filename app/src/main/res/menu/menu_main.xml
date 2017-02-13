@@ -14,5 +14,7 @@
         android:id="@+id/item_perfil" />
     <item android:title="@string/ajustes"
         android:id="@+id/item_ajustes" />
+    <item android:title="@string/cerrar_sesion"
+        android:id="@+id/item_logOut" />
 
 </menu>
