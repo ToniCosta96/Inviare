@@ -1,42 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_content"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="com.example.prova.inviare.AlarmasActivity">
+    android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/appbar_padding_top"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="?android:attr/actionBarSize"
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        app:title="Alarmas">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/AppTheme.PopupOverlay">
+            app:contentScrim="?attr/colorPrimary"
+            app:title="Alarmas">
 
-        </android.support.v7.widget.Toolbar>
 
-        <android.support.design.widget.TabLayout
-            android:id="@+id/tabs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="wrap_content"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:title="Alarmas"
+                android:background="@color/colorPrimary">
+
+
+            </android.support.v7.widget.Toolbar>
+
+            <TextView
+                android:text="Alarmas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/Alarmas"
+                android:textColor="@android:color/background_light"
+                android:textSize="22dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp" />
+
+
+        </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -44,6 +53,228 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:srcCompat="@drawable/ic_alarm_black_24dp" />
 
+
+
+    <android.support.v4.widget.NestedScrollView android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="fill_vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
+
+
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <android.support.v7.widget.CardView
+
+
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:layout_height="260dp"
+                android:layout_width="match_parent"
+                card_view:cardUseCompatPadding="true"
+                card_view:cardElevation="4dp"
+                app:cardBackgroundColor="@android:color/white"
+                android:layout_marginLeft="-9dp"
+                android:layout_marginRight="-9dp"
+                android:layout_marginTop="-9dp">
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_margin="5dp">
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:weightSum="1">
+
+                        <TextView
+                            android:text="Tipo de alarma:"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/textView"
+                            android:textSize="18dp"
+                            android:textColor="@android:color/black"
+                            android:layout_marginTop="5dp" />
+
+                        <Spinner
+                            android:layout_width="220dp"
+                            android:layout_height="40dp"
+                            android:id="@+id/spinnerTipo"
+                            style="@style/Base.Widget.AppCompat.Spinner.Underlined"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="0.86" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <EditText
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:inputType="textPersonName"
+                            android:text=""
+                            android:ems="10"
+                            android:id="@+id/etxtMensaje"
+                            android:hint="Mensaje"
+                            android:layout_weight="1" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/alarma">
+
+                        <CheckBox
+                            android:text="Notificar al instante"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/chkInstante"
+                            android:layout_weight="1" />
+
+                        <Spinner
+                            android:layout_width="194dp"
+                            android:layout_height="42dp"
+                            android:id="@+id/spinnerInicio"
+                            android:layout_weight="0.85" />
+
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3.09">
+
+                        <TextView
+                            android:text="Duración: "
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/txtDuracion"
+                            android:layout_weight="1"
+                            android:textSize="18dp"
+                            android:textColor="@android:color/black" />
+
+                        <Spinner
+                            android:layout_width="190dp"
+                            android:layout_height="36dp"
+                            android:id="@+id/spinnerDuracion"
+                            android:layout_weight="1.00" />
+
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:layout_marginTop="10dp"
+                        android:id="@+id/layoutD">
+
+                        <Button
+                            android:text="     Dia: "
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:id="@+id/btnDia"
+                            android:background="@drawable/button_border"
+                            android:gravity="left|center_vertical|center_horizontal" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="left|center"
+                        android:id="@+id/layoutH">
+
+
+                        <Button
+                            android:text="     Hora: "
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:background="@drawable/button_border"
+                            android:id="@+id/btnHora"
+                            android:gravity="left|center_vertical|center_horizontal"
+                            android:layout_marginBottom="20dp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:text="Frecuencia"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:id="@+id/txtFrecuencia"
+                            android:layout_weight="0.14"
+                            android:textColor="@android:color/black"
+                            android:textSize="18dp" />
+
+                        <Spinner
+                            android:layout_width="200dp"
+                            android:layout_height="42dp"
+                            android:id="@+id/spinnerFrecuencia"
+                            android:layout_weight="0.44" />
+
+                    </LinearLayout>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+
+            </LinearLayout>
+
+
+            <android.support.v7.widget.RecyclerView
+
+                android:layout_width="match_parent"
+
+                android:layout_height="wrap_content"
+
+                android:id="@+id/recyclerAlarmas"
+                android:layout_marginTop="25dp"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+
+
+        </LinearLayout>
+
+
+
+
+    </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>
+
+
+
+
