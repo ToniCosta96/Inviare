@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="tipo">
-        <item>Fija</item>
-        <item>Repetitiva</item>
-        <item>Persistente</item>
+    <string-array name="tipo_alarma">
+        <item>@string/tipo_fija</item>
+        <item>@string/tipo_repetitiva</item>
+        <item>@string/tipo_persistente</item>
     </string-array>
 
     <string-array name="duracion_h_inicio">

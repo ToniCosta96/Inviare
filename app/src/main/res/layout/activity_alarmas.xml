@@ -28,8 +28,6 @@
                 app:layout_collapseMode="pin"
                 app:title="Alarmas"
                 android:background="@color/colorPrimary">
-
-
             </android.support.v7.widget.Toolbar>
 
             <TextView
@@ -38,10 +36,9 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/Alarmas"
                 android:textColor="@android:color/background_light"
-                android:textSize="22dp"
-                android:layout_marginLeft="20dp"
+                android:textSize="22sp"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp" />
-
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -57,34 +54,24 @@
         app:fabSize="normal" />
 
 
-
     <android.support.v4.widget.NestedScrollView android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="fill_vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp">
-
-
-
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <android.support.v7.widget.CardView
-
-
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:layout_height="260dp"
+                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                card_view:cardUseCompatPadding="true"
-                card_view:cardElevation="4dp"
+                card_view:cardElevation="5dp"
                 app:cardBackgroundColor="@android:color/white"
-                android:layout_marginLeft="-9dp"
-                android:layout_marginRight="-9dp"
-                android:layout_marginTop="-9dp">
+                card_view:cardCornerRadius="0dp">
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
@@ -106,7 +93,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/textView"
-                            android:textSize="18dp"
+                            android:textSize="18sp"
                             android:textColor="@android:color/black"
                             android:layout_marginTop="5dp" />
 
@@ -118,26 +105,17 @@
                             android:layout_marginTop="10dp"
                             android:layout_weight="0.86" />
 
-
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:orientation="horizontal"
+                    <EditText
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1">
-
-                        <EditText
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:inputType="textPersonName"
-                            android:text=""
-                            android:ems="10"
-                            android:id="@+id/etxtMensaje"
-                            android:hint="Mensaje"
-                            android:layout_weight="1" />
-
-                    </LinearLayout>
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName"
+                        android:text=""
+                        android:ems="10"
+                        android:id="@+id/etxtMensaje"
+                        android:hint="@string/conversacion_escribir_mensaje"
+                        android:layout_weight="1" />
 
                     <LinearLayout
                         android:orientation="horizontal"
@@ -154,10 +132,9 @@
 
                         <Spinner
                             android:layout_width="194dp"
-                            android:layout_height="42dp"
                             android:id="@+id/spinnerInicio"
-                            android:layout_weight="0.85" />
-
+                            android:layout_weight="0.85"
+                            android:layout_height="40dp" />
 
                     </LinearLayout>
                     <LinearLayout
@@ -177,10 +154,9 @@
 
                         <Spinner
                             android:layout_width="190dp"
-                            android:layout_height="36dp"
                             android:id="@+id/spinnerDuracion"
-                            android:layout_weight="1.00" />
-
+                            android:layout_weight="1.00"
+                            android:layout_height="40dp" />
 
                     </LinearLayout>
                     <LinearLayout
@@ -197,8 +173,7 @@
                             android:layout_height="40dp"
                             android:id="@+id/btnDia"
                             android:background="@drawable/button_border"
-                            android:gravity="left|center_vertical|center_horizontal" />
-
+                            android:gravity="start|center_vertical|center_horizontal" />
 
                     </LinearLayout>
 
@@ -206,9 +181,8 @@
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_gravity="left|center"
+                        android:layout_gravity="start|center"
                         android:id="@+id/layoutH">
-
 
                         <Button
                             android:text="     Hora: "
@@ -216,7 +190,7 @@
                             android:layout_height="40dp"
                             android:background="@drawable/button_border"
                             android:id="@+id/btnHora"
-                            android:gravity="left|center_vertical|center_horizontal"
+                            android:gravity="start|center_vertical|center_horizontal"
                             android:layout_marginBottom="20dp" />
 
                     </LinearLayout>
@@ -225,10 +199,11 @@
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1">
+                        android:visibility="invisible"
+                        android:id="@+id/layoutFrecuencia">
 
                         <TextView
-                            android:text="Frecuencia"
+                            android:text="@string/fracuencia_"
                             android:layout_width="wrap_content"
                             android:layout_height="36dp"
                             android:id="@+id/txtFrecuencia"
@@ -246,33 +221,15 @@
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-
-
-            </LinearLayout>
-
-
             <android.support.v7.widget.RecyclerView
-
                 android:layout_width="match_parent"
-
                 android:layout_height="wrap_content"
-
                 android:id="@+id/recyclerAlarmas"
-                android:layout_marginTop="25dp"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-
-
-
+                android:layout_marginTop="10dp"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp" />
         </LinearLayout>
-
-
-
-
     </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>
 

@@ -35,31 +35,16 @@ import java.util.GregorianCalendar;
 import static android.content.ContentValues.TAG;
 
 public class AlarmasActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener{
-    private ArrayList listaAlarmas;
-    private RecyclerView recyclerViewA;
-    private CheckBox chkInstante;
-    private Calendar c = Calendar.getInstance();
-    private Spinner tipoAlarmas;
-    private String h_inicial;
+    private Spinner spinnerTipoAlarmas;
     private boolean chClicked;
-    private String resultadoH;
-    private String resultado="";
-    private Spinner spn_Duracion;
-    private FloatingActionButton FAB;
-    private String selected="";
-    private Spinner frecuencia;
-    private EditText mensaje;
-    private Spinner spnh_i;
-    private TextView dur;
-    private String freq_spiner;
-    private String resultadoDia="";
-    private TextView freq;
-    private Button btnHora;
-    private Button btnDia;
-    private LinearLayout layoutH;
-    private LinearLayout layoutD;
-    private int contadorTipo=0;
-
+    private String resultado;
+    private Spinner spinnerDuracion;
+    private String selected;
+    private Spinner spinnerFrecuencia;
+    private Spinner spinnerTiempoInicio;
+    private Button btnHora,btnDia;
+    private String resultadoDia;
+    private TextView textViewFreq;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,67 +53,66 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
         setContentView(R.layout.activity_alarmas);
         getWindow().setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark));
 
-        AdaptadorAlarmas apdAlarmas;
-        ArrayAdapter<String> adapterTipoAlarmas;
-        ArrayAdapter<String> adapterFrecuencia;
-        ArrayAdapter<String> adapterHoraInicioDuracion;
-        LinearLayoutManager rvLM;
-        String tipo[] = getResources().getStringArray(R.array.tipo);
-        String frecuencia_array[] = getResources().getStringArray(R.array.frecuencia);
-        String hora_inicio_duracion[] = getResources().getStringArray(R.array.duracion_h_inicio);
+        final String tipo[] = getResources().getStringArray(R.array.tipo_alarma);
+        final String frecuencia_array[] = getResources().getStringArray(R.array.frecuencia);
+        final String hora_inicio_duracion[] = getResources().getStringArray(R.array.duracion_h_inicio);
 
-
-
-        layoutD = (LinearLayout) findViewById(R.id.layoutD);
-        layoutH = (LinearLayout) findViewById(R.id.layoutH);
-        CollapsingToolbarLayout collapsingToolbar =
+        final LinearLayout layoutD = (LinearLayout) findViewById(R.id.layoutD);
+        final LinearLayout layoutH = (LinearLayout) findViewById(R.id.layoutH);
+        final LinearLayout layoutFrecuencia = (LinearLayout) findViewById(R.id.layoutFrecuencia);
+        /*CollapsingToolbarLayout collapsingToolbar =
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        collapsingToolbar.setTitle("Alarmas");
+        collapsingToolbar.setTitle("Alarmas");*/
 
-        tipoAlarmas = (Spinner) findViewById(R.id.spinnerTipo);
-        mensaje = (EditText) findViewById(R.id.etxtMensaje);
+        spinnerTipoAlarmas = (Spinner) findViewById(R.id.spinnerTipo);
+        final EditText editTextMensaje = (EditText) findViewById(R.id.etxtMensaje);
         btnHora = (Button) findViewById(R.id.btnHora);
-        frecuencia = (Spinner) findViewById(R.id.spinnerFrecuencia);
+        spinnerFrecuencia = (Spinner) findViewById(R.id.spinnerFrecuencia);
         btnDia = (Button) findViewById(R.id.btnDia);
-        chkInstante = (CheckBox) findViewById(R.id.chkInstante);
-        dur = (TextView) findViewById(R.id.txtDuracion);
-        freq = (TextView) findViewById(R.id.txtFrecuencia);
-        FAB = (FloatingActionButton) findViewById(R.id.fab);
-        spn_Duracion = (Spinner) findViewById(R.id.spinnerDuracion);
-        spnh_i = (Spinner) findViewById(R.id.spinnerInicio);
-        recyclerViewA = (RecyclerView) findViewById(R.id.recyclerAlarmas);
+        final CheckBox chkInstante = (CheckBox) findViewById(R.id.chkInstante);
+        final TextView textViewDuracion = (TextView) findViewById(R.id.txtDuracion);
+        textViewFreq = (TextView) findViewById(R.id.txtFrecuencia);
+        final FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
+        spinnerDuracion = (Spinner) findViewById(R.id.spinnerDuracion);
+        spinnerTiempoInicio = (Spinner) findViewById(R.id.spinnerInicio);
+        final RecyclerView recyclerViewA = (RecyclerView) findViewById(R.id.recyclerAlarmas);
 
-        adapterHoraInicioDuracion = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, hora_inicio_duracion);
-        adapterHoraInicioDuracion.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        adapterHoraInicioDuracion.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spnh_i.setAdapter(adapterHoraInicioDuracion);
-        spn_Duracion.setAdapter(adapterHoraInicioDuracion);
+        ArrayAdapter<String> adapterTipoAlarmas,adapterFrecuencia,adapterHoraInicioDuracion;
 
-        adapterFrecuencia = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, frecuencia_array);
-        adapterFrecuencia.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        frecuencia.setAdapter(adapterFrecuencia);
-
-
-        adapterTipoAlarmas = new ArrayAdapter<String>(this,
+        // ADAPTER TIPO DE ALARMA
+        adapterTipoAlarmas = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, tipo);
         adapterTipoAlarmas.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        tipoAlarmas.setAdapter(adapterTipoAlarmas);
+        spinnerTipoAlarmas.setAdapter(adapterTipoAlarmas);
+
+        // ADAPTER HORA INICIO - HORA DURACION
+        adapterHoraInicioDuracion = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, hora_inicio_duracion);
+        adapterHoraInicioDuracion.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerTiempoInicio.setAdapter(adapterHoraInicioDuracion);
+        spinnerDuracion.setAdapter(adapterHoraInicioDuracion);
+
+        // ADAPTER FRECUENCIA
+        adapterFrecuencia = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, frecuencia_array);
+        adapterFrecuencia.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerFrecuencia.setAdapter(adapterFrecuencia);
 
 
-        listaAlarmas = new ArrayList();
+        //ArrayList de alarmas
+        ArrayList<Alarma> listaAlarmas = new ArrayList<>();
         for (int i=0;i<10;i++) {
             listaAlarmas.add(new Alarma("Alarma 1", "12", 1,"jk","hj","jk", "", "", true));
         }
         listaAlarmas.add(new Alarma("Alarma 2", "12", 2,"jk","hj","jk", "", "", true));
 
-        rvLM = new LinearLayoutManager(this);
-        apdAlarmas = new AdaptadorAlarmas(listaAlarmas, AlarmasActivity.this);
+        AdaptadorAlarmas adaptadorAlarmas;
+        adaptadorAlarmas = new AdaptadorAlarmas(listaAlarmas, AlarmasActivity.this);
+        // LinearLayoutManager
+        LinearLayoutManager rvLM = new LinearLayoutManager(this);
         recyclerViewA.setLayoutManager(rvLM);
-        recyclerViewA.setAdapter(apdAlarmas);
+        recyclerViewA.setAdapter(adaptadorAlarmas);
         recyclerViewA.setNestedScrollingEnabled(false);
-
 
         //Es el listener del checkBox.
         chkInstante.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -136,14 +120,14 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
             @Override
             public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
                 if (chkInstante.isChecked()){
-                    spnh_i.setAlpha(0.5f);
-                    spnh_i.setEnabled(false);
-                    spnh_i.setClickable(false);
+                    spinnerTiempoInicio.setAlpha(0.5f);
+                    spinnerTiempoInicio.setEnabled(false);
+                    spinnerTiempoInicio.setClickable(false);
                     chClicked = true;
                 }else{
-                    spnh_i.setAlpha(1f);
-                    spnh_i.setEnabled(true);
-                    spnh_i.setClickable(true);
+                    spinnerTiempoInicio.setAlpha(1f);
+                    spinnerTiempoInicio.setEnabled(true);
+                    spinnerTiempoInicio.setClickable(true);
                     chClicked = false;
                 }
             }
@@ -153,6 +137,7 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
         btnDia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Calendar c = Calendar.getInstance();
                 int year = c.get(Calendar.YEAR);
                 int month = c.get(Calendar.MONTH);
                 int day = c.get(Calendar.DAY_OF_MONTH);
@@ -177,66 +162,44 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
         });
 
         //Es el listener del spinner de tipo de alarma.
-        tipoAlarmas.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinnerTipoAlarmas.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             //Cuando se selecciona un item del spinner entra aqui
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 selected = adapterView.getItemAtPosition(i).toString();
-                contadorTipo=i;
                 //Se coltrola el tipo de alarma para ir haciendo desaparecer o aparecer las cosas.
-                if (selected.equals(getString(R.string.tipo_fija))){
+                if (selected.compareTo(getString(R.string.tipo_fija))==0){
                     btnHora.setVisibility(View.VISIBLE);
                     btnDia.setVisibility(View.VISIBLE);
                     layoutD.setVisibility(View.VISIBLE);
                     layoutH.setVisibility(View.VISIBLE);
                     chkInstante.setVisibility(View.GONE);
-                    spnh_i.setVisibility(View.GONE);
-                    dur.setVisibility(View.GONE);
-                    spn_Duracion.setVisibility(View.GONE);
-                    freq.setVisibility(View.GONE);
-                    frecuencia.setVisibility(View.GONE);
-                }
-                if (selected.equals(getString(R.string.tipo_repetitiva))) {
+                    spinnerTiempoInicio.setVisibility(View.GONE);
+                    textViewDuracion.setVisibility(View.GONE);
+                    spinnerDuracion.setVisibility(View.GONE);
+                    layoutFrecuencia.setVisibility(View.GONE);
+                }else if(selected.compareTo(getString(R.string.tipo_repetitiva))==0) {
                     chkInstante.setVisibility(View.VISIBLE);
-                    spnh_i.setVisibility(View.VISIBLE);
-                    dur.setVisibility(View.VISIBLE);
-                    spn_Duracion.setVisibility(View.VISIBLE);
-                    freq.setVisibility(View.VISIBLE);
-                    frecuencia.setVisibility(View.VISIBLE);
+                    spinnerTiempoInicio.setVisibility(View.VISIBLE);
+                    textViewDuracion.setVisibility(View.VISIBLE);
+                    spinnerDuracion.setVisibility(View.VISIBLE);
                     btnHora.setVisibility(View.GONE);
                     btnDia.setVisibility(View.GONE);
                     layoutD.setVisibility(View.GONE);
                     layoutH.setVisibility(View.GONE);
-                }
-                if (selected.equals(getString(R.string.tipo_persistente))){
+                    layoutFrecuencia.setVisibility(View.VISIBLE);
+                }else if(selected.compareTo(getString(R.string.tipo_persistente))==0){
                     chkInstante.setVisibility(View.VISIBLE);
-                    spnh_i.setVisibility(View.VISIBLE);
-                    dur.setVisibility(View.VISIBLE);
-                    spn_Duracion.setVisibility(View.VISIBLE);
-                    freq.setVisibility(View.VISIBLE);
-                    frecuencia.setVisibility(View.GONE);
-                    freq.setVisibility(View.GONE);
+                    spinnerTiempoInicio.setVisibility(View.VISIBLE);
+                    textViewDuracion.setVisibility(View.VISIBLE);
+                    spinnerDuracion.setVisibility(View.VISIBLE);
+                    textViewFreq.setVisibility(View.VISIBLE);
                     btnHora.setVisibility(View.GONE);
                     btnDia.setVisibility(View.GONE);
                     layoutD.setVisibility(View.GONE);
                     layoutH.setVisibility(View.GONE);
+                    layoutFrecuencia.setVisibility(View.INVISIBLE);
                 }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
-        //Listener del spinner de hora inicio en el caso de habilitarlo.
-        spnh_i.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                h_inicial = adapterView.getItemAtPosition(i).toString();
-
             }
 
             @Override
@@ -246,14 +209,14 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
         });
 
         //Cuando se pulsa el FAB entra
-        FAB.setOnClickListener(new View.OnClickListener() {
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent();
-                i.putExtra(getResources().getString(R.string.intent_alarma_mensaje),mensaje.getText().toString());
+                i.putExtra(getResources().getString(R.string.intent_alarma_mensaje),editTextMensaje.getText().toString());
                 i.putExtra(getResources().getString(R.string.intent_alarma_fecha),resultadoDia);
-                i.putExtra(getResources().getString(R.string.intent_alarma_hora_duracion),spn_Duracion.getSelectedItem().toString());
-                i.putExtra(getResources().getString(R.string.intent_alarma_frecuencia),frecuencia.getSelectedItem().toString());
+                i.putExtra(getResources().getString(R.string.intent_alarma_hora_duracion),spinnerDuracion.getSelectedItem().toString());
+                i.putExtra(getResources().getString(R.string.intent_alarma_frecuencia),spinnerFrecuencia.getSelectedItem().toString());
 
                 if (selected.equals(getString(R.string.tipo_fija))){
                     i.putExtra(getResources().getString(R.string.intent_alarma_tipo), DBAdapter.TIPO_ALARMA_FIJA);
@@ -269,10 +232,6 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
                 finish();
             }
         });
-
-
-
-
     }
 
     public void guardarAlarmas(String mensaje, int tipo,  String  h_i, String  h_f, String feecuencia, String dia) {
@@ -317,15 +276,10 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
                 break;
         }
         btnDia.setText("     Dia:  "+resultadoDia);
-
-
     }
 
     @Override
-    public void onTimeSet(TimePicker timePicker, int i, int i1) {
-        int hourFinal = i;
-        int minuteFinal = i1;
-
+    public void onTimeSet(TimePicker timePicker, int hourFinal, int minuteFinal) {
         String resultadoHora=String.valueOf(hourFinal);
         String resultadoMinutos =String.valueOf(minuteFinal);
 
@@ -336,7 +290,7 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
         if (minuteFinal<10) {
             resultadoMinutos = "0" + String.valueOf(minuteFinal);
         }
-        resultadoH =(resultadoHora + " : : " + resultadoMinutos);
+        String resultadoH =(resultadoHora + " : : " + resultadoMinutos);
         resultado = (String.valueOf(hourFinal)+ "::" + String.valueOf(minuteFinal));
         btnHora.setText("     Hora:  "+resultadoH);
     }
