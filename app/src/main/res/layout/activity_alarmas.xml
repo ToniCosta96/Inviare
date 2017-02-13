@@ -53,7 +53,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_alarm_black_24dp" />
+        app:srcCompat="@drawable/ic_send_button"
+        app:fabSize="normal" />
 
 
 
