@@ -1,6 +1,7 @@
 package com.example.prova.inviare;
 
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -146,6 +148,7 @@ public class ConversacionActivity extends AppCompatActivity{
                 String hora_inicial = data.getStringExtra(getResources().getString(R.string.intent_alarma_hora_inicio));
                 String hora_duracion = data.getStringExtra(getResources().getString(R.string.intent_alarma_hora_duracion));
                 String frecuencia = data.getStringExtra(getResources().getString(R.string.intent_alarma_frecuencia));
+
 
                 arrayMensajes.add(new Alarma(mensaje,fecha,tipo,hora_inicial,hora_duracion,frecuencia,Alarma.TAREA_EN_CURSO,null,true));
                 adaptador.notifyItemInserted(arrayMensajes.size()-1);

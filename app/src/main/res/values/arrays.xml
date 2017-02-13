@@ -2,8 +2,8 @@
 <resources>
     <string-array name="tipo">
         <item>Fija</item>
-        <item>Persistente</item>
         <item>Repetitiva</item>
+        <item>Persistente</item>
     </string-array>
 
     <string-array name="duracion_h_inicio">

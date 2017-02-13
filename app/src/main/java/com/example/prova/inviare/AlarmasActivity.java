@@ -2,6 +2,7 @@ package com.example.prova.inviare;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
@@ -57,6 +58,7 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
     private Button btnDia;
     private LinearLayout layoutH;
     private LinearLayout layoutD;
+    private int contadorTipo=0;
     private int year, month, day, hour, minute;
     private int yearFinal, monthFinal, dayFinal, hourFinal, minuteFinal;
 
@@ -76,6 +78,7 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
         String tipo[] = getResources().getStringArray(R.array.tipo);
         String frecuencia_array[] = getResources().getStringArray(R.array.frecuencia);
         String hora_inicio_duracion[] = getResources().getStringArray(R.array.duracion_h_inicio);
+
 
 
         layoutD = (LinearLayout) findViewById(R.id.layoutD);
@@ -181,6 +184,7 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
             //Cuando se selecciona un item del spinner entra aqui
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 selected = adapterView.getItemAtPosition(i).toString();
+                contadorTipo=i;
                 //Se coltrola el tipo de alarma para ir haciendo desaparecer o aparecer las cosas.
                 if (selected.equals(getString(R.string.tipo_fija))){
                     btnHora.setVisibility(View.VISIBLE);
@@ -234,6 +238,7 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
 
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 h_inicial = adapterView.getItemAtPosition(i).toString();
+
             }
 
             @Override
@@ -272,21 +277,66 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
         FAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent i = new Intent();
+                Bundle b = new Bundle();
                 if (selected.equals(getString(R.string.tipo_fija))){
+                    b.putString("fecha", resultadoDia);
+                    b.putInt("tipo", contadorTipo+1);
+                    b.putString("hora_inicial", resultado);
+                    b.putString("hora_duracion", "");
+                    b.putString("frecuencia", "");
+                    Log.d("Hola" , mensaje.getText().toString()+ " "+ resultadoDia);
+                    i.putExtras(b);
+                    setResult(RESULT_OK, i);
+                    finish();
 
                 }
                 if (selected.equals(getString(R.string.tipo_repetitiva))){
                     if (chClicked==false) {
-
+                        b.putString("mensaje", mensaje.getText().toString());
+                        b.putString("fecha", "");
+                        b.putInt("tipo", contadorTipo+1);
+                        b.putString("hora_inicial", "");
+                        b.putString("hora_duracion", duracion_spiner);
+                        b.putString("frecuencia", freq_spiner);
+                        i.putExtras(b);
+                        Log.d("Hola" , mensaje + " "+frecuencia);
+                        setResult(RESULT_OK, i);
+                        finish();
                     }else{
-
+                        b.putString("mensaje", mensaje.getText().toString());
+                        b.putString("fecha", "");
+                        b.putInt("tipo", contadorTipo+1);
+                        b.putString("hora_inicial", h_inicial);
+                        b.putString("hora_duracion", duracion_spiner);
+                        b.putString("frecuencia", freq_spiner);
+                        i.putExtras(b);
+                        setResult(RESULT_OK, i);
+                        finish();
                     }
                 }
                 if (selected.equals(getString(R.string.tipo_persistente))){
                     if (chClicked==false) {
-
+                        b.putString("mensaje", mensaje.getText().toString());
+                        b.putString("fecha", "");
+                        b.putInt("tipo", contadorTipo+1);
+                        b.putString("hora_inicial", "");
+                        b.putString("hora_duracion", duracion_spiner);
+                        b.putString("frecuencia", "");
+                        i.putExtras(b);
+                        setResult(RESULT_OK, i);
+                        finish();
                     }else{
+                        b.putString("mensaje", mensaje.getText().toString());
+                        b.putString("fecha", "");
+                        b.putInt("tipo", contadorTipo+1);
+                        b.putString("hora_inicial", h_inicial);
+                        b.putString("hora_duracion", duracion_spiner);
+                        b.putString("frecuencia", "");
+                        i.putExtras(b);
 
+                        setResult(RESULT_OK, i);
+                        finish();
                     }
                 }
             }
