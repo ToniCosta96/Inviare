@@ -122,11 +122,11 @@ public class RegistroActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
 
-                    final DatabaseReference tutorialRef = database.getReference(TABLE_CONTACTOS);
+                    final DatabaseReference contactosRef = database.getReference(TABLE_CONTACTOS);
                     //añadir contactos a la bbdd
 
                     Usuario usuario = new Usuario(nombre, email, telefono);
-                    tutorialRef.push().setValue(usuario);
+                    contactosRef.push().setValue(usuario);
 
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);

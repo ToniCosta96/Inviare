@@ -23,6 +23,8 @@ import android.widget.Toast;
 
 import com.example.prova.inviare.adapters.AdaptadorContactos;
 import com.example.prova.inviare.elementos.Contacto;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -35,6 +37,8 @@ public class ContactosActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contactos);
+
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
 
         final RecyclerView recyclerView= (RecyclerView) findViewById(R.id.recycler_view_contactos);
 
@@ -170,4 +174,8 @@ public class ContactosActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    /*private void cargaContactos(){
+        final DatabaseReference contactosRef = database.getReference();
+    }*/
 }

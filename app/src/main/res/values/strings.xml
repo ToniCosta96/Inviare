@@ -61,8 +61,10 @@
     <!--Mensajes registro-->
     <string name="campos_vacios">Por favor, rellena los campos vacios</string>
     <string name="error_login">Error al iniciar sesión</string>
-
     <string name="cerrar_sesion">Cerrar sesión</string>
+
+    <!--Tags Firebase-->
+    <string name="TABLE_CONTACTOS">contactos</string>
 
     <string name="title_activity_alarmas">Enviar notificación</string>
     <string name="action_settings">Settings</string>
