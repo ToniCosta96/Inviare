@@ -1,5 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string-array name="tipo">
+        <item>Fija</item>
+        <item>Persistente</item>
+        <item>Repetitiva</item>
+    </string-array>
 
+    <string-array name="duracion_h_inicio">
+        <item>10 min</item>
+        <item>20 min</item>
+        <item>30 min</item>
+        <item>1h</item>
+        <item>2h</item>
+        <item>6h</item>
+        <item>12h</item>
+        <item>24h</item>
+    </string-array>
+
+    <string-array name="frecuencia">
+        <item>5 min</item>
+        <item>10 min</item>
+        <item>15 min</item>
+        <item>20 min</item>
+        <item>30 min</item>
+        <item>1h</item>
+    </string-array>
 
 </resources>

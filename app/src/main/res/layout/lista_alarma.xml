@@ -66,12 +66,10 @@
 
 
             <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="84dp"
+                android:layout_height="71dp"
                 android:id="@+id/imgAlarma"
-                android:layout_weight="0.27"
-                android:layout_marginTop="22dp" />
-                <!--app:srcCompat="@drawable/alarm1"-->
+                android:layout_marginTop="10dp" />
 
         </LinearLayout>
     </LinearLayout>

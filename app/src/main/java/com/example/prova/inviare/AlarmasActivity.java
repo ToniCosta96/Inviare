@@ -35,25 +35,17 @@ import static android.content.ContentValues.TAG;
 public class AlarmasActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener{
     private ArrayList listaAlarmas;
     private RecyclerView rvA;
-    private LinearLayoutManager rvLM;
-    private AdaptadorAlarmas apdAlarmas;
     private CheckBox chkInstante;
     private Calendar c = Calendar.getInstance();
     private Spinner tipoAlarmas;
-    private String tipo[] = { "Persistente", "Repetitiva", "Fija"};
-    private ArrayAdapter<String> adapterTipoAlarmas;
     private String h_inicial;
     private boolean chClicked;
     private String resultadoH;
     private String resultado="";
-    private String hora_inicio_duracion[] = { "10 min", "20 min", "30 min", "1h", "2h", "6h", "12h", "24h"};
-    private ArrayAdapter<String> adapterHoraInicioDuracion;
     private Spinner spn_Duracion;
     private FloatingActionButton FAB;
     private String selected="";
     private Spinner frecuencia;
-    private String frecuencia_array[] = { "5 min", "10 min", "15 min", "20 min", "30 min", "1h"};
-    private ArrayAdapter<String> adapterFrecuencia;
     private EditText mensaje;
     private Spinner spnh_i;
     private TextView dur;
@@ -75,6 +67,16 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarmas);
         getWindow().setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark));
+
+        AdaptadorAlarmas apdAlarmas;
+        ArrayAdapter<String> adapterTipoAlarmas;
+        ArrayAdapter<String> adapterFrecuencia;
+        ArrayAdapter<String> adapterHoraInicioDuracion;
+        LinearLayoutManager rvLM;
+        String tipo[] = getResources().getStringArray(R.array.tipo);
+        String frecuencia_array[] = getResources().getStringArray(R.array.frecuencia);
+        String hora_inicio_duracion[] = getResources().getStringArray(R.array.duracion_h_inicio);
+
 
         layoutD = (LinearLayout) findViewById(R.id.layoutD);
         layoutH = (LinearLayout) findViewById(R.id.layoutH);
