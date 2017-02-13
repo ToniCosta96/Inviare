@@ -118,6 +118,17 @@
     <string name="contentDescription_imageViewContacto">Imagen de perfil del contacto</string>
     <string name="fecha_">Fecha:</string>
 
+    <string name="dia_lunes">Lunes</string>
+    <string name="dia_martes">Martes</string>
+    <string name="dia_miercoles">Miercoles</string>
+    <string name="dia_jueves">Jueves</string>
+    <string name="dia_viernes">Viernes</string>
+    <string name="dia_sabado">Sabado</string>
+    <string name="dia_domingo">Domingo</string>
+    <string name="tipo_repetitiva">Repetitiva</string>
+    <string name="tipo_persistente">Persistente</string>
+    <string name="tipo_fija">Fija</string>
+
     <string name="hello_world">Hello world!</string>
     <string name="conversacion_escribir_mensaje">Escribir mensaje</string>
 

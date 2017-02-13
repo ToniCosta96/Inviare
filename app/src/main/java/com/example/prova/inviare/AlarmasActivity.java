@@ -182,7 +182,7 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 selected = adapterView.getItemAtPosition(i).toString();
                 //Se coltrola el tipo de alarma para ir haciendo desaparecer o aparecer las cosas.
-                if (selected.equals("Fija")){
+                if (selected.equals(getString(R.string.tipo_fija))){
                     btnHora.setVisibility(View.VISIBLE);
                     btnDia.setVisibility(View.VISIBLE);
                     layoutD.setVisibility(View.VISIBLE);
@@ -194,7 +194,7 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
                     freq.setVisibility(View.GONE);
                     frecuencia.setVisibility(View.GONE);
                 }
-                if (selected.equals("Repetitiva")) {
+                if (selected.equals(getString(R.string.tipo_repetitiva))) {
                     chkInstante.setVisibility(View.VISIBLE);
                     spnh_i.setVisibility(View.VISIBLE);
                     dur.setVisibility(View.VISIBLE);
@@ -206,7 +206,7 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
                     layoutD.setVisibility(View.GONE);
                     layoutH.setVisibility(View.GONE);
                 }
-                if (selected.equals("Persistente")){
+                if (selected.equals(getString(R.string.tipo_persistente))){
                     chkInstante.setVisibility(View.VISIBLE);
                     spnh_i.setVisibility(View.VISIBLE);
                     dur.setVisibility(View.VISIBLE);
@@ -272,17 +272,17 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
         FAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (selected.equals("Fija")){
+                if (selected.equals(getString(R.string.tipo_fija))){
 
                 }
-                if (selected.equals("Repetitiva")){
+                if (selected.equals(getString(R.string.tipo_repetitiva))){
                     if (chClicked==false) {
 
                     }else{
 
                     }
                 }
-                if (selected.equals("Persistente")){
+                if (selected.equals(getString(R.string.tipo_persistente))){
                     if (chClicked==false) {
 
                     }else{
@@ -319,25 +319,25 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
 
         switch (dayOfWeek){
             case 1:
-                resultadoDia="Lunes";
+                resultadoDia=getString(R.string.dia_lunes);
                 break;
             case 2:
-                resultadoDia="Martes";
+                resultadoDia=getString(R.string.dia_martes);
                 break;
             case 3:
-                resultadoDia="Miercoles";
+                resultadoDia=getString(R.string.dia_miercoles);
                 break;
             case 4:
-                resultadoDia="Jueves";
+                resultadoDia=getString(R.string.dia_jueves);
                 break;
             case 5:
-                resultadoDia="Viernes";
+                resultadoDia=getString(R.string.dia_viernes);
                 break;
             case 6:
-                resultadoDia="Sabado";
+                resultadoDia=getString(R.string.dia_sabado);
                 break;
             case 7:
-                resultadoDia="Domingo";
+                resultadoDia=getString(R.string.dia_domingo);
                 break;
         }
         btnDia.setText("     Dia:  "+resultadoDia);
