@@ -45,29 +45,25 @@ public class MainActivity extends AppCompatActivity {
         // Se carga el SharedPreferences
         final int ID_PROPIETARIO=getResources().getInteger(R.integer.id_propietario);
         final SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.shared_preferences), Context.MODE_PRIVATE);
-        //Si NO has iniciado sesión se carga el activity de inicio de sesión.
-        /*if(!sharedPref.getBoolean(getResources().getString(R.string.preferences_sesion_iniciada),false)){
-            startActivity(new Intent(getApplicationContext(),LoginActivity.class));
-            finish();
-        }*/
 
+        // FIREBASE
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {//cuando cambiamos la sesión
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-// Comprobación de autenticación de Firebase, en caso de no estar autenticado llevara al registro
+                // Comprobación de autenticación de Firebase, en caso de no estar autenticado llevara al registro
                 if (user == null) {
-                    startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                    if(!sharedPref.getBoolean(getResources().getString(R.string.preferences_sesion_iniciada),false)){
+                        // Si NO has iniciado sesión se carga el activity de inicio de sesión.
+                        startActivity(new Intent(getApplicationContext(),LoginActivity.class));
+                        finish();
+                    }
                 }else {
                     Log.i("TestInvi", "Sesión iniciada");
                 }
             }
         };
-
-
-
-
 
         USUARIO_ACCESO_DIRECTO = sharedPref.getInt(getResources().getString(R.string.preferences_usuario_acceso_directo),ID_PROPIETARIO);
         direccionImagenPropietario=sharedPref.getString(getResources().getString(R.string.preferences_imagen_perfil),null);
@@ -163,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
                         nombreContacto = arrayConversaciones.get(j).getTitulo();
                     }
                 }
+                // Se pasa el nombre de este contacto al activity ConversacionActivity
                 i.putExtra(getResources().getString(R.string.intent_conversacion_titulo),nombreContacto);
                 startActivity(i);
                 return true;
@@ -180,6 +177,12 @@ public class MainActivity extends AppCompatActivity {
                 AuthUI.getInstance().signOut(this).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
+                        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.shared_preferences), Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        // Se pone preferences_sesion_iniciada a 'false' (Log out)
+                        editor.putBoolean(getResources().getString(R.string.preferences_sesion_iniciada),false);
+                        editor.apply();
+
                         finish();
                     }
                 });
@@ -187,8 +190,6 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-
 
     @Override
     protected void onStart() {

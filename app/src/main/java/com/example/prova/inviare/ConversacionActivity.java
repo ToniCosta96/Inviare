@@ -43,7 +43,7 @@ public class ConversacionActivity extends AppCompatActivity{
         final FloatingActionButton floatingActionButton= (FloatingActionButton) findViewById(R.id.floatingActionButton);
         arrayMensajes= new ArrayList<>();
 
-        //Se obtiene el ID de la conversación y se carga de la base de datos ([-2] no carga nada).
+        // Se obtiene el ID de la conversación y se carga de la base de datos ([-2] no carga nada).
         id_conversacion = getIntent().getIntExtra(getResources().getString(R.string.intent_conversacion_id),-2);
         android.support.v7.app.ActionBar actionBar=getSupportActionBar();
         if(actionBar!=null){
@@ -53,17 +53,17 @@ public class ConversacionActivity extends AppCompatActivity{
         dbAdapter = new DBAdapter(getApplicationContext());
         dbAdapter.open();
         //Alarma de prueba(BORRAR)
-        arrayMensajes.add(new Alarma("Mensaje","fecha",2,"hora_i","hora_d","frecuencia",Alarma.TAREA_EN_CURSO,null,true));
-        arrayMensajes.add(new Alarma("Mensaje de una alarma repetitiva","fecha2",3,"hora_in","25-210-2017","5 min",Alarma.TAREA_EN_CURSO,null,true));
-        arrayMensajes.add(new Alarma("Mensaje de una alarma fija","fecha2",4,"hora_in","25-210-2017","frecuencia",Alarma.TAREA_EN_CURSO,null,true));
+        arrayMensajes.add(new Alarma("Mensaje","fecha",2,"hora_i","hora_d","Cada 5 min",Alarma.TAREA_EN_CURSO,null,true));
+        arrayMensajes.add(new Alarma("Mensaje de una alarma repetitiva","fecha2",3,"hora_in","25-11-2017",null,Alarma.TAREA_EN_CURSO,null,true));
+        arrayMensajes.add(new Alarma("Mensaje de una alarma fija","fecha2",4,"hora_in","25-10-2017",null,Alarma.TAREA_EN_CURSO,null,true));
         dbAdapter.seleccionarMensaje(arrayMensajes,id_conversacion,DBAdapter.ID_CONTACTO,DBAdapter.TABLE_MENSAJES);
-        //RecyclerView
-        //Adaptador - AdaptadorConversaciones
+        // RecyclerView
+        // Adaptador - AdaptadorConversaciones
         adaptador = new AdaptadorChat(arrayMensajes, getApplicationContext());
         recyclerView.setAdapter(adaptador);
         //Use a linear layout manager
         recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
-        //Recycler scroll
+        // Recycler scroll
         recyclerView.scrollToPosition(arrayMensajes.size()-1);
         recyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
@@ -80,7 +80,7 @@ public class ConversacionActivity extends AppCompatActivity{
             }
         });
 
-        //TextWatcher
+        // TextWatcher
         TextWatcher tw = new TextWatcher() {
             public void afterTextChanged(Editable s){
                 //Cambiar floating_button -> Alarma-Enviar
@@ -99,7 +99,7 @@ public class ConversacionActivity extends AppCompatActivity{
         };
         editTextConversacion.addTextChangedListener(tw);
 
-        //FloatingButton
+        // FloatingButton
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

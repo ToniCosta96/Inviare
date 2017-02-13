@@ -116,5 +116,6 @@
     <string name="fecha_">Fecha:</string>
 
     <string name="hello_world">Hello world!</string>
+    <string name="conversacion_escribir_mensaje">Escribir mensaje</string>
 
 </resources>

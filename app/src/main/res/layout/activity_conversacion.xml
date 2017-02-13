@@ -28,7 +28,8 @@
             android:layout_height="match_parent"
             android:inputType="textShortMessage|textAutoCorrect|textCapSentences|textMultiLine"
             android:ems="10"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:hint="@string/conversacion_escribir_mensaje" />
 
         <android.support.design.widget.FloatingActionButton
             android:layout_width="wrap_content"
