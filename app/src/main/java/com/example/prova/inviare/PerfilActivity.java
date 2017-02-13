@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -32,8 +31,8 @@ import java.io.File;
 
 public class PerfilActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_EXTERNAL_STORAGE = 0;
-    int PHOTO_PICK_REQUEST_CODE = 0;
-    int CAMERA_REQUEST_CODE = 1;
+    private static final int PHOTO_PICK_REQUEST_CODE = 0;
+    private static final int CAMERA_REQUEST_CODE = 1;
     private Button btnGuardar;
     private ImageView imageViewPerfil;
     private ImageView imageViewEliminarFoto;
@@ -166,8 +165,9 @@ public class PerfilActivity extends AppCompatActivity {
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        direccionImagenPerfil= savedInstanceState.getString(getResources().getString(R.string.preferences_imagen_perfil),null);
-        anyadirImagenActivityResult(direccionImagenPerfil,savedInstanceState.getInt("imagenCambiada"));
+        direccionImagenPerfil = savedInstanceState.getString(getResources().getString(R.string.preferences_imagen_perfil),null);
+        intentImagenCambiada = savedInstanceState.getInt("imagenCambiada");
+        anyadirImagenActivityResult(direccionImagenPerfil,intentImagenCambiada);
         super.onRestoreInstanceState(savedInstanceState);
     }
 

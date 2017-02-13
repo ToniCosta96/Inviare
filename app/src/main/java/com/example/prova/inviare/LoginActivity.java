@@ -20,8 +20,8 @@ public class LoginActivity extends AppCompatActivity {
 
     @InjectView(R.id.input_name)
     EditText _nameText;
-    @InjectView(R.id.input_email)
-    EditText _emailText;
+    @InjectView(R.id.input_contrasena)
+    EditText _emailTe;
     Button registro;
     Button iniciar;
 
