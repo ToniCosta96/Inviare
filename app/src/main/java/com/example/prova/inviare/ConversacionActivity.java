@@ -25,6 +25,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class ConversacionActivity extends AppCompatActivity{
+    private static final int ALARMA_REQUEST=0;
     private DBAdapter dbAdapter;
     private int id_conversacion;
     private ArrayList<Object> arrayMensajes;
@@ -104,8 +105,10 @@ public class ConversacionActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 if(seleccionarAlarma){
-                    //Seleccionar alarma
-                    startActivity(new Intent(getApplicationContext(),AlarmasActivity.class));
+                    //Seleccionar alarma - Intent-> ID del contacto de este chat
+                    Intent returnIntent = new Intent(getApplicationContext(),AlarmasActivity.class);
+                    returnIntent.putExtra(getResources().getString(R.string.intent_conversacion_id),id_conversacion);
+                    startActivityForResult(returnIntent, ALARMA_REQUEST);
                 }else{
                     //Enviar mensaje
                     //Guardar en la base de datos local
@@ -129,6 +132,25 @@ public class ConversacionActivity extends AppCompatActivity{
                 }
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode==RESULT_OK){
+            if(resultCode==ALARMA_REQUEST){
+                String mensaje = data.getStringExtra(getResources().getString(R.string.intent_alarma_mensaje));
+                String fecha = data.getStringExtra(getResources().getString(R.string.intent_alarma_fecha));
+                int tipo = data.getIntExtra(getResources().getString(R.string.intent_alarma_tipo),0);
+                String hora_inicial = data.getStringExtra(getResources().getString(R.string.intent_alarma_hora_inicio));
+                String hora_duracion = data.getStringExtra(getResources().getString(R.string.intent_alarma_hora_duracion));
+                String frecuencia = data.getStringExtra(getResources().getString(R.string.intent_alarma_frecuencia));
+
+                arrayMensajes.add(new Alarma(mensaje,fecha,tipo,hora_inicial,hora_duracion,frecuencia,Alarma.TAREA_EN_CURSO,null,true));
+                adaptador.notifyItemInserted(arrayMensajes.size()-1);
+            }
+        }
     }
 
     @Override
