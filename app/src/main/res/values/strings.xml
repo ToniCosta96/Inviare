@@ -58,6 +58,11 @@
     <string name="menu_desactivar_silencio">Desactivar silencio</string>
     <string name="menu_desactivar_bloqueo">Desbloquear contacto</string>
 
+    <!--Mensajes registro-->
+    <string name="campos_vacios">Por favor, rellena los campos vacios</string>
+
+    <string name="cerrar_sesion">Cerrar sesión</string>
+
     <string name="title_activity_alarmas">Enviar notificación</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
@@ -99,12 +104,10 @@
     <string name="declinar_tarea">Rechazar</string>
     <string name="tarea_realizada">Ya he realizado esta tarea</string>
     <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_registro">RegistroActivity</string>
     <string name="tipo_alarma_repetitiva">Alarma repetitiva</string>
     <string name="tipo_alarma_persistente">Alarma persistente</string>
     <string name="tipo_alarma_fija">Alarma fija</string>
-
-    <string name="hello_world">Hello world!</string>
-    <string name="title_activity_registro">RegistroActivity</string>
     <string name="eliminar_contacto">Eliminar contacto</string>
     <string name="eliminar">Eliminar</string>
     <string name="galeria">Galería</string>
@@ -112,9 +115,6 @@
     <string name="contentDescription_imageViewContacto">Imagen de perfil del contacto</string>
     <string name="fecha_">Fecha:</string>
 
-    <!--Mensajes registro-->
-    <string name="campos_vacios">Por favor, rellena los campos vacios</string>
-
-    <string name="cerrar_sesion">Cerrar sesión</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>
