@@ -7,6 +7,8 @@ public class Contacto {
     private String infoExtra;
     private String imagen;
 
+    public Contacto(){}
+
     public Contacto(int id, String titulo, String subtitulo, String infoExtra, String imagen){
         this.id=id;
         this.titulo=titulo;

@@ -3,17 +3,17 @@ package com.example.prova.inviare.elementos_firebase;
 
 public class Usuario {
 
-    private String nombre, email, estado, imagen;
+    private String nombre, email, estado, imagen, uid;
     private int telefono;
 
     public Usuario() {
     }
 
-    public Usuario(String nombre, String email, int telefono) {
+    public Usuario(String nombre, String email, int telefono, String uid) {
         this.nombre = nombre;
         this.email = email;
-        this.estado = estado;
         this.telefono = telefono;
+        this.uid = uid;
     }
 
     public Usuario(String nombre, String email, String estado, String imagen, int telefono) {
@@ -22,6 +22,14 @@ public class Usuario {
         this.estado = estado;
         this.imagen = imagen;
         this.telefono = telefono;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getNombre() {

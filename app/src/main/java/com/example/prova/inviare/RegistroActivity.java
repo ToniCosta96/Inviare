@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
@@ -44,7 +45,7 @@ public class RegistroActivity extends AppCompatActivity {
 
     RelativeLayout activity_reg;
     FirebaseDatabase database;
-    public static final String TABLE_CONTACTOS = "contactos";
+    FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,14 +119,20 @@ public class RegistroActivity extends AppCompatActivity {
 
     private void registro(final String nombre, final String email, final String contrasena, final int telefono){
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, contrasena).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            String uid;
+
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
 
-                    final DatabaseReference contactosRef = database.getReference(TABLE_CONTACTOS);
+                    final DatabaseReference contactosRef = database.getReference(getResources().getString(R.string.TABLE_CONTACTOS));
                     //añadir contactos a la bbdd
 
-                    Usuario usuario = new Usuario(nombre, email, telefono);
+                    uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                    Log.d("probando", "llego "+uid);
+
+                    Usuario usuario = new Usuario(nombre, email, telefono, uid);
                     contactosRef.push().setValue(usuario);
 
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -133,7 +140,6 @@ public class RegistroActivity extends AppCompatActivity {
 
                     finish();
                 }else {
-                    Log.i("TestInvi", task.getException().getMessage()+"");
                     Snackbar.make(activity_reg, R.string.error_login, Snackbar.LENGTH_SHORT).show();
                 }
             }

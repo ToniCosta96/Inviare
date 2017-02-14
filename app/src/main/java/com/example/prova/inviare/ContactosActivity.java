@@ -16,6 +16,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,22 +24,28 @@ import android.widget.Toast;
 
 import com.example.prova.inviare.adapters.AdaptadorContactos;
 import com.example.prova.inviare.elementos.Contacto;
+import com.example.prova.inviare.elementos_firebase.Usuario;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 
 public class ContactosActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CONTACT = 1;
     private ArrayList<Contacto> arrayContactos;
     private AdaptadorContactos adaptador;
+    FirebaseDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contactos);
 
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        database = FirebaseDatabase.getInstance();
 
         final RecyclerView recyclerView= (RecyclerView) findViewById(R.id.recycler_view_contactos);
 
@@ -119,10 +126,12 @@ public class ContactosActivity extends AppCompatActivity {
                 }
             }else{
                 anyadirContactos();
+                //cargaContactos();
             }
         }
         else{
             anyadirContactos();
+            //cargaContactos();
         }
     }
 
@@ -134,6 +143,7 @@ public class ContactosActivity extends AppCompatActivity {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     anyadirContactos();
+                    //cargaContactos();
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
 
@@ -175,7 +185,30 @@ public class ContactosActivity extends AppCompatActivity {
         }
     }
 
-    /*private void cargaContactos(){
-        final DatabaseReference contactosRef = database.getReference();
-    }*/
+    private void cargaContactos(){
+        arrayContactos.clear();
+        final DatabaseReference contactosRef = database.getReference(getResources().getString(R.string.TABLE_CONTACTOS));
+
+        contactosRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    Usuario usuario = snapshot.getValue(Usuario.class);
+                    Contacto contacto = new Contacto();
+
+                    contacto.setTitulo(usuario.getNombre());
+                    contacto.setSubtitulo(usuario.getEstado());
+                    contacto.setId(usuario.getTelefono());
+
+                    arrayContactos.add(contacto);
+                }
+                adaptador.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 }
