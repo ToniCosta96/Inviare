@@ -53,6 +53,23 @@
                 android:textColor="@android:color/black"
                 android:textSize="18dp" />
 
+            <TextView
+                android:text="TextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/dia_duracion"
+                android:textColor="@color/authui_inputTextColorDark"
+                android:textSize="18dp" />
+
+            <TextView
+                android:text="TextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/frecuencia"
+                android:layout_weight="1"
+                android:textColor="@color/authui_inputTextColorDark"
+                android:textSize="18dp" />
+
 
         </LinearLayout>
 

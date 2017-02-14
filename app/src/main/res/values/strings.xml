@@ -132,5 +132,6 @@
     <string name="tipo_fija">Fija</string>
     <string name="conversacion_escribir_mensaje">Escribir mensaje</string>
     <string name="fracuencia_">Frecuancia:</string>
+    <string name="instantanea">Instantanea</string>
 
 </resources>

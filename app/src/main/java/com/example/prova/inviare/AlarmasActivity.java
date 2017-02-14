@@ -105,9 +105,9 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
         //ArrayList de alarmas
         ArrayList<Alarma> listaAlarmas = new ArrayList<>();
         for (int i=0;i<10;i++) {
-            listaAlarmas.add(new Alarma("Alarma 1", "12", 1,"jk","hj","jk", "", "", true));
+            listaAlarmas.add(new Alarma("Alarma 1", "Lunes", DBAdapter.TIPO_ALARMA_FIJA,"12::00","","jk", "", "", true));
         }
-        listaAlarmas.add(new Alarma("Alarma 2", "12", 2,"jk","hj","jk", "", "", true));
+        listaAlarmas.add(new Alarma("Alarma 2", "", DBAdapter.TIPO_ALARMA_REPETITIVA,"2h","3h","20 min", "", "", true));
 
         AdaptadorAlarmas adaptadorAlarmas;
         adaptadorAlarmas = new AdaptadorAlarmas(listaAlarmas, AlarmasActivity.this);
@@ -262,8 +262,8 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
         });
     }
 
-    public void guardarAlarmas(String mensaje, int tipo,  String  h_i, String  h_f, String feecuencia, String dia) {
-        //Aqui recibimos los datos al pulsar el boton de la alarma
+    public void guardarAlarmas(String mensaje, String fecha, int tipo, String hora_inicio, String hora_duracion, String frecuencia) {
+        //Aqui recibimos los datos al pulsar el cardview
         Log.d(TAG, tipo + " " + mensaje);
         /*if (tipo.equals("Persistente")) {
 
@@ -276,31 +276,30 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
 
     @Override
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-        GregorianCalendar gregorianCalendar = new GregorianCalendar(i, i1 + 1, i2-1);
-
+        GregorianCalendar gregorianCalendar = new GregorianCalendar(i, i1 , i2);
         int dayOfWeek=gregorianCalendar.get(GregorianCalendar.DAY_OF_WEEK);
 
         switch (dayOfWeek){
-            case 1:
+            case GregorianCalendar.SUNDAY:
+                resultadoDia=getString(R.string.dia_domingo);
+                break;
+            case GregorianCalendar.MONDAY:
                 resultadoDia=getString(R.string.dia_lunes);
                 break;
-            case 2:
+            case GregorianCalendar.TUESDAY:
                 resultadoDia=getString(R.string.dia_martes);
                 break;
-            case 3:
+            case GregorianCalendar.WEDNESDAY:
                 resultadoDia=getString(R.string.dia_miercoles);
                 break;
-            case 4:
+            case GregorianCalendar.THURSDAY:
                 resultadoDia=getString(R.string.dia_jueves);
                 break;
-            case 5:
+            case GregorianCalendar.FRIDAY:
                 resultadoDia=getString(R.string.dia_viernes);
                 break;
-            case 6:
+            case GregorianCalendar.SATURDAY:
                 resultadoDia=getString(R.string.dia_sabado);
-                break;
-            case 7:
-                resultadoDia=getString(R.string.dia_domingo);
                 break;
         }
         btnDia.setText("     Dia:  "+resultadoDia);
