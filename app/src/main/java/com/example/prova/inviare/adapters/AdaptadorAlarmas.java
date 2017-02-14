@@ -82,13 +82,13 @@ public class AdaptadorAlarmas extends RecyclerView.Adapter <AdaptadorAlarmas.Ala
         holder.mensaje.setText(llistaAlarmas.get(position).getMensaje());
         if (llistaAlarmas.get(position).getTipo()==4){
             //holder.img.setImageResource();
-            holder.tipo.setText(R.string.tipo_fija);
+            holder.tipo.setText(R.string.tipo_alarma_fija);
             holder.hora_inicial.setText(llistaAlarmas.get(position).getHora_inicio());
             holder.dia_duracion.setText(llistaAlarmas.get(position).getFecha());
             holder.frecuencia.setAlpha(0);
         }else if (llistaAlarmas.get(position).getTipo()==3){
             //holder.img.setImageResource();
-            holder.tipo.setText(R.string.tipo_persistente);
+            holder.tipo.setText(R.string.tipo_alarma_persistente);
             if (llistaAlarmas.get(position).getHora_inicio().equals("")){
                 holder.hora_inicial.setText(R.string.instantanea);
             }else{
@@ -99,7 +99,7 @@ public class AdaptadorAlarmas extends RecyclerView.Adapter <AdaptadorAlarmas.Ala
         }else if (llistaAlarmas.get(position).getTipo()==2){
             //holder.img.setImageResource();
             holder.frecuencia.setAlpha(1f);
-            holder.tipo.setText(R.string.tipo_repetitiva);
+            holder.tipo.setText(R.string.tipo_alarma_repetitiva);
             if (llistaAlarmas.get(position).getHora_inicio().equals("")){
                 holder.hora_inicial.setText(R.string.instantanea);
             }else{

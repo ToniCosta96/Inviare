@@ -28,7 +28,9 @@ import android.widget.TimePicker;
 import com.example.prova.inviare.adapters.AdaptadorAlarmas;
 import com.example.prova.inviare.db_adapters.DBAdapter;
 import com.example.prova.inviare.elementos.Alarma;
+import com.google.firebase.auth.FirebaseAuth;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -48,7 +50,8 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
     private Button btnHora,btnDia;
     private String resultadoDia;
     private TextView textViewFreq;
-
+    private int yearFinal, monthFinal, dayFinal;
+    private String resultadoFecha;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -228,8 +231,7 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
 
                 if (selected.equals(getString(R.string.tipo_fija))){
                     tipoAlarma=DBAdapter.TIPO_ALARMA_FIJA;
-                    hora_inicio=resultadoDia;
-                    hora_duracion=resultadoHora;
+                    hora_duracion=resultadoFecha;
                 }else if(selected.equals(getString(R.string.tipo_repetitiva))){
                     tipoAlarma=DBAdapter.TIPO_ALARMA_REPETITIVA;
                     if(!chkInstante.isChecked())hora_inicio=spinnerTiempoInicio.getSelectedItem().toString();
@@ -257,6 +259,7 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
                 dbAdapter.insertarMensaje(mensaje,fechaDataBase,tipoAlarma,hora_inicio,hora_duracion,frecuencia,Alarma.TAREA_EN_CURSO,idConversacion,idConversacion);
                 // FIREBASE - Se guarda en Firebase
 
+
                 finish();
             }
         });
@@ -276,33 +279,12 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
 
     @Override
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-        GregorianCalendar gregorianCalendar = new GregorianCalendar(i, i1 , i2);
-        int dayOfWeek=gregorianCalendar.get(GregorianCalendar.DAY_OF_WEEK);
+        yearFinal=i;
+        monthFinal=i1+1;
+        dayFinal=i2;
 
-        switch (dayOfWeek){
-            case GregorianCalendar.SUNDAY:
-                resultadoDia=getString(R.string.dia_domingo);
-                break;
-            case GregorianCalendar.MONDAY:
-                resultadoDia=getString(R.string.dia_lunes);
-                break;
-            case GregorianCalendar.TUESDAY:
-                resultadoDia=getString(R.string.dia_martes);
-                break;
-            case GregorianCalendar.WEDNESDAY:
-                resultadoDia=getString(R.string.dia_miercoles);
-                break;
-            case GregorianCalendar.THURSDAY:
-                resultadoDia=getString(R.string.dia_jueves);
-                break;
-            case GregorianCalendar.FRIDAY:
-                resultadoDia=getString(R.string.dia_viernes);
-                break;
-            case GregorianCalendar.SATURDAY:
-                resultadoDia=getString(R.string.dia_sabado);
-                break;
-        }
-        btnDia.setText("     Dia:  "+resultadoDia);
+        btnDia.setText("     Fecha:  "+String.valueOf(dayFinal)+"-"+String.valueOf(monthFinal)+"-"+String.valueOf(yearFinal));
+
     }
 
     @Override
@@ -317,9 +299,19 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
         if (minuteFinal<10) {
             resultadoMinutos = "0" + String.valueOf(minuteFinal);
         }
-        String resultadoH =(resultadoHora + " : : " + resultadoMinutos);
-        resultadoHora = (String.valueOf(hourFinal)+ "::" + String.valueOf(minuteFinal));
+        String resultadoH =(resultadoHora + "  : " + resultadoMinutos);
+        resultadoHora = (resultadoHora+ ":" + resultadoMinutos);
+        Log.d(TAG, resultadoHora);
         btnHora.setText("     Hora:  "+resultadoH);
+        resultadoFecha = String.valueOf(dayFinal)+"-"+String.valueOf(monthFinal)+"-"+String.valueOf(yearFinal)+ ", "+resultadoHora;
+
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy, HH:mm");
+        try {
+            Date date = format.parse(resultadoFecha);
+            Log.d(TAG, format.format(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 }
 
