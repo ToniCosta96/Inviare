@@ -290,7 +290,7 @@ public class AdaptadorChat extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         public void bindLlista(Alarma elementLlista) {
             textViewMensaje.setText(elementLlista.getMensaje());
-            textViewHoraDuracion.setText(elementLlista.getHora_inicio()+", "+elementLlista.getHora_duracion());
+            textViewHoraDuracion.setText(elementLlista.getHora_duracion());
             textVewHora.setText(elementLlista.getFecha());
             textViewContestacion.setText(elementLlista.getContestacion());
 

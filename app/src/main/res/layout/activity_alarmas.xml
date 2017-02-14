@@ -36,9 +36,10 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/Alarmas"
                 android:textColor="@android:color/background_light"
-                android:textSize="22sp"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp" />
+                android:layout_marginTop="13dp"
+                android:textAppearance="@android:style/TextAppearance.Material.Title"
+                android:fontFamily="sans-serif-medium" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -228,7 +229,8 @@
                 android:layout_marginTop="10dp"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp" />
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>

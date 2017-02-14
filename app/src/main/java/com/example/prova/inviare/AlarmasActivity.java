@@ -28,19 +28,16 @@ import android.widget.TimePicker;
 import com.example.prova.inviare.adapters.AdaptadorAlarmas;
 import com.example.prova.inviare.db_adapters.DBAdapter;
 import com.example.prova.inviare.elementos.Alarma;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 import static android.content.ContentValues.TAG;
 
 public class AlarmasActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener{
-    private Spinner spinnerTipoAlarmas;
     private boolean chClicked;
     private String resultadoHora;
     private Spinner spinnerDuracion;
@@ -48,7 +45,6 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
     private Spinner spinnerFrecuencia;
     private Spinner spinnerTiempoInicio;
     private Button btnHora,btnDia;
-    private String resultadoDia;
     private TextView textViewFreq;
     private int yearFinal, monthFinal, dayFinal;
     private String resultadoFecha;
@@ -70,7 +66,7 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setTitle("Alarmas");*/
 
-        spinnerTipoAlarmas = (Spinner) findViewById(R.id.spinnerTipo);
+        final Spinner spinnerTipoAlarmas = (Spinner) findViewById(R.id.spinnerTipo);
         final EditText editTextMensaje = (EditText) findViewById(R.id.etxtMensaje);
         btnHora = (Button) findViewById(R.id.btnHora);
         spinnerFrecuencia = (Spinner) findViewById(R.id.spinnerFrecuencia);
@@ -279,6 +275,8 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
 
     @Override
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+        Date date= new Date();
+        date.setYear(i);
         yearFinal=i;
         monthFinal=i1+1;
         dayFinal=i2;
