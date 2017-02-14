@@ -27,7 +27,7 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/separacion_alarma_V1">
+            android:layout_marginTop="@dimen/separacion_alarma_V2">
 
             <TextView
                 android:text="@string/hora_inicio_t"

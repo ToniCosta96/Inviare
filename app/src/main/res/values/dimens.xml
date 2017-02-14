@@ -16,5 +16,6 @@
     <dimen name="ajustes_margen_titulo">15dp</dimen>
     <dimen name="ajustes_margen_ajuste">15dp</dimen>
     <dimen name="ajustes_subtitulo_bottom">2dp</dimen>
-    <dimen name="separacion_alarma_V1">10dp</dimen>
+    <dimen name="separacion_alarma_V1">5dp</dimen>
+    <dimen name="separacion_alarma_V2">10dp</dimen>
 </resources>

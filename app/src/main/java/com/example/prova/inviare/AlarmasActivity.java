@@ -224,7 +224,7 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
                 int tipoAlarma=0;
                 String hora_inicio="-1";
                 String hora_duracion="-1";
-                String frecuencia="-1";
+                String frecuencia=null;
 
                 if (selected.equals(getString(R.string.tipo_fija))){
                     tipoAlarma=DBAdapter.TIPO_ALARMA_FIJA;
@@ -246,16 +246,9 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
                 i.putExtra(getResources().getString(R.string.intent_alarma_mensaje),mensaje);
                 i.putExtra(getResources().getString(R.string.intent_alarma_fecha),fechaMuestra);
                 i.putExtra(getResources().getString(R.string.intent_alarma_tipo),tipoAlarma);
+                i.putExtra(getResources().getString(R.string.intent_alarma_hora_inicio),hora_inicio);
                 i.putExtra(getResources().getString(R.string.intent_alarma_hora_duracion),hora_duracion);
                 i.putExtra(getResources().getString(R.string.intent_alarma_frecuencia),frecuencia);
-
-                if (selected.equals(getString(R.string.tipo_fija))){
-                    i.putExtra(getResources().getString(R.string.intent_alarma_hora_inicio),btnHora.getText().toString());
-                }else if(selected.equals(getString(R.string.tipo_repetitiva))){
-                    i.putExtra(getResources().getString(R.string.intent_alarma_hora_inicio),resultadoDia);
-                }else if(selected.equals(getString(R.string.tipo_persistente))){
-                    i.putExtra(getResources().getString(R.string.intent_alarma_hora_inicio),resultadoDia);
-                }
                 setResult(RESULT_OK, i);
                 // DB_ADAPTER - Se guarda en la base de datos local
                 final String idConversacion=i.getStringExtra(getResources().getString(R.string.intent_conversacion_id)); //ID_conversacion
