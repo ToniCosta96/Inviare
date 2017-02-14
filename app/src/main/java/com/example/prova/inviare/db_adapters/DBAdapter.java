@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.prova.inviare.R;
@@ -40,6 +41,8 @@ public class DBAdapter {
     private static final String HORA_DURACION = "hora_duracion";
     private static final String FRECUENCIA = "frecuencia";
     private static final String CURSO_TAREA = "curso_tarea";
+    private static final String CONTESTACION = "contestacion";
+    private static final String PROPIETARIO_MENSAJE = "propietario";
     public static final String ID_CONTACTO = "contacto_id";
 
     public static final int TIPO_TEXTO = 0; //Texto
@@ -53,9 +56,9 @@ public class DBAdapter {
     public static final int PERMISOS_BLOQUEADO = 2; // Contacto bloqueado
     public static final int PERMISOS_ELIMINADO = 3; // Contacto eliminado
 
-    private static final String DATABASE_CREATE_CONTACTOS = "CREATE TABLE "+TABLE_CONTACTOS+" (_id integer primary key AUTOINCREMENT, nombre text, estado text, imagen text, permisos integer);";
+    private static final String DATABASE_CREATE_CONTACTOS = "CREATE TABLE "+TABLE_CONTACTOS+" (_id text primary key, nombre text, estado text, imagen text, permisos integer);";
     private static final String DATABASE_CREATE_MENSAJES = "CREATE TABLE "+TABLE_MENSAJES+
-            " (_id integer primary key AUTOINCREMENT, mensaje text, fecha text, tipo integer, hora_inicio text, hora_duracion text, frecuencia text, curso_tarea text, contacto_id integer, FOREIGN KEY(contacto_id) REFERENCES contactos(_id));";
+            " (_id integer primary key AUTOINCREMENT, mensaje text, fecha text, tipo integer, hora_inicio text, hora_duracion text, frecuencia text, curso_tarea text, contestacion text, propietario text, contacto_id text, FOREIGN KEY(contacto_id) REFERENCES contactos(_id));";
 
     private static final String DATABASE_DROP_CONTACTOS = "DROP TABLE IF EXISTS "+TABLE_CONTACTOS+";";
     private static final String DATABASE_DROP_MENSAJES = "DROP TABLE IF EXISTS "+TABLE_MENSAJES+";";
@@ -82,11 +85,10 @@ public class DBAdapter {
         }
     }
 
-    public void seleccionarMensaje(ArrayList<Object> arrayElementos, int valor, String columna, String tabla){
+    public void seleccionarMensaje(ArrayList<Object> arrayElementos, String valor, String columna, String tabla){
         //Se introducen los mensajes de la base de datos en el arrayElementos
-        String selectQuery = "SELECT * FROM "+tabla+" WHERE "+columna+" = "+valor+";";
+        String selectQuery = "SELECT * FROM "+tabla+" WHERE "+columna+" LIKE "+valor+";";
         Cursor cursor= db.rawQuery(selectQuery, null);
-
         if(cursor.moveToFirst()){
             do {
                 //Se crea un objeto 'Elemento' con los datos de la DB recogidos por el cursor
@@ -99,11 +101,12 @@ public class DBAdapter {
                     e.printStackTrace();
                 }
                 //Se averigua si el mensaje es del propietario y el tipo de mensaje
-                final boolean mensajePropietario = cursor.getInt(9) == context.getResources().getInteger(R.integer.id_propietario);
+                final boolean mensajePropietario = cursor.getString(9).compareTo(context.getResources().getString(R.string.id_propietario))==0;
+
                 final String fechaFinal=df2.format(dateSegundos);
                 if(cursor.getInt(3)==TIPO_TEXTO){
                     arrayElementos.add(new Mensaje(cursor.getString(1),fechaFinal,mensajePropietario));
-                }else if(cursor.getInt(3)==TIPO_ALARMA_REPETITIVA || cursor.getInt(3)==TIPO_ALARMA_PERSISTENTE){
+                }else if(cursor.getInt(3)==TIPO_ALARMA_REPETITIVA || cursor.getInt(3)==TIPO_ALARMA_PERSISTENTE || cursor.getInt(3)==TIPO_ALARMA_FIJA){
                     arrayElementos.add(new Alarma(cursor.getString(1),fechaFinal,cursor.getInt(3),cursor.getString(4),cursor.getString(5),cursor.getString(6),cursor.getString(7),cursor.getString(8),mensajePropietario));
                 }
 
@@ -123,8 +126,8 @@ public class DBAdapter {
      * PERMISOS_BLOQUEADO = 2<br>
      * PERMISOS_ELIMINADO = 3</p>
      */
-    public int seleccionarPermisoContacto(int valor, String columna){
-        String selectQuery = "SELECT "+PERMISOS+" FROM "+TABLE_CONTACTOS+" WHERE "+columna+" = "+valor+";";
+    public int seleccionarPermisoContacto(String valor, String columna){
+        String selectQuery = "SELECT "+PERMISOS+" FROM "+TABLE_CONTACTOS+" WHERE "+columna+" LIKE "+valor+";";
         Cursor cursor= db.rawQuery(selectQuery, null);
         //Se asigna
         int permisosContacto=-1;
@@ -144,10 +147,10 @@ public class DBAdapter {
      * @param formatoFecha formato de la fecha en string (Ej.: "dd MMMM yyyy, HH:mm")
      * @return String - Fecha del último mensaje recibido
      */
-    public String seleccionarUltimaFechaContacto(int valor, String columna, String formatoFecha){
+    public String seleccionarUltimaFechaContacto(String valor, String columna, String formatoFecha){
         //Se introducen los contactos de la base de datos en el arrayElementos y se intercala Contacto si no es null
         String ultimaFecha=null;
-        String selectQuery = "SELECT MAX(fecha) FROM "+TABLE_MENSAJES+" WHERE "+columna+" = "+valor+";";
+        String selectQuery = "SELECT MAX(fecha) FROM "+TABLE_MENSAJES+" WHERE "+columna+" LIKE "+valor+";";
         Cursor cursor= db.rawQuery(selectQuery, null);
         if(cursor.moveToFirst()){
             SimpleDateFormat df = new SimpleDateFormat(context.getResources().getString(R.string.simple_date_format_DB), java.util.Locale.getDefault());
@@ -169,22 +172,23 @@ public class DBAdapter {
 
     public void seleccionarContactos(ArrayList<Contacto> arrayElementos, String valor, String columna, String tabla){
         //Se introducen los contactos de la base de datos en el arrayElementos y se intercala Contacto si no es null
-        String selectQuery = "SELECT c.nombre,c.estado,c.imagen,m.fecha FROM contactos c INNER JOIN mensajes m ON c._id=m.contacto_id GROUP BY c._id ORDER BY m.fecha;";
+        String selectQuery = "SELECT c._id,c.nombre,c.estado,c.imagen,m.fecha FROM contactos c INNER JOIN mensajes m ON c._id=m.contacto_id GROUP BY c._id ORDER BY m.fecha;";
         Cursor cursor= db.rawQuery(selectQuery, null);
 
         if(cursor.moveToFirst()){
             do {
                 //Se crea un objeto 'Elemento' con los datos de la DB recogidos por el cursor
-                arrayElementos.add(new Contacto(cursor.getInt(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),null));
+                arrayElementos.add(new Contacto(cursor.getString(0),cursor.getString(1),cursor.getString(3),cursor.getString(2),null));
             } while (cursor.moveToNext());
         }
         cursor.close();
     }
 
-    public void insertarContacto(String nom, String estado, String img){
+    public void insertarContacto(String id, String nom, String estado, String img){
         //Creamos un nuevo registro de valores a insertar
         ContentValues newValues = new ContentValues();
         //Asignamos los valores de cada campo
+        newValues.put(ID,id);//Nombre del contacto
         newValues.put(NOMBRE,nom);//Nombre del contacto
         newValues.put(ESTADO,estado);//Estado del contacto
         newValues.put(IMAGEN,img);//Imagen del contacto
@@ -227,18 +231,34 @@ public class DBAdapter {
         cursor.close();
         db.execSQL(insertQuery.toString());
     }*/
-    public void insertarMensaje(String m, String dt, int tipo, String h_i, String h_d, String f, String ct, int contacto_id){
+
+    /**
+     *
+     * @param m Mensaje
+     * @param dt Fecha de creación del mensaje
+     * @param tipo Tipo de mensaje (TIPO_TEXTO, TIPO_ALARMA_FIJA etc.)
+     * @param h_i Tiempo de inicio de la alarma o DIA
+     * @param h_d Tiempo de duración de la alarma o HORA
+     * @param f Frecuencia de la alarma repetitiva
+     * @param ct Curso de la tarea (de la clase Alarma)
+     * @param contacto_id Contacto al que pertenece este mensaje
+     */
+    public void insertarMensaje(String m, String dt, int tipo, String h_i, String h_d, String f, String ct, String propietario, String contacto_id){
         //Creamos un nuevo registro de valores a insertar
         ContentValues newValues = new ContentValues();
         //Asignamos los valores de cada campo
         newValues.put(MENSAJE,m);
-        newValues.put(DATE_TIME,dt);
-        newValues.put(TIPO,tipo);
+        newValues.put(DATE_TIME,dt);    //Fecha
+        newValues.put(TIPO,tipo);       //Tipo de mensaje
         newValues.put(HORA_INICIO,h_i);
         newValues.put(HORA_DURACION,h_d);
         newValues.put(FRECUENCIA,f);
         newValues.put(CURSO_TAREA,ct);
+        newValues.put(CONTESTACION,(String)null);   //De manera predeterminada no habrá contestación
+        newValues.put(PROPIETARIO_MENSAJE,propietario);
         newValues.put(ID_CONTACTO,contacto_id);
+        Log.d("PROPIETARIO ",""+propietario);
+        Log.d("CONTACTO_ID ",""+contacto_id);
         db.insert(TABLE_MENSAJES,null,newValues);
     }
 
@@ -258,9 +278,9 @@ public class DBAdapter {
         Toast.makeText(this.context,n+" registros eliminados",Toast.LENGTH_SHORT).show();
     }
 
-    public void eliminarMensajesPorContacto(int contacto_id){
+    public void eliminarMensajesPorContacto(String contacto_id){
         ContentValues newValues = new ContentValues();
-        int n=db.delete(TABLE_MENSAJES,"contacto_id="+contacto_id,null);
+        int n=db.delete(TABLE_MENSAJES,"contacto_id LIKE"+contacto_id,null);
         Toast.makeText(this.context,n+" mensajes eliminados.",Toast.LENGTH_SHORT).show();
     }
 

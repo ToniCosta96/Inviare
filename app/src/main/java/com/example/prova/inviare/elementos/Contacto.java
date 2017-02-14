@@ -1,7 +1,7 @@
 package com.example.prova.inviare.elementos;
 
 public class Contacto {
-    private int id;
+    private String id;
     private String titulo;
     private String subtitulo;
     private String infoExtra;
@@ -9,7 +9,7 @@ public class Contacto {
 
     public Contacto(){}
 
-    public Contacto(int id, String titulo, String subtitulo, String infoExtra, String imagen){
+    public Contacto(String id, String titulo, String subtitulo, String infoExtra, String imagen){
         this.id=id;
         this.titulo=titulo;
         this.subtitulo=subtitulo;
@@ -17,11 +17,11 @@ public class Contacto {
         this.imagen=imagen;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

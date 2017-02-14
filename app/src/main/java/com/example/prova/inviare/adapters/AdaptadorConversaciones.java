@@ -3,7 +3,6 @@ package com.example.prova.inviare.adapters;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,14 +35,14 @@ public class AdaptadorConversaciones extends RecyclerView.Adapter<AdaptadorConve
     }
 
     @Override
-    public void onBindViewHolder(ListaViewHolder holder, final int position) {
+    public void onBindViewHolder(final ListaViewHolder holder, final int position) {
         final Contacto item = listData.get(position);
         //
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i= new Intent(activity, ConversacionActivity.class);
-                i.putExtra(activity.getResources().getString(R.string.intent_conversacion_posicion_array),position);
+                i.putExtra(activity.getResources().getString(R.string.intent_conversacion_posicion_array),holder.getAdapterPosition());
                 i.putExtra(activity.getResources().getString(R.string.intent_conversacion_id),item.getId());
                 i.putExtra(activity.getResources().getString(R.string.intent_conversacion_titulo),item.getTitulo());
                 activity.startActivityForResult(i,CHAT_REQUEST);

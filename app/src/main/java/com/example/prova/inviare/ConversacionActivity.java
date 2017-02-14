@@ -28,7 +28,7 @@ public class ConversacionActivity extends AppCompatActivity{
     private static final int ALARMA_REQUEST=0;
     private RecyclerView recyclerView;
     private DBAdapter dbAdapter;
-    private int id_conversacion;
+    private String id_conversacion;
     private ArrayList<Object> arrayMensajes;
     private AdaptadorChat adaptador;
     private boolean seleccionarAlarma=true;
@@ -46,7 +46,7 @@ public class ConversacionActivity extends AppCompatActivity{
         arrayMensajes= new ArrayList<>();
 
         // Se obtiene el ID de la conversación y se carga de la base de datos ([-2] no carga nada).
-        id_conversacion = getIntent().getIntExtra(getResources().getString(R.string.intent_conversacion_id),-2);
+        id_conversacion = getIntent().getStringExtra(getResources().getString(R.string.intent_conversacion_id));
         android.support.v7.app.ActionBar actionBar=getSupportActionBar();
         if(actionBar!=null){
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -54,10 +54,6 @@ public class ConversacionActivity extends AppCompatActivity{
         }
         dbAdapter = new DBAdapter(getApplicationContext());
         dbAdapter.open();
-        //Alarma de prueba(BORRAR)
-        arrayMensajes.add(new Alarma("Mensaje","fecha",2,"hora_i","hora_d","Cada 5 min",Alarma.TAREA_EN_CURSO,null,true));
-        arrayMensajes.add(new Alarma("Mensaje de una alarma repetitiva","fecha2",3,"hora_in","25-11-2017",null,Alarma.TAREA_EN_CURSO,null,true));
-        arrayMensajes.add(new Alarma("Mensaje de una alarma fija","fecha2",4,"hora_in","25-10-2017",null,Alarma.TAREA_EN_CURSO,null,true));
         dbAdapter.seleccionarMensaje(arrayMensajes,id_conversacion,DBAdapter.ID_CONTACTO,DBAdapter.TABLE_MENSAJES);
         // RecyclerView
         // Adaptador - AdaptadorConversaciones
@@ -118,10 +114,10 @@ public class ConversacionActivity extends AppCompatActivity{
                     Date horaActual = Calendar.getInstance().getTime();
                     String date = dfDataBase.format(horaActual);
                     String dateMuestra = dfMuestra.format(horaActual);
-                    dbAdapter.insertarMensaje(editTextConversacion.getText().toString(),date,DBAdapter.TIPO_TEXTO,null,null,null,null,id_conversacion);
+                    dbAdapter.insertarMensaje(editTextConversacion.getText().toString(),date,DBAdapter.TIPO_TEXTO,null,null,null,null,getResources().getString(R.string.id_propietario),id_conversacion);
                     // Mostrar por pantalla (A la derecha si es propietario [-1])
                     boolean propietario=false;
-                    if(id_conversacion==getResources().getInteger(R.integer.id_propietario)) propietario=true;
+                    if(id_conversacion.compareTo(getResources().getString(R.string.id_propietario))==0) propietario=true;
                     arrayMensajes.add(new Mensaje(editTextConversacion.getText().toString(),dateMuestra, propietario));
                     // Notificar cambios a la interfaz
                     adaptador.notifyItemInserted(arrayMensajes.size()-1);
@@ -161,7 +157,7 @@ public class ConversacionActivity extends AppCompatActivity{
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_contacto, menu);
         //Si la conversación es del chat personal no se puede silenciar, bloquear ni eliminar
-        if(getIntent().getIntExtra(getResources().getString(R.string.intent_conversacion_id),-2)==getResources().getInteger(R.integer.id_propietario)){
+        if(getIntent().getStringExtra(getResources().getString(R.string.intent_conversacion_id)).compareTo(getResources().getString(R.string.id_propietario))==0){
             menu.removeItem(R.id.item_silenciar);
             menu.removeItem(R.id.item_bloquear);
             menu.removeItem(R.id.item_eliminar_contacto);

@@ -16,7 +16,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,14 +23,8 @@ import android.widget.Toast;
 
 import com.example.prova.inviare.adapters.AdaptadorContactos;
 import com.example.prova.inviare.elementos.Contacto;
-import com.example.prova.inviare.elementos_firebase.Usuario;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 
 public class ContactosActivity extends AppCompatActivity {
@@ -78,7 +71,7 @@ public class ContactosActivity extends AppCompatActivity {
             while (phones.moveToNext()) {
                 String name=phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
                 String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                arrayContactos.add(new Contacto(arrayContactos.size(),name,phoneNumber,"MÓVIL¿?",null));
+                arrayContactos.add(new Contacto("No hay id",name,phoneNumber,"MÓVIL¿?",null));
             }
             phones.close();
         }
@@ -185,30 +178,4 @@ public class ContactosActivity extends AppCompatActivity {
         }
     }
 
-    private void cargaContactos(){
-        arrayContactos.clear();
-        final DatabaseReference contactosRef = database.getReference(getResources().getString(R.string.TABLE_CONTACTOS));
-
-        contactosRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    Usuario usuario = snapshot.getValue(Usuario.class);
-                    Contacto contacto = new Contacto();
-
-                    contacto.setTitulo(usuario.getNombre());
-                    contacto.setSubtitulo(usuario.getEstado());
-                    contacto.setId(usuario.getTelefono());
-
-                    arrayContactos.add(contacto);
-                }
-                adaptador.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
 }
