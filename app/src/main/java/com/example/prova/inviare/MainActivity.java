@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -99,11 +98,14 @@ public class MainActivity extends AppCompatActivity {
             if(resultCode == AppCompatActivity.RESULT_OK){
                 for(int i=0;i<arrayConversaciones.size();i++){
                     if(arrayConversaciones.get(i).getId().compareTo(ID_PROPIETARIO)==0){
-                        Log.d("aaaa","aa");
                         arrayConversaciones.get(i).setImagen(data.getStringExtra(getResources().getString(R.string.preferences_imagen_perfil)));
                         adaptador.notifyItemChanged(i);
                     }
                 }
+            }else{
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
             }
         }else if(requestCode == AJUSTES_REQUEST){
             if(resultCode == AppCompatActivity.RESULT_OK){

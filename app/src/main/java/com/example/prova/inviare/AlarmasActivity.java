@@ -222,7 +222,7 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
                 final String fechaDataBase = dfDataBase.format(horaActual);
                 final String fechaMuestra = dfMuestra.format(horaActual);
                 int tipoAlarma=0;
-                String hora_inicio="-1";
+                String hora_inicio=null;
                 String hora_duracion="-1";
                 String frecuencia=null;
 
@@ -307,7 +307,7 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
 
     @Override
     public void onTimeSet(TimePicker timePicker, int hourFinal, int minuteFinal) {
-        String resultadoHora=String.valueOf(hourFinal);
+        resultadoHora=String.valueOf(hourFinal);
         String resultadoMinutos =String.valueOf(minuteFinal);
 
         if (hourFinal<10){
