@@ -36,7 +36,7 @@ public class PerfilActivity extends AppCompatActivity {
     private Button btnGuardar;
     private ImageView imageViewPerfil;
     private ImageView imageViewEliminarFoto;
-    private String direccionImagenPerfil;
+    private String direccionImagenPerfil=null;
     private int intentImagenCambiada=AppCompatActivity.RESULT_CANCELED;
 
     @Override
@@ -72,7 +72,7 @@ public class PerfilActivity extends AppCompatActivity {
 
         // Se carga el SharedPreferences
         final SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.shared_preferences), Context.MODE_PRIVATE);
-        direccionImagenPerfil = sharedPref.getString(getResources().getString(R.string.preferences_imagen_perfil),"");
+        direccionImagenPerfil = sharedPref.getString(getResources().getString(R.string.preferences_imagen_perfil),null);
         final String nombrePerfil = sharedPref.getString(getResources().getString(R.string.preferences_nombre_perfil),"");
         final String estadoPerfil = sharedPref.getString(getResources().getString(R.string.preferences_estado_perfil),"");
         final String telefonoPerfil = sharedPref.getString(getResources().getString(R.string.preferences_telefono_perfil),"");
@@ -83,7 +83,7 @@ public class PerfilActivity extends AppCompatActivity {
         textViewCorreo.setText(emailPerfil);
 
         // Se carga en el imageViewPerfil la imagen del sharedPreferences
-        if(direccionImagenPerfil.isEmpty()) {
+        if(direccionImagenPerfil==null) {
             imageViewEliminarFoto.setVisibility(View.GONE);
         }else{
             //imageViewPerfil.setImageBitmap(BitmapFactory.decodeFile(imagenPerfil,options));
@@ -107,7 +107,6 @@ public class PerfilActivity extends AppCompatActivity {
                         // Devuelve la dirección de la imagen cambiada al activity anterior
                         direccionImagenPerfil=null;
                         intentImagenCambiada=AppCompatActivity.RESULT_OK;
-                        anyadirImagenActivityResult(null,AppCompatActivity.RESULT_OK);
                     }else{
                         Toast.makeText(getApplicationContext(),"Ha habido algún problema en eliminar la imagen",Toast.LENGTH_SHORT).show();
                     }
@@ -137,7 +136,7 @@ public class PerfilActivity extends AppCompatActivity {
         btnGuardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Si hay cambios se guardan
+                // Si hay cambios se guardan
                 if(editTextNombre.getText().toString().compareTo(nombrePerfil)!=0 || editTextEstado.getText().toString().compareTo(estadoPerfil)!=0 ||
                 editTextTelefono.getText().toString().compareTo(telefonoPerfil)!=0){
                     Context context=getApplicationContext();
@@ -149,7 +148,9 @@ public class PerfilActivity extends AppCompatActivity {
                     editor.apply();
                     Toast.makeText(getApplicationContext(),"Cambios guardados correctamente.",Toast.LENGTH_SHORT).show();
                 }
-                //Cerrar activity
+                // Se guarda la imagen
+                addIntentExtras();
+                // Cerrar activity
                 finish();
             }
         });
@@ -158,7 +159,7 @@ public class PerfilActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         Intent returnIntent= getIntent();
-        outState.putString(getResources().getString(R.string.preferences_imagen_perfil), returnIntent.getStringExtra(getResources().getString(R.string.preferences_imagen_perfil)));
+        outState.putString(getResources().getString(R.string.preferences_imagen_perfil), direccionImagenPerfil);
         outState.putInt("imagenCambiada", intentImagenCambiada);
         super.onSaveInstanceState(outState);
     }
@@ -167,17 +168,15 @@ public class PerfilActivity extends AppCompatActivity {
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         direccionImagenPerfil = savedInstanceState.getString(getResources().getString(R.string.preferences_imagen_perfil),null);
         intentImagenCambiada = savedInstanceState.getInt("imagenCambiada");
-        anyadirImagenActivityResult(direccionImagenPerfil,intentImagenCambiada);
         super.onRestoreInstanceState(savedInstanceState);
     }
 
-    /**
-     * Devuelve la dirección de la nueva imagen al activity anterior
-     */
-    public void anyadirImagenActivityResult(String direccionImagenPerfil, int resultado){
-        Intent returnIntent = getIntent();
-        returnIntent.putExtra(getResources().getString(R.string.preferences_imagen_perfil),direccionImagenPerfil);
-        setResult(resultado,returnIntent);
+    private void addIntentExtras(){
+        if(intentImagenCambiada==AppCompatActivity.RESULT_OK){
+            Intent returnIntent = getIntent();
+            returnIntent.putExtra(getResources().getString(R.string.preferences_imagen_perfil),direccionImagenPerfil);
+            setResult(intentImagenCambiada,returnIntent);
+        }
     }
 
     @Override
@@ -268,6 +267,13 @@ public class PerfilActivity extends AppCompatActivity {
     @Override
     public void onBackPressed()
     {
-        if (btnGuardar.isClickable()) finish();
+        if (btnGuardar.isClickable()) {
+            addIntentExtras();
+            finish();
+        }
+    }
+
+    public void setDireccionImagenPerfil(String direccionImagenPerfil) {
+        this.direccionImagenPerfil = direccionImagenPerfil;
     }
 }
