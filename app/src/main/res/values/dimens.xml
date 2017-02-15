@@ -19,4 +19,5 @@
     <dimen name="separacion_alarma_V1">5dp</dimen>
     <dimen name="separacion_alarma_V2">10dp</dimen>
     <dimen name="chat_alarma_colapso_fecha">-10dp</dimen>
+    <dimen name="lista_chat_padding_fechas">4dp</dimen>
 </resources>

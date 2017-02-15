@@ -39,7 +39,8 @@
                 android:text="@string/fecha_"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView_horaDuracion_At" />
+                android:id="@+id/textView_horaDuracion_At"
+                android:paddingEnd="@dimen/lista_chat_padding_fechas" />
 
             <TextView
                 android:text="TextView"

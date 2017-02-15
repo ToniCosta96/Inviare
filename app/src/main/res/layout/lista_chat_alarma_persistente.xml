@@ -26,7 +26,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/separacion_alarma_V1"
-            android:id="@+id/textView_mensaje_A" />
+            android:id="@+id/textView_mensaje_A"
+            android:textAppearance="@android:style/TextAppearance.Material.Body1" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -35,10 +36,11 @@
             android:layout_marginTop="@dimen/separacion_alarma_V2">
 
             <TextView
-                android:text="@string/hora_inicio_t"
+                android:text="@string/lista_chat_hora_inicio_t"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView_horaInicio_APt" />
+                android:id="@+id/textView_horaInicio_APt"
+                android:paddingEnd="@dimen/lista_chat_padding_fechas" />
 
             <TextView
                 android:text="TextView"
@@ -53,10 +55,11 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:text="@string/hora_duracion_t"
+                android:text="@string/lista_chat_hora_duracion_t"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView_horaDuracion_At" />
+                android:id="@+id/textView_horaDuracion_At"
+                android:paddingEnd="@dimen/lista_chat_padding_fechas" />
 
             <TextView
                 android:text="TextView"

@@ -105,8 +105,9 @@
     <string name="ajustes_t3">General</string>
     <string name="ajustes_eliminar_DB">Eliminar datos de la aplicación</string>
     <string name="ajustes_eliminar_DB_descripcion">Se eliminarán todos los mensajes guardados en el dispositivo</string>
-    <string name="hora_inicio_t">Realizar tarea a partir de: </string>
-    <string name="hora_duracion_t">Terminar tarea antes de: </string>
+    <string name="lista_chat_hora_inicio_t">Realizar tarea a partir de:</string>
+    <string name="lista_chat_hora_duracion_t">Terminar tarea antes de:</string>
+    <string name="lista_chat_frecuencia">Avisar cada %1$s.</string>
     <string name="tarea_terminada">Hecho</string>
     <string name="declinar_tarea">Rechazar</string>
     <string name="tarea_realizada">Ya he realizado esta tarea</string>
