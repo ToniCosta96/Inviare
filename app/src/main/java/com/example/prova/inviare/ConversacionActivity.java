@@ -2,7 +2,9 @@ package com.example.prova.inviare;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +20,12 @@ import com.example.prova.inviare.adapters.AdaptadorChat;
 import com.example.prova.inviare.db_adapters.DBAdapter;
 import com.example.prova.inviare.elementos.Alarma;
 import com.example.prova.inviare.elementos.Mensaje;
+import com.example.prova.inviare.elementos_firebase.Mensajes;
+import com.example.prova.inviare.elementos_firebase.Usuario;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,7 +40,7 @@ public class ConversacionActivity extends AppCompatActivity{
     private ArrayList<Object> arrayMensajes;
     private AdaptadorChat adaptador;
     private boolean seleccionarAlarma=true;
-
+    FirebaseDatabase database;
     private int oldBottom=0;
 
     @Override
@@ -40,6 +48,7 @@ public class ConversacionActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversacion);
 
+        database = FirebaseDatabase.getInstance();
         final EditText editTextConversacion= (EditText) findViewById(R.id.editTextConversacion);
         final FloatingActionButton floatingActionButton= (FloatingActionButton) findViewById(R.id.floatingActionButton);
         recyclerView= (RecyclerView) findViewById(R.id.recycler_view_conversacion);
@@ -117,19 +126,35 @@ public class ConversacionActivity extends AppCompatActivity{
                     dbAdapter.insertarMensaje(editTextConversacion.getText().toString(),date,DBAdapter.TIPO_TEXTO,null,null,null,null,getResources().getString(R.string.id_propietario),id_conversacion);
                     // Mostrar por pantalla (A la derecha si es propietario [-1])
                     boolean propietario=false;
-                    if(id_conversacion.compareTo(getResources().getString(R.string.id_propietario))==0) propietario=true;
+                    if (id_conversacion.compareTo(getResources().getString(R.string.id_propietario))==0) propietario=true;
                     arrayMensajes.add(new Mensaje(editTextConversacion.getText().toString(),dateMuestra, propietario));
                     // Notificar cambios a la interfaz
                     adaptador.notifyItemInserted(arrayMensajes.size()-1);
                     recyclerView.scrollToPosition(arrayMensajes.size()-1);
                     // Eliminar del editText
+                    String mensaje=editTextConversacion.getText().toString();
                     editTextConversacion.setText("");
-                    // Enviar a FireBbase
+                    // Enviar a FireBase
+                    GuardarBBDD(mensaje);
 
                 }
             }
         });
     }
+
+    public void GuardarBBDD(final String mensaje) {
+        String uid;
+
+        final DatabaseReference MensajesRef = database.getReference(getResources().getString(R.string.TABLE_MENSAJES));
+        //añadir mensajes a la bbdd
+
+        uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+            Mensajes mensajes = new Mensajes("", uid, mensaje);
+            MensajesRef.push().setValue(mensajes);
+
+        }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -157,7 +182,7 @@ public class ConversacionActivity extends AppCompatActivity{
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_contacto, menu);
         //Si la conversación es del chat personal no se puede silenciar, bloquear ni eliminar
-        if(getIntent().getStringExtra(getResources().getString(R.string.intent_conversacion_id)).compareTo(getResources().getString(R.string.id_propietario))==0){
+        if (getIntent().getStringExtra(getResources().getString(R.string.intent_conversacion_id)).compareTo(getResources().getString(R.string.id_propietario))==0){
             menu.removeItem(R.id.item_silenciar);
             menu.removeItem(R.id.item_bloquear);
             menu.removeItem(R.id.item_eliminar_contacto);

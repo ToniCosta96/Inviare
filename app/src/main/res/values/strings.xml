@@ -67,9 +67,15 @@
     <string name="error_login">Error al iniciar sesión</string>
     <string name="cerrar_sesion">Cerrar sesión</string>
 
+    <!-- Labels Registro. -->
+    <string name="label_nombre">Nombre</string>
+    <string name="label_email">E-mail</string>
+    <string name="label_contraseña">Contraseña</string>
+    <string name="label_telefono">Telefono</string>
+
     <!--Tags Firebase-->
     <string name="TABLE_CONTACTOS">contactos</string>
-
+    <string name="TABLE_MENSAJES">conversaciones</string>
     <string name="title_activity_alarmas">Enviar notificación</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>

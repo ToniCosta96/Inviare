@@ -130,7 +130,7 @@ public class RegistroActivity extends AppCompatActivity {
 
                     uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                    Log.d("probando", "llego "+uid);
+                   // Log.d("probando", "llego "+uid);
 
                     Usuario usuario = new Usuario(nombre, email, telefono, uid);
                     contactosRef.push().setValue(usuario);
@@ -138,9 +138,9 @@ public class RegistroActivity extends AppCompatActivity {
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
 
-                    finish();
-                }else {
-                    Snackbar.make(activity_reg, R.string.error_login, Snackbar.LENGTH_SHORT).show();
+                finish();
+            }else {
+                Snackbar.make(activity_reg, R.string.error_login, Snackbar.LENGTH_SHORT).show();
                 }
             }
         });
