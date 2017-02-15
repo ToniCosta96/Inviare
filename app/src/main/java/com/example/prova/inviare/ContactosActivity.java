@@ -52,6 +52,8 @@ public class ContactosActivity extends AppCompatActivity {
 
         //Pedir permisos para ver los contactos
         askForContactPermission();
+
+
     }
 
     private void anyadirContactos(){
@@ -119,12 +121,10 @@ public class ContactosActivity extends AppCompatActivity {
                 }
             }else{
                 anyadirContactos();
-                //cargaContactos();
             }
         }
         else{
             anyadirContactos();
-            //cargaContactos();
         }
     }
 
@@ -136,7 +136,6 @@ public class ContactosActivity extends AppCompatActivity {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     anyadirContactos();
-                    //cargaContactos();
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
 

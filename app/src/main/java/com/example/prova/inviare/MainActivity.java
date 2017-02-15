@@ -3,11 +3,13 @@ package com.example.prova.inviare;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,9 +19,17 @@ import com.example.prova.inviare.db_adapters.DBAdapter;
 import com.example.prova.inviare.elementos.Contacto;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -29,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Contacto> arrayConversaciones;
     private AdaptadorConversaciones adaptador;
     private static String USUARIO_ACCESO_DIRECTO;
+    private static final String MY_FIREBASE_BUCKET = "gs://inviare-411d4.appspot.com";
 
     private String direccionImagenPropietario;
 
@@ -44,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         final SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.shared_preferences), Context.MODE_PRIVATE);
 
         // FIREBASE
-        /*FirebaseDatabase database = FirebaseDatabase.getInstance();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {//cuando cambiamos la sesión
@@ -60,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.i("TestInvi", "Sesión iniciada");
                 }
             }
-        };*/
+        };
 
         USUARIO_ACCESO_DIRECTO = sharedPref.getString(getResources().getString(R.string.preferences_usuario_acceso_directo),ID_PROPIETARIO);
         direccionImagenPropietario=sharedPref.getString(getResources().getString(R.string.preferences_imagen_perfil),null);
@@ -95,7 +106,14 @@ public class MainActivity extends AppCompatActivity {
         // ID_PROPIETARIO = -1 <-> Id del propietario del dispositivo
         final String ID_PROPIETARIO=getResources().getString(R.string.id_propietario);
         if (requestCode == PERFIL_REQUEST) {
+
             if(resultCode == AppCompatActivity.RESULT_OK){
+
+                //subirImgFirebase(getResources().getString(R.string.preferences_imagen_perfil));
+                Log.i("CARGA", data.getStringExtra(getResources().getString(R.string.preferences_imagen_perfil)));
+
+                subirImgFirebase(data.getStringExtra(getResources().getString(R.string.preferences_imagen_perfil)));
+
                 for(int i=0;i<arrayConversaciones.size();i++){
                     if(arrayConversaciones.get(i).getId().compareTo(ID_PROPIETARIO)==0){
                         arrayConversaciones.get(i).setImagen(data.getStringExtra(getResources().getString(R.string.preferences_imagen_perfil)));
@@ -195,14 +213,45 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        //FirebaseAuth.getInstance().addAuthStateListener(mAuthListener);
+        FirebaseAuth.getInstance().addAuthStateListener(mAuthListener);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         if (mAuthListener != null){
-            //FirebaseAuth.getInstance().removeAuthStateListener(mAuthListener);
+            FirebaseAuth.getInstance().removeAuthStateListener(mAuthListener);
         }
+    }
+
+    private void subirImgFirebase(String image){
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+// Create a storage reference from our app
+        StorageReference storageRef = storage.getReferenceFromUrl(MY_FIREBASE_BUCKET);
+
+        Uri file = Uri.fromFile(new File(image));
+
+        // Create a reference to image
+        StorageReference imageRef = storageRef.child(uid);
+        StorageReference imageFolderRef = storageRef.child("images/"+uid);
+        UploadTask uploadTask = imageFolderRef.putFile(file);
+
+        imageRef.getName().equals(imageFolderRef.getName());    // true
+        imageRef.getPath().equals(imageFolderRef.getPath());    // false
+
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i("CARGA", "Error en la carga");
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                Log.i("CARGA", "Imagen Subida");
+            }
+        });
     }
 }

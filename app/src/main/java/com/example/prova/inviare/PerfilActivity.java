@@ -17,6 +17,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,6 +26,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.prova.inviare.asynctasks.GuardarImagen;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -138,7 +141,8 @@ public class PerfilActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // Si hay cambios se guardan
                 if(editTextNombre.getText().toString().compareTo(nombrePerfil)!=0 || editTextEstado.getText().toString().compareTo(estadoPerfil)!=0 ||
-                editTextTelefono.getText().toString().compareTo(telefonoPerfil)!=0){
+                editTextTelefono.getText().toString().compareTo(telefonoPerfil)!=0) {
+
                     Context context=getApplicationContext();
                     SharedPreferences sharedPref = context.getSharedPreferences(context.getString(R.string.shared_preferences), Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPref.edit();
@@ -276,4 +280,5 @@ public class PerfilActivity extends AppCompatActivity {
     public void setDireccionImagenPerfil(String direccionImagenPerfil) {
         this.direccionImagenPerfil = direccionImagenPerfil;
     }
+
 }
