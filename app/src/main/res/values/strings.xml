@@ -55,6 +55,8 @@
     <string name="simple_date_format_DB">dd MM yyyy, HH:mm:ss</string>
     <string name="simple_date_format_MENSAJE">dd-MM-yyyy, HH:mm</string>
     <string name="simple_date_format_CONTACTO">dd MMMM yyyy, HH:mm</string>
+    <string name="simple_date_format_FECHA">dd-MM-yyyy</string>
+    <string name="simple_date_format_HORA">HH:mm</string>
 
     <!-- Menu. -->
     <string name="menu_desactivar_silencio">Desactivar silencio</string>
@@ -133,5 +135,7 @@
     <string name="conversacion_escribir_mensaje">Escribir mensaje</string>
     <string name="fracuencia_">Frecuancia:</string>
     <string name="instantanea">Instantanea</string>
+    <string name="alarma_fecha">Fecha: %1$s</string>
+    <string name="alarma_hora">Hora: %1$s</string>
 
 </resources>

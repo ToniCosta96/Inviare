@@ -34,20 +34,18 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import static android.content.ContentValues.TAG;
 
 public class AlarmasActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener{
-    private boolean chClicked;
-    private String resultadoHora;
     private Spinner spinnerDuracion;
     private String selected;
     private Spinner spinnerFrecuencia;
     private Spinner spinnerTiempoInicio;
     private Button btnHora,btnDia;
     private TextView textViewFreq;
-    private int yearFinal, monthFinal, dayFinal;
-    private String resultadoFecha;
+    private GregorianCalendar calendarFechaAlarmaFija;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -58,9 +56,8 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
         final String tipo[] = getResources().getStringArray(R.array.tipo_alarma);
         final String frecuencia_array[] = getResources().getStringArray(R.array.frecuencia);
         final String hora_inicio_duracion[] = getResources().getStringArray(R.array.duracion_h_inicio);
+        calendarFechaAlarmaFija= new GregorianCalendar();
 
-        final LinearLayout layoutD = (LinearLayout) findViewById(R.id.layoutD);
-        final LinearLayout layoutH = (LinearLayout) findViewById(R.id.layoutH);
         final LinearLayout layoutFrecuencia = (LinearLayout) findViewById(R.id.layoutFrecuencia);
         /*CollapsingToolbarLayout collapsingToolbar =
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
@@ -125,12 +122,10 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
                     spinnerTiempoInicio.setAlpha(0.5f);
                     spinnerTiempoInicio.setEnabled(false);
                     spinnerTiempoInicio.setClickable(false);
-                    chClicked = true;
                 }else{
                     spinnerTiempoInicio.setAlpha(1f);
                     spinnerTiempoInicio.setEnabled(true);
                     spinnerTiempoInicio.setClickable(true);
-                    chClicked = false;
                 }
             }
         });
@@ -173,8 +168,6 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
                 if (selected.compareTo(getString(R.string.tipo_fija))==0){
                     btnHora.setVisibility(View.VISIBLE);
                     btnDia.setVisibility(View.VISIBLE);
-                    layoutD.setVisibility(View.VISIBLE);
-                    layoutH.setVisibility(View.VISIBLE);
                     chkInstante.setVisibility(View.GONE);
                     spinnerTiempoInicio.setVisibility(View.GONE);
                     textViewDuracion.setVisibility(View.GONE);
@@ -187,8 +180,6 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
                     spinnerDuracion.setVisibility(View.VISIBLE);
                     btnHora.setVisibility(View.GONE);
                     btnDia.setVisibility(View.GONE);
-                    layoutD.setVisibility(View.GONE);
-                    layoutH.setVisibility(View.GONE);
                     layoutFrecuencia.setVisibility(View.VISIBLE);
                 }else if(selected.compareTo(getString(R.string.tipo_persistente))==0){
                     chkInstante.setVisibility(View.VISIBLE);
@@ -198,8 +189,6 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
                     textViewFreq.setVisibility(View.VISIBLE);
                     btnHora.setVisibility(View.GONE);
                     btnDia.setVisibility(View.GONE);
-                    layoutD.setVisibility(View.GONE);
-                    layoutH.setVisibility(View.GONE);
                     layoutFrecuencia.setVisibility(View.INVISIBLE);
                 }
             }
@@ -227,7 +216,8 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
 
                 if (selected.equals(getString(R.string.tipo_fija))){
                     tipoAlarma=DBAdapter.TIPO_ALARMA_FIJA;
-                    hora_duracion=resultadoFecha;
+                    SimpleDateFormat dateFormat = new SimpleDateFormat(getResources().getString(R.string.simple_date_format_MENSAJE), java.util.Locale.getDefault());
+                    hora_duracion=dateFormat.format(calendarFechaAlarmaFija.getTime());
                 }else if(selected.equals(getString(R.string.tipo_repetitiva))){
                     tipoAlarma=DBAdapter.TIPO_ALARMA_REPETITIVA;
                     if(!chkInstante.isChecked())hora_inicio=spinnerTiempoInicio.getSelectedItem().toString();
@@ -274,42 +264,21 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
     }
 
     @Override
-    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-        Date date= new Date();
-        date.setYear(i);
-        yearFinal=i;
-        monthFinal=i1+1;
-        dayFinal=i2;
+    public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+        calendarFechaAlarmaFija.set(year,month,dayOfMonth);
 
-        btnDia.setText("     Fecha:  "+String.valueOf(dayFinal)+"-"+String.valueOf(monthFinal)+"-"+String.valueOf(yearFinal));
+        final SimpleDateFormat dateFormat = new SimpleDateFormat(getResources().getString(R.string.simple_date_format_FECHA), java.util.Locale.getDefault());
+        btnDia.setText(getResources().getString(R.string.alarma_fecha,dateFormat.format(calendarFechaAlarmaFija.getTime())));
 
     }
 
     @Override
     public void onTimeSet(TimePicker timePicker, int hourFinal, int minuteFinal) {
-        resultadoHora=String.valueOf(hourFinal);
-        String resultadoMinutos =String.valueOf(minuteFinal);
+        calendarFechaAlarmaFija.set(Calendar.HOUR_OF_DAY, hourFinal);
+        calendarFechaAlarmaFija.set(Calendar.MINUTE, minuteFinal);
 
-        if (hourFinal<10){
-            resultadoHora="0"+String.valueOf(hourFinal);
-
-        }
-        if (minuteFinal<10) {
-            resultadoMinutos = "0" + String.valueOf(minuteFinal);
-        }
-        String resultadoH =(resultadoHora + "  : " + resultadoMinutos);
-        resultadoHora = (resultadoHora+ ":" + resultadoMinutos);
-        Log.d(TAG, resultadoHora);
-        btnHora.setText("     Hora:  "+resultadoH);
-        resultadoFecha = String.valueOf(dayFinal)+"-"+String.valueOf(monthFinal)+"-"+String.valueOf(yearFinal)+ ", "+resultadoHora;
-
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy, HH:mm");
-        try {
-            Date date = format.parse(resultadoFecha);
-            Log.d(TAG, format.format(date));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        final SimpleDateFormat dateFormat = new SimpleDateFormat(getResources().getString(R.string.simple_date_format_HORA), java.util.Locale.getDefault());
+        btnHora.setText(getResources().getString(R.string.alarma_hora,dateFormat.format(calendarFechaAlarmaFija.getTime())));
     }
 }
 

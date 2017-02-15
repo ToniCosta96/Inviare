@@ -160,47 +160,33 @@
                             android:layout_height="40dp" />
 
                     </LinearLayout>
-                    <LinearLayout
-                        android:orientation="horizontal"
+
+                    <Button
+                        android:text="Dia: "
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_weight="1"
-                        android:layout_marginTop="10dp"
-                        android:id="@+id/layoutD">
+                        android:layout_height="wrap_content"
+                        android:id="@+id/btnDia"
+                        android:background="@drawable/button_border"
+                        android:gravity="start|center_vertical|center_horizontal"
+                        android:layout_marginBottom="5dp"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp" />
 
-                        <Button
-                            android:text="     Dia: "
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:id="@+id/btnDia"
-                            android:background="@drawable/button_border"
-                            android:gravity="start|center_vertical|center_horizontal" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:orientation="horizontal"
+                    <Button
+                        android:text="Hora: "
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="start|center"
-                        android:id="@+id/layoutH">
-
-                        <Button
-                            android:text="     Hora: "
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:background="@drawable/button_border"
-                            android:id="@+id/btnHora"
-                            android:gravity="start|center_vertical|center_horizontal"
-                            android:layout_marginBottom="20dp" />
-
-                    </LinearLayout>
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/button_border"
+                        android:id="@+id/btnHora"
+                        android:gravity="start|center_vertical|center_horizontal"
+                        android:layout_marginBottom="21dp"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp" />
 
                     <LinearLayout
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:visibility="invisible"
                         android:id="@+id/layoutFrecuencia">
 
                         <TextView
