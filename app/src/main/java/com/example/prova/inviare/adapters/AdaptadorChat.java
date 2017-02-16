@@ -256,8 +256,8 @@ public class AdaptadorChat extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 textViewTitulo.setText(context.getResources().getString(R.string.tipo_alarma_persistente));
             }
             textViewMensaje.setText(elementLlista.getMensaje());
-            textViewHoraInicio.setText(elementLlista.getHora_inicio());
-            textViewHoraDuracion.setText(elementLlista.getHora_duracion());
+            textViewHoraInicio.setText(elementLlista.getHora_inicioFormateada(context));
+            textViewHoraDuracion.setText(elementLlista.getHora_duracionFormateada(context));
             if(elementLlista.getTipo()==DBAdapter.TIPO_ALARMA_REPETITIVA){
                 textViewFrecuencia.setText(context.getString(R.string.lista_chat_frecuencia,elementLlista.getFrecuencia()));
             }else{

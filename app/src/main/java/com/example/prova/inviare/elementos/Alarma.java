@@ -1,15 +1,18 @@
 package com.example.prova.inviare.elementos;
 
+import android.content.Context;
+
+import com.example.prova.inviare.R;
+
 import java.io.Serializable;
-import java.util.Objects;
 
 public class Alarma implements Serializable{
     private int id;
     private String mensaje;
     private String fecha;
     private int tipo;
-    private String hora_inicio;
-    private String hora_duracion;
+    private String horaInicio;
+    private String horaDuracion;
     private String frecuencia;
     private String cursoTarea;
     private String contestacion;
@@ -19,13 +22,13 @@ public class Alarma implements Serializable{
     public static final String TAREA_RECHAZADA="1";
     public static final String TAREA_REALIZADA="2";
 
-    public Alarma(int id, String mensaje, String fecha, int tipo, String hora_inicio, String hora_duracion, String frecuencia, String cursoTarea, String contestacion, boolean propietario) {
+    public Alarma(int id, String mensaje, String fecha, int tipo, String horaInicio, String horaDuracion, String frecuencia, String cursoTarea, String contestacion, boolean propietario) {
         this.id = id;
         this.mensaje = mensaje;
         this.fecha = fecha;
         this.tipo = tipo;
-        this.hora_inicio = hora_inicio;
-        this.hora_duracion = hora_duracion;
+        this.horaInicio = horaInicio;
+        this.horaDuracion = horaDuracion;
         this.frecuencia = frecuencia;
         this.cursoTarea = cursoTarea;
         this.contestacion = contestacion;
@@ -66,19 +69,57 @@ public class Alarma implements Serializable{
     }
 
     public String getHora_inicio() {
-        return hora_inicio;
+        return horaInicio;
     }
 
     public void setHora_inicio(String hora_inicio) {
-        this.hora_inicio = hora_inicio;
+        this.horaInicio = hora_inicio;
+    }
+
+    /**
+     * Devuelve la hora_inicio en una forma presentable para la interfaz o null si se produce algún error
+     * @param c Context necesario para el método
+     * @return String - Texto para mostrar en la interfaz
+     */
+    public String getHora_inicioFormateada(Context c){
+        String resultado=null;
+        if(horaInicio!=null) {
+            final String[] tiempoInicioSpinnerMilis = c.getResources().getStringArray(R.array.h_duracion_inicio_milisegundos);
+            final String[] tiempoInicioSpinnerText = c.getResources().getStringArray(R.array.h_duracion_inicio);
+
+            for (int i = 0; i < tiempoInicioSpinnerMilis.length; i++) {
+                if (tiempoInicioSpinnerMilis[i].compareTo(horaInicio) == 0)
+                    resultado = tiempoInicioSpinnerText[i];
+            }
+        }
+        return resultado;
     }
 
     public String getHora_duracion() {
-        return hora_duracion;
+        return horaDuracion;
     }
 
     public void setHora_duracion(String hora_duracion) {
-        this.hora_duracion = hora_duracion;
+        this.horaDuracion = hora_duracion;
+    }
+
+    /**
+     * Devuelve la hora_duracion en una forma presentable para la interfaz o null si se produce algún error
+     * @param c Context necesario para el método
+     * @return String - Texto para mostrar en la interfaz
+     */
+    public String getHora_duracionFormateada(Context c){
+        String resultado=null;
+        if(horaDuracion!=null) {
+            final String[] tiempoInicioSpinnerMilis = c.getResources().getStringArray(R.array.frecuencia_milisegundos);
+            final String[] tiempoInicioSpinnerText = c.getResources().getStringArray(R.array.frecuencia);
+
+            for (int i = 0; i < tiempoInicioSpinnerMilis.length; i++) {
+                if (tiempoInicioSpinnerMilis[i].compareTo(horaDuracion) == 0)
+                    resultado = tiempoInicioSpinnerText[i];
+            }
+        }
+        return resultado;
     }
 
     public String getFrecuencia() {
@@ -112,20 +153,4 @@ public class Alarma implements Serializable{
     public void setPropietario(boolean propietario) {
         this.propietario = propietario;
     }
-
-    /*@Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Alarma alarma = (Alarma) o;
-        return tipo == alarma.tipo &&
-                propietario == alarma.propietario &&
-                Objects.equals(mensaje, alarma.mensaje) &&
-                Objects.equals(fecha, alarma.fecha) &&
-                Objects.equals(hora_inicio, alarma.hora_inicio) &&
-                Objects.equals(hora_duracion, alarma.hora_duracion) &&
-                Objects.equals(frecuencia, alarma.frecuencia) &&
-                Objects.equals(cursoTarea, alarma.cursoTarea) &&
-                Objects.equals(contestacion, alarma.contestacion);
-    }*/
 }

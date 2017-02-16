@@ -29,11 +29,8 @@ import com.example.prova.inviare.adapters.AdaptadorAlarmas;
 import com.example.prova.inviare.db_adapters.DBAdapter;
 import com.example.prova.inviare.elementos.Alarma;
 import com.example.prova.inviare.servicios.ControladorAlarma;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -64,7 +61,7 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
 
         final String tipo[] = getResources().getStringArray(R.array.tipo_alarma);
         final String frecuencia_array[] = getResources().getStringArray(R.array.frecuencia);
-        final String hora_inicio_duracion[] = getResources().getStringArray(R.array.duracion_h_inicio);
+        final String hora_inicio_duracion[] = getResources().getStringArray(R.array.h_duracion_inicio);
         calendarFechaAlarmaFija= new GregorianCalendar();
 
         final LinearLayout layoutFrecuencia = (LinearLayout) findViewById(R.id.layoutFrecuencia);
@@ -214,7 +211,7 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String[] duracionInicioSpinner=getResources().getStringArray(R.array.duracion_h_inicio_milisegundos);
+                final String[] duracionInicioSpinner=getResources().getStringArray(R.array.h_duracion_inicio_milisegundos);
                 final String[] frecuenciaSpinner=getResources().getStringArray(R.array.frecuencia_milisegundos);
 
                 final String mensaje=editTextMensaje.getText().toString();
