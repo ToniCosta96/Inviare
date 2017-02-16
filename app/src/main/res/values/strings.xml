@@ -124,6 +124,7 @@
     <string name="tipo_alarma_repetitiva">Alarma repetitiva</string>
     <string name="tipo_alarma_persistente">Alarma persistente</string>
     <string name="tipo_alarma_fija">Alarma fija</string>
+    <string name="tipo_notificacion_persistente">Notificación persistente</string>
     <string name="eliminar_contacto">Eliminar contacto</string>
     <string name="eliminar">Eliminar</string>
     <string name="galeria">Galería</string>

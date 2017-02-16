@@ -129,13 +129,15 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/chkInstante"
-                            android:layout_weight="1" />
+                            android:layout_weight="1"
+                            android:checked="true" />
 
                         <Spinner
                             android:layout_width="194dp"
                             android:id="@+id/spinnerInicio"
                             android:layout_weight="0.85"
-                            android:layout_height="40dp" />
+                            android:layout_height="40dp"
+                            android:alpha="0.5" />
 
                     </LinearLayout>
                     <LinearLayout

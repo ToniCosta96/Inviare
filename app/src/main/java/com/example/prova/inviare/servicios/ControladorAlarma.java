@@ -1,6 +1,5 @@
 package com.example.prova.inviare.servicios;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -39,7 +38,6 @@ public class ControladorAlarma {
         if(arrayListAlarmas==null){
             arrayListAlarmas = new ArrayList<>();
         }
-
     }
 
     public void ponerAlarma(){
@@ -49,32 +47,40 @@ public class ControladorAlarma {
         switch(alarma.getTipo()){
             case DBAdapter.TIPO_ALARMA_PERSISTENTE:
                 // Fecha en la que sonará la alarma
-                long time = new GregorianCalendar().getTimeInMillis()+5000;
-
+                long timeDuracionAlarma = new GregorianCalendar().getTimeInMillis()+Long.valueOf(alarma.getHora_duracion());
 
                 // Create an Intent and set the class that will execute when the Alarm triggers. Here we have
-                // specified AlarmReceiver in the Intent. The onReceive() method of this class will execute when the broadcast from your alarm is received.
-                Intent intentAlarm = new Intent(context, AlarmReceiver.class);
+                // specified AlarmaPersistenteReceiver in the Intent. The onReceive() method of this class will execute when the broadcast from your alarm is received.
+                Intent intentAlarm = new Intent(context, AlarmaPersistenteReceiver.class);
                 intentAlarm.putExtra(context.getResources().getString(R.string.intent_alarma_mensaje),alarma.getMensaje());
                 intentAlarm.putExtra(context.getResources().getString(R.string.intent_alarma_codigo),codigoAlarma);
 
                 // Get the Alarm Service.
                 AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                //Si no se ha indicado tiempo de inicio crea una notificación persistente
+                if(alarma.getHora_inicio()==null) {
+                    NotificationCompat.Builder mBuilder =
+                            new NotificationCompat.Builder(context)
+                                    .setSmallIcon(R.drawable.ic_access_alarm_24dp)
+                                    .setContentTitle(context.getString(R.string.tipo_notificacion_persistente))
+                                    .setContentText(alarma.getMensaje())
+                                    .setOngoing(true);
+                    // Gets an instance of the NotificationManager service
+                    NotificationManager mNotifyMgr = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+                    // Builds the notification and issues it.
+                    mNotifyMgr.notify(codigoAlarma, mBuilder.build());
+                    //Intent
+                    intentAlarm.putExtra("empezarNotificacion",false);
+                }else{
+                    Long timeInicioAlarma= new GregorianCalendar().getTimeInMillis()+Long.valueOf(alarma.getHora_inicio());
+                    intentAlarm.putExtra("empezarNotificacion",true);
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, timeInicioAlarma, PendingIntent.getBroadcast(context, codigoAlarma*-1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
+                }
 
                 // Set the alarm for a particular time.
-                alarmManager.set(AlarmManager.RTC_WAKEUP, time, PendingIntent.getBroadcast(context, codigoAlarma, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
+                intentAlarm.putExtra("empezarNotificacion",false);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, timeDuracionAlarma, PendingIntent.getBroadcast(context, codigoAlarma, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
 
-                //Crea una notificación persistente
-                NotificationCompat.Builder mBuilder =
-                        new NotificationCompat.Builder(context)
-                                .setSmallIcon(R.drawable.ic_access_alarm_24dp)
-                                .setContentTitle(context.getString(R.string.tipo_alarma_persistente))
-                                .setContentText(alarma.getMensaje())
-                                .setOngoing(true);
-                // Gets an instance of the NotificationManager service
-                NotificationManager mNotifyMgr = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
-                // Builds the notification and issues it.
-                mNotifyMgr.notify(codigoAlarma, mBuilder.build());
             break;
             case DBAdapter.TIPO_ALARMA_REPETITIVA:
                 break;

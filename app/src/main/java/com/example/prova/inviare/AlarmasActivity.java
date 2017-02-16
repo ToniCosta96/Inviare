@@ -74,6 +74,8 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
         final FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         spinnerDuracion = (Spinner) findViewById(R.id.spinnerDuracion);
         spinnerTiempoInicio = (Spinner) findViewById(R.id.spinnerInicio);
+        spinnerTiempoInicio.setEnabled(false);
+        spinnerTiempoInicio.setClickable(false);
         final RecyclerView recyclerViewA = (RecyclerView) findViewById(R.id.recyclerAlarmas);
 
         ArrayAdapter<String> adapterTipoAlarmas,adapterFrecuencia,adapterHoraInicioDuracion;
@@ -203,6 +205,9 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                final String[] duracionInicioSpinner=getResources().getStringArray(R.array.duracion_h_inicio_milisegundos);
+                final String[] frecuenciaSpinner=getResources().getStringArray(R.array.frecuencia_milisegundos);
+
                 final String mensaje=editTextMensaje.getText().toString();
                 final SimpleDateFormat dfDataBase = new SimpleDateFormat(getResources().getString(R.string.simple_date_format_DB), java.util.Locale.getDefault());
                 final SimpleDateFormat dfMuestra = new SimpleDateFormat(getResources().getString(R.string.simple_date_format_MENSAJE), java.util.Locale.getDefault());
@@ -217,16 +222,16 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
                 if (selected.equals(getString(R.string.tipo_fija))){
                     tipoAlarma=DBAdapter.TIPO_ALARMA_FIJA;
                     SimpleDateFormat dateFormat = new SimpleDateFormat(getResources().getString(R.string.simple_date_format_MENSAJE), java.util.Locale.getDefault());
-                    hora_duracion=dateFormat.format(calendarFechaAlarmaFija.getTime());
+                    hora_duracion=dateFormat.format(calendarFechaAlarmaFija.getTimeInMillis());
                 }else if(selected.equals(getString(R.string.tipo_repetitiva))){
                     tipoAlarma=DBAdapter.TIPO_ALARMA_REPETITIVA;
-                    if(!chkInstante.isChecked())hora_inicio=spinnerTiempoInicio.getSelectedItem().toString();
-                    hora_duracion=spinnerDuracion.getSelectedItem().toString();
-                    frecuencia=spinnerFrecuencia.getSelectedItem().toString();
+                    if(!chkInstante.isChecked())hora_inicio = duracionInicioSpinner[(int)spinnerTiempoInicio.getSelectedItemId()];
+                    hora_duracion = duracionInicioSpinner[(int)spinnerDuracion.getSelectedItemId()];
+                    frecuencia = frecuenciaSpinner[(int)spinnerFrecuencia.getSelectedItemId()];
                 }else if(selected.equals(getString(R.string.tipo_persistente))){
                     tipoAlarma=DBAdapter.TIPO_ALARMA_PERSISTENTE;
-                    if(!chkInstante.isChecked())hora_inicio=spinnerTiempoInicio.getSelectedItem().toString();
-                    hora_duracion=spinnerDuracion.getSelectedItem().toString();
+                    if(!chkInstante.isChecked())hora_inicio = duracionInicioSpinner[(int)spinnerTiempoInicio.getSelectedItemId()];
+                    hora_duracion = duracionInicioSpinner[(int)spinnerDuracion.getSelectedItemId()];
                 }
 
                 Intent i = getIntent();
@@ -246,8 +251,7 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
                 i.putExtra(getResources().getString(R.string.intent_alarma_frecuencia),frecuencia);
                 setResult(RESULT_OK, i);
 
-                // ALARM_MAANGER
-                Log.d("IdAlarma",""+idAlarma);
+                // ALARM_MANAGER
                 Alarma alarma = new Alarma((int)idAlarma,mensaje,fechaMuestra,tipoAlarma,hora_inicio,hora_duracion,frecuencia,Alarma.TAREA_EN_CURSO,null,true);
                 ControladorAlarma controladorAlarma = new ControladorAlarma(AlarmasActivity.this,alarma);
                 controladorAlarma.ponerAlarma();
