@@ -45,6 +45,7 @@
             android:name=".RegistroActivity"
             android:label="@string/title_activity_registro" >
         </activity>
+        <receiver android:name=".servicios.AlarmReceiver" />
     </application>
 
 </manifest>

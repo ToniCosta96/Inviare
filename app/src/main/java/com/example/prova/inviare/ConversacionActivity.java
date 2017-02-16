@@ -20,7 +20,7 @@ import com.example.prova.inviare.adapters.AdaptadorChat;
 import com.example.prova.inviare.db_adapters.DBAdapter;
 import com.example.prova.inviare.elementos.Alarma;
 import com.example.prova.inviare.elementos.Mensaje;
-import com.example.prova.inviare.elementos_firebase.Mensajes;
+
 import com.example.prova.inviare.elementos_firebase.Usuario;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -135,14 +135,14 @@ public class ConversacionActivity extends AppCompatActivity{
                     String mensaje=editTextConversacion.getText().toString();
                     editTextConversacion.setText("");
                     // Enviar a FireBase
-                    GuardarBBDD(mensaje);
+                    //GuardarBBDD(mensaje);
 
                 }
             }
         });
     }
 
-    public void GuardarBBDD(final String mensaje) {
+    /*public void GuardarBBDD(final String mensaje) {
         String uid;
 
         final DatabaseReference MensajesRef = database.getReference(getResources().getString(R.string.TABLE_MENSAJES));
@@ -153,7 +153,7 @@ public class ConversacionActivity extends AppCompatActivity{
             Mensajes mensajes = new Mensajes("", uid, mensaje);
             MensajesRef.push().setValue(mensajes);
 
-        }
+        }*/
 
 
     @Override

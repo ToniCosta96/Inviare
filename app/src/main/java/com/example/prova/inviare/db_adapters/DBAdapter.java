@@ -257,8 +257,6 @@ public class DBAdapter {
         newValues.put(CONTESTACION,(String)null);   //De manera predeterminada no habrá contestación
         newValues.put(PROPIETARIO_MENSAJE,propietario);
         newValues.put(ID_CONTACTO,contacto_id);
-        Log.d("PROPIETARIO ",""+propietario);
-        Log.d("CONTACTO_ID ",""+contacto_id);
         db.insert(TABLE_MENSAJES,null,newValues);
     }
 

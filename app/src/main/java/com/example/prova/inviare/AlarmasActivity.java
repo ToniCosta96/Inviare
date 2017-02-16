@@ -28,6 +28,7 @@ import android.widget.TimePicker;
 import com.example.prova.inviare.adapters.AdaptadorAlarmas;
 import com.example.prova.inviare.db_adapters.DBAdapter;
 import com.example.prova.inviare.elementos.Alarma;
+import com.example.prova.inviare.servicios.ControladorAlarma;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -243,6 +244,9 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
                 DBAdapter dbAdapter = new DBAdapter(getApplicationContext());
                 dbAdapter.open();
                 dbAdapter.insertarMensaje(mensaje,fechaDataBase,tipoAlarma,hora_inicio,hora_duracion,frecuencia,Alarma.TAREA_EN_CURSO,idConversacion,idConversacion);
+                // ALARM_MAANGER
+                Alarma alarma = new Alarma(mensaje,fechaMuestra,tipoAlarma,hora_inicio,hora_duracion,frecuencia,Alarma.TAREA_EN_CURSO,null,true);
+                new ControladorAlarma(AlarmasActivity.this,alarma);
                 // FIREBASE - Se guarda en Firebase
 
 
