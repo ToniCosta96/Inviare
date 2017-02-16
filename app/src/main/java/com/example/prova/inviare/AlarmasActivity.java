@@ -30,7 +30,6 @@ import com.example.prova.inviare.db_adapters.DBAdapter;
 import com.example.prova.inviare.elementos.Alarma;
 import com.example.prova.inviare.servicios.ControladorAlarma;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -102,9 +101,9 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
         //ArrayList de alarmas
         ArrayList<Alarma> listaAlarmas = new ArrayList<>();
         for (int i=0;i<10;i++) {
-            listaAlarmas.add(new Alarma("Alarma 1", "Lunes", DBAdapter.TIPO_ALARMA_FIJA,"12::00","","jk", "", "", true));
+            listaAlarmas.add(new Alarma(i,"Alarma 1", "Lunes", DBAdapter.TIPO_ALARMA_FIJA,"12::00","","jk", "", "", true));
         }
-        listaAlarmas.add(new Alarma("Alarma 2", "", DBAdapter.TIPO_ALARMA_REPETITIVA,"2h","3h","20 min", "", "", true));
+        listaAlarmas.add(new Alarma(11,"Alarma 2", "", DBAdapter.TIPO_ALARMA_REPETITIVA,"2h","3h","20 min", "", "", true));
 
         AdaptadorAlarmas adaptadorAlarmas;
         adaptadorAlarmas = new AdaptadorAlarmas(listaAlarmas, AlarmasActivity.this);
@@ -230,8 +229,15 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
                     hora_duracion=spinnerDuracion.getSelectedItem().toString();
                 }
 
-                // INTENT - Se muestra en el activity anterior
                 Intent i = getIntent();
+                // DB_ADAPTER - Se guarda en la base de datos local
+                final String idConversacion=i.getStringExtra(getResources().getString(R.string.intent_conversacion_id)); //ID_conversacion
+                DBAdapter dbAdapter = new DBAdapter(getApplicationContext());
+                dbAdapter.open();
+                final long idAlarma = dbAdapter.insertarMensaje(mensaje,fechaDataBase,tipoAlarma,hora_inicio,hora_duracion,frecuencia,Alarma.TAREA_EN_CURSO,idConversacion,idConversacion);
+
+                // INTENT - Se muestra en el activity anterior
+                i.putExtra(getResources().getString(R.string.intent_alarma_codigo),(int)idAlarma);
                 i.putExtra(getResources().getString(R.string.intent_alarma_mensaje),mensaje);
                 i.putExtra(getResources().getString(R.string.intent_alarma_fecha),fechaMuestra);
                 i.putExtra(getResources().getString(R.string.intent_alarma_tipo),tipoAlarma);
@@ -239,14 +245,13 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
                 i.putExtra(getResources().getString(R.string.intent_alarma_hora_duracion),hora_duracion);
                 i.putExtra(getResources().getString(R.string.intent_alarma_frecuencia),frecuencia);
                 setResult(RESULT_OK, i);
-                // DB_ADAPTER - Se guarda en la base de datos local
-                final String idConversacion=i.getStringExtra(getResources().getString(R.string.intent_conversacion_id)); //ID_conversacion
-                DBAdapter dbAdapter = new DBAdapter(getApplicationContext());
-                dbAdapter.open();
-                dbAdapter.insertarMensaje(mensaje,fechaDataBase,tipoAlarma,hora_inicio,hora_duracion,frecuencia,Alarma.TAREA_EN_CURSO,idConversacion,idConversacion);
+
                 // ALARM_MAANGER
-                Alarma alarma = new Alarma(mensaje,fechaMuestra,tipoAlarma,hora_inicio,hora_duracion,frecuencia,Alarma.TAREA_EN_CURSO,null,true);
-                new ControladorAlarma(AlarmasActivity.this,alarma);
+                Log.d("IdAlarma",""+idAlarma);
+                Alarma alarma = new Alarma((int)idAlarma,mensaje,fechaMuestra,tipoAlarma,hora_inicio,hora_duracion,frecuencia,Alarma.TAREA_EN_CURSO,null,true);
+                ControladorAlarma controladorAlarma = new ControladorAlarma(AlarmasActivity.this,alarma);
+                controladorAlarma.ponerAlarma();
+                controladorAlarma.guardarAlarmasPuestas();
                 // FIREBASE - Se guarda en Firebase
 
 

@@ -36,7 +36,7 @@ public class DBAdapter {
 
     private static final String MENSAJE = "mensaje";
     private static final String DATE_TIME = "fecha";
-    private static final String TIPO = "tipo";
+    public static final String TIPO = "tipo";
     private static final String HORA_INICIO = "hora_inicio";
     private static final String HORA_DURACION = "hora_duracion";
     private static final String FRECUENCIA = "frecuencia";
@@ -87,7 +87,7 @@ public class DBAdapter {
 
     public void seleccionarMensaje(ArrayList<Object> arrayElementos, String valor, String columna, String tabla){
         //Se introducen los mensajes de la base de datos en el arrayElementos
-        String selectQuery = "SELECT * FROM "+tabla+" WHERE "+columna+" LIKE "+valor+";";
+        String selectQuery = "SELECT * FROM "+tabla+" WHERE "+columna+" LIKE '"+valor+"';";
         Cursor cursor= db.rawQuery(selectQuery, null);
         if(cursor.moveToFirst()){
             do {
@@ -107,7 +107,7 @@ public class DBAdapter {
                 if(cursor.getInt(3)==TIPO_TEXTO){
                     arrayElementos.add(new Mensaje(cursor.getString(1),fechaFinal,mensajePropietario));
                 }else if(cursor.getInt(3)==TIPO_ALARMA_REPETITIVA || cursor.getInt(3)==TIPO_ALARMA_PERSISTENTE || cursor.getInt(3)==TIPO_ALARMA_FIJA){
-                    arrayElementos.add(new Alarma(cursor.getString(1),fechaFinal,cursor.getInt(3),cursor.getString(4),cursor.getString(5),cursor.getString(6),cursor.getString(7),cursor.getString(8),mensajePropietario));
+                    arrayElementos.add(new Alarma(cursor.getInt(0),cursor.getString(1),fechaFinal,cursor.getInt(3),cursor.getString(4),cursor.getString(5),cursor.getString(6),cursor.getString(7),cursor.getString(8),mensajePropietario));
                 }
 
             } while (cursor.moveToNext());
@@ -127,7 +127,7 @@ public class DBAdapter {
      * PERMISOS_ELIMINADO = 3</p>
      */
     public int seleccionarPermisoContacto(String valor, String columna){
-        String selectQuery = "SELECT "+PERMISOS+" FROM "+TABLE_CONTACTOS+" WHERE "+columna+" LIKE "+valor+";";
+        String selectQuery = "SELECT "+PERMISOS+" FROM "+TABLE_CONTACTOS+" WHERE "+columna+" LIKE '"+valor+"';";
         Cursor cursor= db.rawQuery(selectQuery, null);
         //Se asigna
         int permisosContacto=-1;
@@ -150,7 +150,7 @@ public class DBAdapter {
     public String seleccionarUltimaFechaContacto(String valor, String columna, String formatoFecha){
         //Se introducen los contactos de la base de datos en el arrayElementos y se intercala Contacto si no es null
         String ultimaFecha=null;
-        String selectQuery = "SELECT MAX(fecha) FROM "+TABLE_MENSAJES+" WHERE "+columna+" LIKE "+valor+";";
+        String selectQuery = "SELECT MAX(fecha) FROM "+TABLE_MENSAJES+" WHERE "+columna+" LIKE '"+valor+"';";
         Cursor cursor= db.rawQuery(selectQuery, null);
         if(cursor.moveToFirst()){
             SimpleDateFormat df = new SimpleDateFormat(context.getResources().getString(R.string.simple_date_format_DB), java.util.Locale.getDefault());
@@ -243,7 +243,7 @@ public class DBAdapter {
      * @param ct Curso de la tarea (de la clase Alarma)
      * @param contacto_id Contacto al que pertenece este mensaje
      */
-    public void insertarMensaje(String m, String dt, int tipo, String h_i, String h_d, String f, String ct, String propietario, String contacto_id){
+    public long insertarMensaje(String m, String dt, int tipo, String h_i, String h_d, String f, String ct, String propietario, String contacto_id){
         //Creamos un nuevo registro de valores a insertar
         ContentValues newValues = new ContentValues();
         //Asignamos los valores de cada campo
@@ -257,7 +257,7 @@ public class DBAdapter {
         newValues.put(CONTESTACION,(String)null);   //De manera predeterminada no habrá contestación
         newValues.put(PROPIETARIO_MENSAJE,propietario);
         newValues.put(ID_CONTACTO,contacto_id);
-        db.insert(TABLE_MENSAJES,null,newValues);
+        return db.insert(TABLE_MENSAJES,null,newValues);
     }
 
     public void eliminarContactoPorId(String id){
@@ -306,4 +306,39 @@ public class DBAdapter {
             onCreate(db);
         }
     }
+
+    /*public class AdministradorAlarmas{
+        private int codigoAlarma;
+        public AdministradorAlarmas(){}
+        public Alarma[] seleccionarAlarmas(String valor, String columna, String tabla){
+            //Se introducen los mensajes de la base de datos en el arrayElementos
+            String selectQuery = "SELECT * FROM "+tabla+" WHERE "+columna+" != "+valor+";";
+            Cursor cursor= db.rawQuery(selectQuery, null);
+            Alarma[] alarmas = new Alarma[cursor.getCount()];
+            if(cursor.moveToFirst()){
+                for(int i=0;i<alarmas.length;i++){
+                    //Se crea un objeto 'Elemento' con los datos de la DB recogidos por el cursor
+                    SimpleDateFormat df = new SimpleDateFormat(context.getResources().getString(R.string.simple_date_format_DB), java.util.Locale.getDefault());
+                    SimpleDateFormat df2 = new SimpleDateFormat(context.getResources().getString(R.string.simple_date_format_MENSAJE), java.util.Locale.getDefault());
+                    Date dateSegundos=null;
+                    try {
+                        dateSegundos = df.parse(cursor.getString(2));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    //Se averigua si el mensaje es del propietario y el tipo de mensaje
+                    final boolean mensajePropietario = cursor.getString(9).compareTo(context.getResources().getString(R.string.id_propietario))==0;
+                    final String fechaFinal=df2.format(dateSegundos);
+                    codigoAlarma=cursor.getInt(1);
+                    alarmas[i]=new Alarma(cursor.getString(1),fechaFinal,cursor.getInt(3),cursor.getString(4),cursor.getString(5),cursor.getString(6),cursor.getString(7),cursor.getString(8),mensajePropietario);
+                    cursor.moveToNext();
+                }
+            }
+            cursor.close();
+            return alarmas;
+        }
+        public int getCodigoAlarma(){
+            return codigoAlarma;
+        }
+    }*/
 }

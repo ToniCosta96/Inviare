@@ -1,6 +1,10 @@
 package com.example.prova.inviare.elementos;
 
-public class Alarma {
+import java.io.Serializable;
+import java.util.Objects;
+
+public class Alarma implements Serializable{
+    private int id;
     private String mensaje;
     private String fecha;
     private int tipo;
@@ -15,7 +19,8 @@ public class Alarma {
     public static final String TAREA_RECHAZADA="1";
     public static final String TAREA_REALIZADA="2";
 
-    public Alarma(String mensaje, String fecha, int tipo, String hora_inicio, String hora_duracion, String frecuencia, String cursoTarea, String contestacion, boolean propietario) {
+    public Alarma(int id, String mensaje, String fecha, int tipo, String hora_inicio, String hora_duracion, String frecuencia, String cursoTarea, String contestacion, boolean propietario) {
+        this.id = id;
         this.mensaje = mensaje;
         this.fecha = fecha;
         this.tipo = tipo;
@@ -25,6 +30,14 @@ public class Alarma {
         this.cursoTarea = cursoTarea;
         this.contestacion = contestacion;
         this.propietario = propietario;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getMensaje() {
@@ -98,4 +111,20 @@ public class Alarma {
     public void setPropietario(boolean propietario) {
         this.propietario = propietario;
     }
+
+    /*@Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Alarma alarma = (Alarma) o;
+        return tipo == alarma.tipo &&
+                propietario == alarma.propietario &&
+                Objects.equals(mensaje, alarma.mensaje) &&
+                Objects.equals(fecha, alarma.fecha) &&
+                Objects.equals(hora_inicio, alarma.hora_inicio) &&
+                Objects.equals(hora_duracion, alarma.hora_duracion) &&
+                Objects.equals(frecuencia, alarma.frecuencia) &&
+                Objects.equals(cursoTarea, alarma.cursoTarea) &&
+                Objects.equals(contestacion, alarma.contestacion);
+    }*/
 }

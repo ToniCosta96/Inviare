@@ -161,6 +161,7 @@ public class ConversacionActivity extends AppCompatActivity{
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode==RESULT_OK){
             if(requestCode==ALARMA_REQUEST){
+                final int idAlarma = data.getIntExtra(getResources().getString(R.string.intent_alarma_codigo),0);
                 final String mensaje = data.getStringExtra(getResources().getString(R.string.intent_alarma_mensaje));
                 final String fecha = data.getStringExtra(getResources().getString(R.string.intent_alarma_fecha));
                 final int tipo = data.getIntExtra(getResources().getString(R.string.intent_alarma_tipo),0);
@@ -169,7 +170,7 @@ public class ConversacionActivity extends AppCompatActivity{
                 final String frecuencia = data.getStringExtra(getResources().getString(R.string.intent_alarma_frecuencia));
 
 
-                arrayMensajes.add(new Alarma(mensaje,fecha,tipo,hora_inicial,hora_duracion,frecuencia,Alarma.TAREA_EN_CURSO,null,true));
+                arrayMensajes.add(new Alarma(idAlarma,mensaje,fecha,tipo,hora_inicial,hora_duracion,frecuencia,Alarma.TAREA_EN_CURSO,null,true));
                 // Notificar cambios a la interfaz
                 adaptador.notifyItemInserted(arrayMensajes.size()-1);
                 recyclerView.scrollToPosition(arrayMensajes.size()-1);
