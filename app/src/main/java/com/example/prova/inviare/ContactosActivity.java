@@ -23,7 +23,12 @@ import android.widget.Toast;
 
 import com.example.prova.inviare.adapters.AdaptadorContactos;
 import com.example.prova.inviare.elementos.Contacto;
+import com.example.prova.inviare.elementos_firebase.Usuario;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -121,10 +126,12 @@ public class ContactosActivity extends AppCompatActivity {
                 }
             }else{
                 anyadirContactos();
+                cargaContactos();
             }
         }
         else{
             anyadirContactos();
+            cargaContactos();
         }
     }
 
@@ -136,6 +143,7 @@ public class ContactosActivity extends AppCompatActivity {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     anyadirContactos();
+                    cargaContactos();
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
 
@@ -175,6 +183,33 @@ public class ContactosActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void cargaContactos(){
+        //arrayContactos.clear();
+        final DatabaseReference contactosRef = database.getReference(getResources().getString(R.string.TABLE_CONTACTOS));
+
+        contactosRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    Usuario usuario = snapshot.getValue(Usuario.class);
+                    Contacto contacto = new Contacto();
+
+                    contacto.setId(usuario.getUid());
+                    contacto.setTitulo(usuario.getNombre());
+                    contacto.setSubtitulo(usuario.getEstado());
+
+                    arrayContactos.add(contacto);
+                }
+                adaptador.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }

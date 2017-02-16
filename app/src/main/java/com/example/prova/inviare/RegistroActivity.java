@@ -130,8 +130,6 @@ public class RegistroActivity extends AppCompatActivity {
 
                     uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                   // Log.d("probando", "llego "+uid);
-
                     Usuario usuario = new Usuario(nombre, email, telefono, uid);
                     contactosRef.push().setValue(usuario);
 
