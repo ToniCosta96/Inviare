@@ -29,6 +29,11 @@ import com.example.prova.inviare.adapters.AdaptadorAlarmas;
 import com.example.prova.inviare.db_adapters.DBAdapter;
 import com.example.prova.inviare.elementos.Alarma;
 import com.example.prova.inviare.servicios.ControladorAlarma;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -52,6 +57,10 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarmas);
         getWindow().setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark));
+
+        //Firebase
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference myRef = database.getReference(getString(R.string.TABLE_ALARMAS));
 
         final String tipo[] = getResources().getStringArray(R.array.tipo_alarma);
         final String frecuencia_array[] = getResources().getStringArray(R.array.frecuencia);
@@ -101,13 +110,13 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
 
 
         //ArrayList de alarmas
-        ArrayList<Alarma> listaAlarmas = new ArrayList<>();
+        final ArrayList<Alarma> listaAlarmas = new ArrayList<>();
         for (int i=0;i<10;i++) {
             listaAlarmas.add(new Alarma(i,"Alarma 1", "Lunes", DBAdapter.TIPO_ALARMA_FIJA,"12::00","","jk", "", "", true));
         }
         listaAlarmas.add(new Alarma(11,"Alarma 2", "", DBAdapter.TIPO_ALARMA_REPETITIVA,"2h","3h","20 min", "", "", true));
 
-        AdaptadorAlarmas adaptadorAlarmas;
+        final AdaptadorAlarmas adaptadorAlarmas;
         adaptadorAlarmas = new AdaptadorAlarmas(listaAlarmas, AlarmasActivity.this);
         // LinearLayoutManager
         LinearLayoutManager rvLM = new LinearLayoutManager(this);
@@ -257,11 +266,13 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
                 controladorAlarma.ponerAlarma();
                 controladorAlarma.guardarAlarmasPuestas();
                 // FIREBASE - Se guarda en Firebase
-
+                myRef.push().setValue(alarma);
 
                 finish();
             }
         });
+
+
     }
 
     public void guardarAlarmas(String mensaje, String fecha, int tipo, String hora_inicio, String hora_duracion, String frecuencia) {

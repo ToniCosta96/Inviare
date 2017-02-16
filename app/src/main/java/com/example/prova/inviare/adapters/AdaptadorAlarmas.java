@@ -81,15 +81,18 @@ public class AdaptadorAlarmas extends RecyclerView.Adapter <AdaptadorAlarmas.Ala
     public void onBindViewHolder(final AlarmasViewHolder holder, final int position) {
         holder.mensaje.setText(llistaAlarmas.get(position).getMensaje());
         if (llistaAlarmas.get(position).getTipo()==4){
+            holder.hora_inicial.setAlpha(0);
             //holder.img.setImageResource();
             holder.tipo.setText(R.string.tipo_alarma_fija);
-            holder.hora_inicial.setText(llistaAlarmas.get(position).getHora_inicio());
+            //holder.hora_inicial.setText(llistaAlarmas.get(position).getFecha());
             holder.dia_duracion.setText(llistaAlarmas.get(position).getFecha());
             holder.frecuencia.setAlpha(0);
+
         }else if (llistaAlarmas.get(position).getTipo()==3){
+            holder.hora_inicial.setAlpha(1f);
             //holder.img.setImageResource();
             holder.tipo.setText(R.string.tipo_alarma_persistente);
-            if (llistaAlarmas.get(position).getHora_inicio().equals("")){
+            if (llistaAlarmas.get(position).getHora_inicio()==null){
                 holder.hora_inicial.setText(R.string.instantanea);
             }else{
                 holder.hora_inicial.setText("Empieza en "+llistaAlarmas.get(position).getHora_inicio());
@@ -97,10 +100,11 @@ public class AdaptadorAlarmas extends RecyclerView.Adapter <AdaptadorAlarmas.Ala
             holder.dia_duracion.setText("Dura: "+llistaAlarmas.get(position).getHora_duracion());
             holder.frecuencia.setAlpha(0);
         }else if (llistaAlarmas.get(position).getTipo()==2){
+            holder.hora_inicial.setAlpha(1f);
             //holder.img.setImageResource();
             holder.frecuencia.setAlpha(1f);
             holder.tipo.setText(R.string.tipo_alarma_repetitiva);
-            if (llistaAlarmas.get(position).getHora_inicio().equals("")){
+            if (llistaAlarmas.get(position).getHora_inicio()==null){
                 holder.hora_inicial.setText(R.string.instantanea);
             }else{
                 holder.hora_inicial.setText("Empieza en "+llistaAlarmas.get(position).getHora_inicio());

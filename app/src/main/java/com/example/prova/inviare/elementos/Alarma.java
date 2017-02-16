@@ -32,6 +32,7 @@ public class Alarma implements Serializable{
         this.propietario = propietario;
     }
 
+
     public int getId() {
         return id;
     }
