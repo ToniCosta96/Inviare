@@ -2,6 +2,7 @@ package com.example.prova.inviare.adapters;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,15 +34,18 @@ public class AdaptadorContactos extends RecyclerView.Adapter<AdaptadorContactos.
     }
 
     @Override
-    public void onBindViewHolder(ListaViewHolder holder, final int position) {
+    public void onBindViewHolder(final ListaViewHolder holder, final int position) {
         final Contacto item = listData.get(position);
         //
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i= new Intent(activity.getApplicationContext(), ConversacionActivity.class);
-                i.putExtra(activity.getResources().getString(R.string.intent_conversacion_id),item.getId());
-                i.putExtra(activity.getResources().getString(R.string.intent_conversacion_titulo),item.getTitulo());
+                Bundle b = new Bundle();
+                b.putInt(activity.getResources().getString(R.string.intent_conversacion_posicion_array),holder.getAdapterPosition());
+                b.putString(activity.getResources().getString(R.string.intent_conversacion_id),item.getId());
+                b.putString(activity.getResources().getString(R.string.intent_conversacion_titulo),item.getTitulo());
+                i.putExtras(b);
                 activity.startActivity(i);
                 activity.finish();
             }
