@@ -9,6 +9,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -218,7 +219,7 @@ public class AdaptadorChat extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     private abstract class ViewHolderAlarma extends RecyclerView.ViewHolder{
-        TextView textViewMensaje,textViewHoraDuracion,textViewContestacion,textVewHora;
+        TextView textViewMensaje,textViewHoraDuracion,textViewContestacion,textViewHora;
         Button btnDeclinar,btnTareaRealizada;
         CardView cardView;
         LinearLayout layoutAlarmaBotones;
@@ -229,7 +230,7 @@ public class AdaptadorChat extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             textViewMensaje = (TextView) itemView.findViewById(R.id.textView_mensaje_A);
             textViewHoraDuracion = (TextView) itemView.findViewById(R.id.textView_horaDuracion_A);
             textViewContestacion = (TextView) itemView.findViewById(R.id.textView_contestacion_A);
-            textVewHora = (TextView) itemView.findViewById(R.id.textView_hora_A);
+            textViewHora = (TextView) itemView.findViewById(R.id.textView_hora_A);
             btnDeclinar = (Button) itemView.findViewById(R.id.btn_declinar_tarea);
             btnTareaRealizada = (Button) itemView.findViewById(R.id.btn_tareaRealizada);
             cardView= (CardView) itemView.findViewById(R.id.card_view_A);
@@ -241,29 +242,32 @@ public class AdaptadorChat extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private class ViewHolderAlarmaPersistente extends ViewHolderAlarma {
         private TextView textViewTitulo,textViewHoraInicio,textViewFrecuencia;
+        private LinearLayout linearLayoutHoraInicio;
 
         public ViewHolderAlarmaPersistente(View itemView) {
             super(itemView);
             textViewTitulo = (TextView) itemView.findViewById(R.id.textView_titulo_AP);
             textViewHoraInicio = (TextView) itemView.findViewById(R.id.textView_horaInicio_AP);
             textViewFrecuencia = (TextView) itemView.findViewById(R.id.textView_frecuencia_AP);
+            linearLayoutHoraInicio = (LinearLayout) itemView.findViewById(R.id.linearLayout_horaInicio);
         }
 
         public void bindLlista(Alarma elementLlista) {
             if (elementLlista.getTipo() == DBAdapter.TIPO_ALARMA_REPETITIVA) {
                 textViewTitulo.setText(context.getResources().getString(R.string.tipo_alarma_repetitiva));
+                textViewFrecuencia.setText(context.getString(R.string.lista_chat_frecuencia,elementLlista.getFrecuenciaFormateada(context)));
             } else if (elementLlista.getTipo() == DBAdapter.TIPO_ALARMA_PERSISTENTE) {
                 textViewTitulo.setText(context.getResources().getString(R.string.tipo_alarma_persistente));
-            }
-            textViewMensaje.setText(elementLlista.getMensaje());
-            textViewHoraInicio.setText(elementLlista.getHora_inicioFormateada(context));
-            textViewHoraDuracion.setText(elementLlista.getHora_duracionFormateada(context));
-            if(elementLlista.getTipo()==DBAdapter.TIPO_ALARMA_REPETITIVA){
-                textViewFrecuencia.setText(context.getString(R.string.lista_chat_frecuencia,elementLlista.getFrecuencia()));
-            }else{
                 textViewFrecuencia.setVisibility(View.GONE);
             }
-            textVewHora.setText(elementLlista.getFecha());
+            textViewMensaje.setText(elementLlista.getMensaje());
+            if(elementLlista.getHoraInicio()==null){
+                linearLayoutHoraInicio.setVisibility(View.GONE);
+            }else{
+                textViewHoraInicio.setText(elementLlista.getHoraInicioFormateada(context));
+            }
+            textViewHoraDuracion.setText(elementLlista.getHoraDuracionFormateada(context));
+            textViewHora.setText(elementLlista.getFecha());
             textViewContestacion.setText(elementLlista.getContestacion());
 
             cambiarVista(cardView, elementLlista.isPropietario());
@@ -290,8 +294,8 @@ public class AdaptadorChat extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         public void bindLlista(Alarma elementLlista) {
             textViewMensaje.setText(elementLlista.getMensaje());
-            textViewHoraDuracion.setText(elementLlista.getHora_duracion());
-            textVewHora.setText(elementLlista.getFecha());
+            textViewHoraDuracion.setText(elementLlista.getHoraDuracion());
+            textViewHora.setText(elementLlista.getFecha());
             textViewContestacion.setText(elementLlista.getContestacion());
 
             cambiarVista(cardView, elementLlista.isPropietario());

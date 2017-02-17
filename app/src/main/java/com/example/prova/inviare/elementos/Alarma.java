@@ -1,6 +1,7 @@
 package com.example.prova.inviare.elementos;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.prova.inviare.R;
 
@@ -68,11 +69,11 @@ public class Alarma implements Serializable{
         this.tipo = tipo;
     }
 
-    public String getHora_inicio() {
+    public String getHoraInicio() {
         return horaInicio;
     }
 
-    public void setHora_inicio(String hora_inicio) {
+    public void setHoraInicio(String hora_inicio) {
         this.horaInicio = hora_inicio;
     }
 
@@ -81,7 +82,7 @@ public class Alarma implements Serializable{
      * @param c Context necesario para el método
      * @return String - Texto para mostrar en la interfaz
      */
-    public String getHora_inicioFormateada(Context c){
+    public String getHoraInicioFormateada(Context c){
         String resultado=null;
         if(horaInicio!=null) {
             final String[] tiempoInicioSpinnerMilis = c.getResources().getStringArray(R.array.h_duracion_inicio_milisegundos);
@@ -95,11 +96,11 @@ public class Alarma implements Serializable{
         return resultado;
     }
 
-    public String getHora_duracion() {
+    public String getHoraDuracion() {
         return horaDuracion;
     }
 
-    public void setHora_duracion(String hora_duracion) {
+    public void setHoraDuracion(String hora_duracion) {
         this.horaDuracion = hora_duracion;
     }
 
@@ -108,11 +109,11 @@ public class Alarma implements Serializable{
      * @param c Context necesario para el método
      * @return String - Texto para mostrar en la interfaz
      */
-    public String getHora_duracionFormateada(Context c){
+    public String getHoraDuracionFormateada(Context c){
         String resultado=null;
         if(horaDuracion!=null) {
-            final String[] tiempoInicioSpinnerMilis = c.getResources().getStringArray(R.array.frecuencia_milisegundos);
-            final String[] tiempoInicioSpinnerText = c.getResources().getStringArray(R.array.frecuencia);
+            final String[] tiempoInicioSpinnerMilis = c.getResources().getStringArray(R.array.h_duracion_inicio_milisegundos);
+            final String[] tiempoInicioSpinnerText = c.getResources().getStringArray(R.array.h_duracion_inicio);
 
             for (int i = 0; i < tiempoInicioSpinnerMilis.length; i++) {
                 if (tiempoInicioSpinnerMilis[i].compareTo(horaDuracion) == 0)
@@ -128,6 +129,25 @@ public class Alarma implements Serializable{
 
     public void setFrecuencia(String frecuencia) {
         this.frecuencia = frecuencia;
+    }
+
+    /**
+     * Devuelve la frecuencia en una forma presentable para la interfaz o null si se produce algún error
+     * @param c Context necesario para el método
+     * @return String - Texto para mostrar en la interfaz
+     */
+    public String getFrecuenciaFormateada(Context c){
+        String resultado=null;
+        if(horaDuracion!=null) {
+            final String[] tiempoInicioSpinnerMilis = c.getResources().getStringArray(R.array.frecuencia_milisegundos);
+            final String[] tiempoInicioSpinnerText = c.getResources().getStringArray(R.array.frecuencia);
+
+            for (int i = 0; i < tiempoInicioSpinnerMilis.length; i++) {
+                if (tiempoInicioSpinnerMilis[i].compareTo(frecuencia) == 0)
+                    resultado = tiempoInicioSpinnerText[i];
+            }
+        }
+        return resultado;
     }
 
     public String getCursoTarea() {

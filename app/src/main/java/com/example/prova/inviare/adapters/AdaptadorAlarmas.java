@@ -92,25 +92,25 @@ public class AdaptadorAlarmas extends RecyclerView.Adapter <AdaptadorAlarmas.Ala
             holder.hora_inicial.setAlpha(1f);
             //holder.img.setImageResource();
             holder.tipo.setText(R.string.tipo_alarma_persistente);
-            if (llistaAlarmas.get(position).getHora_inicio()==null){
+            if (llistaAlarmas.get(position).getHoraInicio()==null){
                 holder.hora_inicial.setText(R.string.instantanea);
             }else{
-                holder.hora_inicial.setText("Empieza en "+llistaAlarmas.get(position).getHora_inicio());
+                holder.hora_inicial.setText("Empieza en "+llistaAlarmas.get(position).getHoraInicio());
             }
-            holder.dia_duracion.setText("Dura: "+llistaAlarmas.get(position).getHora_duracion());
+            holder.dia_duracion.setText("Dura: "+llistaAlarmas.get(position).getHoraDuracion());
             holder.frecuencia.setAlpha(0);
         }else if (llistaAlarmas.get(position).getTipo()==2){
             holder.hora_inicial.setAlpha(1f);
             //holder.img.setImageResource();
             holder.frecuencia.setAlpha(1f);
             holder.tipo.setText(R.string.tipo_alarma_repetitiva);
-            if (llistaAlarmas.get(position).getHora_inicio()==null){
+            if (llistaAlarmas.get(position).getHoraInicio()==null){
                 holder.hora_inicial.setText(R.string.instantanea);
             }else{
-                holder.hora_inicial.setText("Empieza en "+llistaAlarmas.get(position).getHora_inicio());
+                holder.hora_inicial.setText("Empieza en "+llistaAlarmas.get(position).getHoraInicio());
             }
             //holder.h_i.setText(llistaAlarmas.get(position).getHora_inicio());
-            holder.dia_duracion.setText("Dura: "+llistaAlarmas.get(position).getHora_duracion());
+            holder.dia_duracion.setText("Dura: "+llistaAlarmas.get(position).getHoraDuracion());
             holder.frecuencia.setText("Suena cada "+llistaAlarmas.get(position).getFrecuencia());
         }
     }

@@ -27,13 +27,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/separacion_alarma_V1"
             android:id="@+id/textView_mensaje_A"
-            android:textAppearance="@android:style/TextAppearance.Material.Body1" />
+            android:textAppearance="@android:style/TextAppearance.Material.Body1"
+            android:layout_marginBottom="@dimen/separacion_alarma_V2" />
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/separacion_alarma_V2">
+            android:id="@+id/linearLayout_horaInicio">
 
             <TextView
                 android:text="@string/lista_chat_hora_inicio_t"

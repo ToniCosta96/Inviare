@@ -5,6 +5,7 @@
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
     <!-- Permisos para acceder a Firebase -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -45,7 +46,8 @@
             android:name=".RegistroActivity"
             android:label="@string/title_activity_registro" >
         </activity>
-        <receiver android:name=".servicios.AlarmaPersistenteReceiver"></receiver>
+        <receiver android:name=".servicios.AlarmaPersistenteReceiver" />
+        <receiver android:name=".servicios.AlarmaRepetitivaReceiver" />
     </application>
 
 </manifest>

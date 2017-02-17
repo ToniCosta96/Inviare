@@ -6,14 +6,17 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.example.prova.inviare.ConversacionActivity;
 import com.example.prova.inviare.R;
 import com.example.prova.inviare.db_adapters.DBAdapter;
 import com.example.prova.inviare.elementos.Alarma;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
@@ -38,7 +41,7 @@ public class ControladorAlarma {
         this.context = context;
         this.alarma = alarma;
         arrayListAlarmas=null;
-        cargarAlarmas();
+        if(new File(FILENAME).exists()) cargarAlarmas();
         if(arrayListAlarmas==null){
             arrayListAlarmas = new ArrayList<>();
         }
@@ -52,7 +55,11 @@ public class ControladorAlarma {
 
         final String EMPEZAR_NOTIFICACION = context.getString(R.string.intent_empezar_notificacion_bool);
         // Fecha límite hasta la qual sonará la alarma
-        long timeDuracionAlarma = new GregorianCalendar().getTimeInMillis()+Long.valueOf(alarma.getHora_duracion());
+        long timeDuracionAlarma = new GregorianCalendar().getTimeInMillis()+Long.valueOf(alarma.getHoraDuracion());
+
+        Intent intentProvisional = ((Activity)context).getIntent();
+        Bundle bundle = intentProvisional.getExtras();
+        bundle.putInt(context.getString(R.string.intent_alarma_codigo),intentProvisional.getIntExtra(context.getString(R.string.intent_alarma_codigo),0));
 
         switch(alarma.getTipo()){
             case DBAdapter.TIPO_ALARMA_PERSISTENTE:
@@ -65,21 +72,18 @@ public class ControladorAlarma {
                 // Get the Alarm Service.
                 AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                 //Si no se ha indicado tiempo de inicio crea una notificación persistente
-                if(alarma.getHora_inicio()==null) {
+                if(alarma.getHoraInicio()==null) {
                     NotificationCompat.Builder mBuilder =
                             new NotificationCompat.Builder(context)
                                     .setSmallIcon(R.drawable.ic_access_alarm_24dp)
                                     .setContentTitle(context.getString(R.string.tipo_notificacion_persistente))
                                     .setContentText(mensaje)
+                                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                                     .setOngoing(true);
 
                     // Pending intent para que la notificación abra ConversacionActivity.class
                     Intent resultIntent = new Intent(context, ConversacionActivity.class);
-                    Intent intentProvisional = ((Activity)context).getIntent();
-                    Bundle bundle = intentProvisional.getExtras();
-                    bundle.putInt(context.getString(R.string.intent_alarma_codigo),intentProvisional.getIntExtra(context.getString(R.string.intent_alarma_codigo),0));
                     resultIntent.putExtras(bundle);
-                    //resultIntent.putExtra();
                     PendingIntent resultPendingIntent = PendingIntent.getActivity(context, NOTIFICACION_REQUEST, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                     mBuilder.setContentIntent(resultPendingIntent);
 
@@ -91,7 +95,7 @@ public class ControladorAlarma {
                     //Intent (intentAlarm)
                     intentAlarmaP.putExtra(EMPEZAR_NOTIFICACION,false);
                 }else{
-                    Long timeInicioAlarma= new GregorianCalendar().getTimeInMillis()+Long.valueOf(alarma.getHora_inicio());
+                    Long timeInicioAlarma= new GregorianCalendar().getTimeInMillis()+Long.valueOf(alarma.getHoraInicio());
                     intentAlarmaP.putExtra(EMPEZAR_NOTIFICACION,true);
                     alarmManager.set(AlarmManager.RTC_WAKEUP, timeInicioAlarma, PendingIntent.getBroadcast(context, codigoAlarma*-1, intentAlarmaP, PendingIntent.FLAG_UPDATE_CURRENT));
                 }
@@ -102,11 +106,25 @@ public class ControladorAlarma {
 
             break;
             case DBAdapter.TIPO_ALARMA_REPETITIVA:
-                Intent intentAlarmaR = new Intent(context, AlarmaPersistenteReceiver.class);
+                long frecuencia = Long.valueOf(alarma.getFrecuencia());
+                long tiempoInicioAlarma;
+
+                if(alarma.getHoraInicio()==null){
+                    tiempoInicioAlarma = 5000;
+                }else{
+                    tiempoInicioAlarma = Long.valueOf(alarma.getHoraInicio());
+                }
+
+                // Se crea el intent
+                Intent intentAlarmaR = new Intent(context, AlarmaRepetitivaReceiver.class);
                 intentAlarmaR.putExtra(context.getResources().getString(R.string.intent_alarma_mensaje),mensaje);
                 intentAlarmaR.putExtra(context.getResources().getString(R.string.intent_alarma_codigo),codigoAlarma);
+                intentAlarmaR.putExtra(context.getResources().getString(R.string.intent_alarma_duracion_milisegundos),timeDuracionAlarma);
+                intentAlarmaR.putExtras(bundle);
+
+                // Se instancia un AlarmManager y se crea una alarma repetitiva
                 AlarmManager alarmManager2 = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                alarmManager2.setRepeating(AlarmManager.RTC_WAKEUP, timeDuracionAlarma, 60000,PendingIntent.getBroadcast(context, codigoAlarma, intentAlarmaR, PendingIntent.FLAG_UPDATE_CURRENT));
+                alarmManager2.setRepeating(AlarmManager.RTC_WAKEUP, tiempoInicioAlarma, frecuencia,PendingIntent.getBroadcast(context, codigoAlarma, intentAlarmaR, PendingIntent.FLAG_UPDATE_CURRENT));
 
                 break;
             case DBAdapter.TIPO_ALARMA_FIJA:
@@ -114,8 +132,10 @@ public class ControladorAlarma {
         }
     }
 
-    public void detenerAlarma(){
-
+    public void detenerAlarma(int codigoAlarma,Class tipoAlarma){
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intentAlarmaR = new Intent(context, tipoAlarma);
+        alarmManager.cancel(PendingIntent.getBroadcast(context, codigoAlarma, intentAlarmaR, PendingIntent.FLAG_UPDATE_CURRENT));
     }
 
     public void guardarAlarmasPuestas(){
