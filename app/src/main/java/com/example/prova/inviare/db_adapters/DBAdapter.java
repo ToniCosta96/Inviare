@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.example.prova.inviare.R;
@@ -182,6 +181,13 @@ public class DBAdapter {
             } while (cursor.moveToNext());
         }
         cursor.close();
+    }
+
+    public void actualizarMensaje(int codigoAlarma, String cursoTarea, String contestacion){
+        ContentValues newValues = new ContentValues();
+        newValues.put(CURSO_TAREA,cursoTarea);
+        newValues.put(CONTESTACION,contestacion);   //De manera predeterminada no habrá contestación
+        db.update(TABLE_MENSAJES, newValues, "_id="+codigoAlarma, null);
     }
 
     public void insertarContacto(String id, String nom, String estado, String img){

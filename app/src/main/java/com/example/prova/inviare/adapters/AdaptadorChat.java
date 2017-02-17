@@ -9,7 +9,6 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +22,7 @@ import com.example.prova.inviare.R;
 import com.example.prova.inviare.db_adapters.DBAdapter;
 import com.example.prova.inviare.elementos.Alarma;
 import com.example.prova.inviare.elementos.Mensaje;
+import com.example.prova.inviare.servicios.ControladorAlarma;
 
 import java.util.ArrayList;
 
@@ -138,7 +138,11 @@ public class AdaptadorChat extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         ((Alarma)listData.get(position)).setCursoTarea(Alarma.TAREA_RECHAZADA);
                         ((Alarma)listData.get(position)).setContestacion(contestacion);
                         //Actualizar base de datos
-
+                        DBAdapter dbAdapter= new DBAdapter(context);
+                        dbAdapter.open();
+                        dbAdapter.actualizarMensaje(((Alarma)listData.get(position)).getId(),Alarma.TAREA_RECHAZADA,input.getText().toString());
+                        // Detener alarma
+                        new ControladorAlarma(context,((Alarma)listData.get(position))).detenerAlarma();
                         //Actualizar firabase
                     }
                 });
@@ -165,19 +169,23 @@ public class AdaptadorChat extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which){
                             case DialogInterface.BUTTON_POSITIVE:
-                                //Tarea realizada
+                                // Tarea realizada
                                 final String textoTareaRealizada= context.getResources().getString(R.string.tarea_realizada);
                                 //Actualizar interfaz
                                 holder.textViewContestacion.setText(textoTareaRealizada);
                                 holder.layoutAlarmaBotones.setVisibility(View.GONE);
                                 holder.textViewContestacion.setVisibility(View.VISIBLE);
                                 holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, android.R.color.holo_green_dark));
-                                //Actualizar array
+                                // Actualizar array
                                 ((Alarma)listData.get(position)).setCursoTarea(Alarma.TAREA_REALIZADA);
                                 ((Alarma)listData.get(position)).setContestacion(textoTareaRealizada);
                                 //Actualizar base de datos
-
-                                //Actualizar firabase
+                                DBAdapter dbAdapter= new DBAdapter(context);
+                                dbAdapter.open();
+                                dbAdapter.actualizarMensaje(((Alarma)listData.get(position)).getId(),Alarma.TAREA_REALIZADA,textoTareaRealizada);
+                                // Detener alarma
+                                new ControladorAlarma(context,((Alarma)listData.get(position))).detenerAlarma();
+                                // Actualizar firabase
                                 break;
 
                             case DialogInterface.BUTTON_NEGATIVE:

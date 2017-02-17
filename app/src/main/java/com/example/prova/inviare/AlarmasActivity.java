@@ -2,8 +2,12 @@ package com.example.prova.inviare;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -29,6 +33,7 @@ import com.example.prova.inviare.adapters.AdaptadorAlarmas;
 import com.example.prova.inviare.db_adapters.DBAdapter;
 import com.example.prova.inviare.elementos.Alarma;
 import com.example.prova.inviare.servicios.ControladorAlarma;
+import com.example.prova.inviare.servicios.ServicioAlarmas;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -41,13 +46,18 @@ import java.util.GregorianCalendar;
 import static android.content.ContentValues.TAG;
 
 public class AlarmasActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener{
-    private Spinner spinnerDuracion;
+    private Spinner spinnerTipoAlarmas,spinnerTiempoInicio,spinnerDuracion,spinnerFrecuencia;
+    private EditText editTextMensaje;
+    private CheckBox chkInstante;
     private String selected;
-    private Spinner spinnerFrecuencia;
-    private Spinner spinnerTiempoInicio;
     private Button btnHora,btnDia;
     private TextView textViewFreq;
     private GregorianCalendar calendarFechaAlarmaFija;
+
+    // service
+    private ServicioAlarmas mService;
+    private boolean mBound = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -69,12 +79,12 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setTitle("Alarmas");*/
 
-        final Spinner spinnerTipoAlarmas = (Spinner) findViewById(R.id.spinnerTipo);
-        final EditText editTextMensaje = (EditText) findViewById(R.id.etxtMensaje);
+        spinnerTipoAlarmas = (Spinner) findViewById(R.id.spinnerTipo);
+        editTextMensaje = (EditText) findViewById(R.id.etxtMensaje);
         btnHora = (Button) findViewById(R.id.btnHora);
         spinnerFrecuencia = (Spinner) findViewById(R.id.spinnerFrecuencia);
         btnDia = (Button) findViewById(R.id.btnDia);
-        final CheckBox chkInstante = (CheckBox) findViewById(R.id.chkInstante);
+        chkInstante = (CheckBox) findViewById(R.id.chkInstante);
         final TextView textViewDuracion = (TextView) findViewById(R.id.txtDuracion);
         textViewFreq = (TextView) findViewById(R.id.txtFrecuencia);
         final FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
@@ -264,6 +274,11 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
                 ControladorAlarma controladorAlarma = new ControladorAlarma(AlarmasActivity.this,alarma);
                 controladorAlarma.ponerAlarma();
                 controladorAlarma.guardarAlarmasPuestas();
+
+                Intent startIntent = new Intent(AlarmasActivity.this, ServicioAlarmas.class);
+                startIntent.setAction(getString(R.string.servicio_empezar));
+                startService(startIntent);
+
                 // FIREBASE - Se guarda en Firebase
                 myRef.push().setValue(alarma);
 
@@ -271,6 +286,26 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
             }
         });
 
+
+    }
+
+    public void rellenarCampos(Alarma a){
+        editTextMensaje.setText(a.getMensaje());
+        switch(a.getTipo()){
+            case DBAdapter.TIPO_ALARMA_PERSISTENTE:
+                spinnerTipoAlarmas.setSelection(2,true);
+                break;
+            case DBAdapter.TIPO_ALARMA_REPETITIVA:
+                spinnerTipoAlarmas.setSelection(1,true);
+                spinnerFrecuencia.setSelection(1,true);
+                break;
+            case DBAdapter.TIPO_ALARMA_FIJA:
+                spinnerTipoAlarmas.setSelection(0,true);
+                break;
+        }
+        chkInstante.setChecked(a.getHoraInicio()==null);
+        spinnerTiempoInicio.setSelection(1,true);
+        spinnerDuracion.setSelection(1,true);
 
     }
 
@@ -303,6 +338,41 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
         final SimpleDateFormat dateFormat = new SimpleDateFormat(getResources().getString(R.string.simple_date_format_HORA), java.util.Locale.getDefault());
         btnHora.setText(getResources().getString(R.string.alarma_hora,dateFormat.format(calendarFechaAlarmaFija.getTime())));
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Bind to LocalService
+        Intent intent = new Intent(this, ServicioAlarmas.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // Unbind from the service
+        if (mBound) {
+            unbindService(mConnection);
+            mBound = false;
+        }
+    }
+
+    /** Defines callbacks for service binding, passed to bindService() */
+    private ServiceConnection mConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            ServicioAlarmas.LocalBinder binder = (ServicioAlarmas.LocalBinder) service;
+            mService = binder.getService();
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mBound = false;
+        }
+    };
 }
 
 

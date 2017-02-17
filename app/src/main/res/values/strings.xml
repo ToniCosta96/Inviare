@@ -65,6 +65,13 @@
     <string name="menu_desactivar_silencio">Desactivar silencio</string>
     <string name="menu_desactivar_bloqueo">Desbloquear contacto</string>
 
+    <!-- ServicioAlarmas. -->
+    <string name="local_service_started">servicio_empezado</string>
+    <string name="local_service_stopped">servicio_detenido</string>
+
+    <string name="servicio_empezar">servicio_empezado</string>
+    <string name="servicio_terminar">servicio_detenido</string>
+
     <!--Mensajes registro-->
     <string name="campos_vacios">Por favor, rellena los campos vacios</string>
     <string name="error_login">Error al iniciar sesión</string>

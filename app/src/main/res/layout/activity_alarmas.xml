@@ -51,6 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/fab_margin"
+        android:elevation="6dp"
         app:srcCompat="@drawable/ic_send_button"
         app:fabSize="normal" />
 

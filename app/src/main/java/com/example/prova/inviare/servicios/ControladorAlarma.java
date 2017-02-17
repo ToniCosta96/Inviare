@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.example.prova.inviare.ConversacionActivity;
 import com.example.prova.inviare.R;
@@ -128,6 +127,7 @@ public class ControladorAlarma {
 
                 break;
             case DBAdapter.TIPO_ALARMA_FIJA:
+
                 break;
         }
     }
@@ -136,6 +136,18 @@ public class ControladorAlarma {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intentAlarmaR = new Intent(context, tipoAlarma);
         alarmManager.cancel(PendingIntent.getBroadcast(context, codigoAlarma, intentAlarmaR, PendingIntent.FLAG_UPDATE_CURRENT));
+    }
+
+    public void detenerAlarma(){
+        Class tipoAlarma=null;
+        if(alarma.getTipo()==DBAdapter.TIPO_ALARMA_PERSISTENTE){
+            tipoAlarma=AlarmaPersistenteReceiver.class;
+        }else if(alarma.getTipo()==DBAdapter.TIPO_ALARMA_REPETITIVA){
+            tipoAlarma=AlarmaRepetitivaReceiver.class;
+        }
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intentAlarmaR = new Intent(context, tipoAlarma);
+        alarmManager.cancel(PendingIntent.getBroadcast(context, alarma.getId(), intentAlarmaR, PendingIntent.FLAG_UPDATE_CURRENT));
     }
 
     public void guardarAlarmasPuestas(){
