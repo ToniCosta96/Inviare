@@ -17,6 +17,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class DBAdapter {
     private static final String DATABASE_NAME = "db_inviare.db";
@@ -292,6 +293,22 @@ public class DBAdapter {
         if(context.deleteDatabase(DATABASE_NAME))
             Toast.makeText(context,"La base de datos ha sido eliminada correctamente",Toast.LENGTH_SHORT).show();
     }
+    //Recupera todas las alarmas
+    public List<Alarma> recuperarALARMA() {
+        List<Alarma> lista_alarmas = new ArrayList<Alarma>();
+        String[] valores_recuperar = {"_id", "mensaje", "fecha", "tipo", "hora_inicio", "hora_duracion", "frecuencia","curso_tarea","contestacion", "propietario"};
+        Cursor c = db.query(TABLE_MENSAJES, valores_recuperar,
+                null, null, null, null, null, null);
+        c.moveToFirst();
+        do {
+            if (c.getInt(3)>=2) {
+                Alarma alarma = new Alarma(c.getInt(0), c.getString(1),
+                        c.getString(2), c.getInt(3), c.getString(4), c.getString(5), c.getString(6), c.getString(7), c.getString(8), true);
+                lista_alarmas.add(alarma);
+            }
+        } while (c.moveToNext());
+        return lista_alarmas;
+    }
 
     private static class MyDbHelper extends SQLiteOpenHelper {
 
@@ -312,6 +329,8 @@ public class DBAdapter {
             onCreate(db);
         }
     }
+
+
 
     /*public class AdministradorAlarmas{
         private int codigoAlarma;

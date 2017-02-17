@@ -141,6 +141,9 @@
     <string name="foto">Foto</string>
     <string name="contentDescription_imageViewContacto">Imagen de perfil del contacto</string>
     <string name="fecha_">Fecha:</string>
+    <string name="text_duracion">Dura </string>
+    <string name="text_inicio">Empieza en </string>
+    <string name="text_frecuencia">Suena cada </string>
 
     <string name="dia_lunes">Lunes</string>
     <string name="dia_martes">Martes</string>
@@ -153,7 +156,7 @@
     <string name="tipo_persistente">Persistente</string>
     <string name="tipo_fija">Fija</string>
     <string name="conversacion_escribir_mensaje">Escribir mensaje</string>
-    <string name="fracuencia_">Frecuancia:</string>
+    <string name="fracuencia_">Frecuencia:</string>
     <string name="instantanea">Instantanea</string>
     <string name="alarma_fecha">Fecha: %1$s</string>
     <string name="alarma_hora">Hora: %1$s</string>

@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import static android.content.ContentValues.TAG;
 
@@ -68,6 +69,9 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
         //Firebase
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference myRef = database.getReference(getString(R.string.TABLE_ALARMAS));
+
+        final DBAdapter myDB = new DBAdapter(this);
+        myDB.open();
 
         final String tipo[] = getResources().getStringArray(R.array.tipo_alarma);
         final String frecuencia_array[] = getResources().getStringArray(R.array.frecuencia);
@@ -117,14 +121,16 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
 
 
         //ArrayList de alarmas
+        List<Alarma> alarmas = myDB.recuperarALARMA();
+        //ArrayList de alarmas
         final ArrayList<Alarma> listaAlarmas = new ArrayList<>();
-        for (int i=0;i<10;i++) {
-            listaAlarmas.add(new Alarma(i,"Alarma 1", "Lunes", DBAdapter.TIPO_ALARMA_FIJA,"12::00","","jk", "", "", true));
+        for (int i = 0; i < alarmas.size(); i++) {
+            listaAlarmas.add(alarmas.get(i));
         }
-        listaAlarmas.add(new Alarma(11,"Alarma 2", "", DBAdapter.TIPO_ALARMA_REPETITIVA,"2h","3h","20 min", "", "", true));
+        //listaAlarmas.add(new Alarma(11,"Alarma 2", "", DBAdapter.TIPO_ALARMA_REPETITIVA,"2h","3h","20 min", "", "", true));
 
         final AdaptadorAlarmas adaptadorAlarmas;
-        adaptadorAlarmas = new AdaptadorAlarmas(listaAlarmas, AlarmasActivity.this);
+        adaptadorAlarmas = new AdaptadorAlarmas(listaAlarmas, AlarmasActivity.this, getApplicationContext());
         // LinearLayoutManager
         LinearLayoutManager rvLM = new LinearLayoutManager(this);
         recyclerViewA.setLayoutManager(rvLM);

@@ -1,5 +1,6 @@
 package com.example.prova.inviare.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,10 +19,12 @@ import java.util.List;
 public class AdaptadorAlarmas extends RecyclerView.Adapter <AdaptadorAlarmas.AlarmasViewHolder> {
     private List<Alarma> llistaAlarmas;
     AlarmasActivity aA;
+    Context c;
 
-    public AdaptadorAlarmas(List<Alarma> alarmas, AlarmasActivity aA) {
+    public AdaptadorAlarmas(List<Alarma> alarmas, AlarmasActivity aA, Context c) {
         llistaAlarmas = alarmas;
         this.aA=aA;
+        this.c=c;
     }
 
 
@@ -57,7 +60,9 @@ public class AdaptadorAlarmas extends RecyclerView.Adapter <AdaptadorAlarmas.Ala
             //aA.guardarAlarmas(alarmas.get(getPosition()).getMensaje(), alarmas.get(getPosition()).getTipo(), alarmas.get(getPosition()).getHora_inicio(), alarmas.get(getPosition()).getHora_duracion(), alarmas.get(getPosition()).getFrecuencia(), alarmas.get(getPosition()).getFecha());
 
         }
-    }
+
+        }
+
 
 
 
@@ -79,39 +84,39 @@ public class AdaptadorAlarmas extends RecyclerView.Adapter <AdaptadorAlarmas.Ala
     @Override
     //Enlazamos la información que queremos mostrar a un holder
     public void onBindViewHolder(final AlarmasViewHolder holder, final int position) {
+
         holder.mensaje.setText(llistaAlarmas.get(position).getMensaje());
         if (llistaAlarmas.get(position).getTipo()==4){
-            holder.hora_inicial.setAlpha(0);
+            holder.hora_inicial.setVisibility(View.GONE);
             //holder.img.setImageResource();
             holder.tipo.setText(R.string.tipo_alarma_fija);
             //holder.hora_inicial.setText(llistaAlarmas.get(position).getFecha());
             holder.dia_duracion.setText(llistaAlarmas.get(position).getFecha());
             holder.frecuencia.setAlpha(0);
-
         }else if (llistaAlarmas.get(position).getTipo()==3){
             holder.hora_inicial.setAlpha(1f);
             //holder.img.setImageResource();
             holder.tipo.setText(R.string.tipo_alarma_persistente);
-            if (llistaAlarmas.get(position).getHoraInicio()==null){
+            if (llistaAlarmas.get(position).getHoraInicioFormateada(c)==null){
                 holder.hora_inicial.setText(R.string.instantanea);
             }else{
-                holder.hora_inicial.setText("Empieza en "+llistaAlarmas.get(position).getHoraInicio());
+                holder.hora_inicial.setText(c.getString(R.string.text_inicio)+" "+llistaAlarmas.get(position).getHoraInicioFormateada(c));
             }
-            holder.dia_duracion.setText("Dura: "+llistaAlarmas.get(position).getHoraDuracion());
+            holder.dia_duracion.setText(c.getString(R.string.text_duracion)+" "+llistaAlarmas.get(position).getHoraDuracionFormateada(c));
             holder.frecuencia.setAlpha(0);
         }else if (llistaAlarmas.get(position).getTipo()==2){
             holder.hora_inicial.setAlpha(1f);
             //holder.img.setImageResource();
             holder.frecuencia.setAlpha(1f);
             holder.tipo.setText(R.string.tipo_alarma_repetitiva);
-            if (llistaAlarmas.get(position).getHoraInicio()==null){
+            if (llistaAlarmas.get(position).getHoraInicioFormateada(c)==null){
                 holder.hora_inicial.setText(R.string.instantanea);
             }else{
-                holder.hora_inicial.setText("Empieza en "+llistaAlarmas.get(position).getHoraInicio());
+                holder.hora_inicial.setText(c.getString(R.string.text_inicio)+" "+llistaAlarmas.get(position).getHoraInicioFormateada(c));
             }
             //holder.h_i.setText(llistaAlarmas.get(position).getHora_inicio());
-            holder.dia_duracion.setText("Dura: "+llistaAlarmas.get(position).getHoraDuracion());
-            holder.frecuencia.setText("Suena cada "+llistaAlarmas.get(position).getFrecuencia());
+            holder.dia_duracion.setText(c.getString(R.string.text_duracion)+" "+llistaAlarmas.get(position).getHoraDuracionFormateada(c));
+            holder.frecuencia.setText(c.getString(R.string.text_frecuencia)+" "+llistaAlarmas.get(position).getFrecuenciaFormateada(c));
         }
     }
 }
