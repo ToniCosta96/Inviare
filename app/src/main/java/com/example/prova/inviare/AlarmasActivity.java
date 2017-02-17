@@ -242,7 +242,7 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
 
                 Intent i = getIntent();
                 // DB_ADAPTER - Se guarda en la base de datos local
-                final String idConversacion=i.getStringExtra(getResources().getString(R.string.intent_conversacion_id)); //ID_conversacion
+                final String idConversacion=i.getExtras().getString(getResources().getString(R.string.intent_conversacion_id)); //ID_conversacion
                 DBAdapter dbAdapter = new DBAdapter(getApplicationContext());
                 dbAdapter.open();
                 final long idAlarma = dbAdapter.insertarMensaje(mensaje,fechaDataBase,tipoAlarma,hora_inicio,hora_duracion,frecuencia,Alarma.TAREA_EN_CURSO,idConversacion,idConversacion);
@@ -255,6 +255,8 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
                 i.putExtra(getResources().getString(R.string.intent_alarma_hora_inicio),hora_inicio);
                 i.putExtra(getResources().getString(R.string.intent_alarma_hora_duracion),hora_duracion);
                 i.putExtra(getResources().getString(R.string.intent_alarma_frecuencia),frecuencia);
+                // Se le pasa el Bundle al intent
+                i.putExtras(i.getExtras());
                 setResult(RESULT_OK, i);
 
                 // ALARM_MANAGER

@@ -31,6 +31,7 @@
     <string name="intent_alarma_hora_duracion">hora_duracion</string>
     <string name="intent_alarma_dia">dia_alarma</string>
     <string name="intent_alarma_frecuencia">frecuencia</string>
+    <string name="intent_empezar_notificacion_bool">empezarNotificacion</string>
 
     <!-- Permisos. -->
     <string name="permisos_sin_permiso">No se ha asignado ningún permiso.</string>

@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,6 +23,7 @@ import com.example.prova.inviare.elementos.Alarma;
 import com.example.prova.inviare.elementos.Mensaje;
 
 import com.example.prova.inviare.elementos_firebase.Usuario;
+import com.example.prova.inviare.servicios.ControladorAlarma;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -55,11 +57,11 @@ public class ConversacionActivity extends AppCompatActivity{
         arrayMensajes= new ArrayList<>();
 
         // Se obtiene el ID de la conversación y se carga de la base de datos ([-2] no carga nada).
-        id_conversacion = getIntent().getStringExtra(getResources().getString(R.string.intent_conversacion_id));
+        id_conversacion = getIntent().getExtras().getString(getResources().getString(R.string.intent_conversacion_id));
         android.support.v7.app.ActionBar actionBar=getSupportActionBar();
         if(actionBar!=null){
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(getIntent().getStringExtra(getResources().getString(R.string.intent_conversacion_titulo)));
+            actionBar.setTitle(getIntent().getExtras().getString(getResources().getString(R.string.intent_conversacion_titulo)));
         }
         dbAdapter = new DBAdapter(getApplicationContext());
         dbAdapter.open();
@@ -87,6 +89,18 @@ public class ConversacionActivity extends AppCompatActivity{
             }
         });
 
+        // Moverse a la alarma indicada si este activity procede de una Notificación
+        int codigoAlarma = getIntent().getExtras().getInt(getString(R.string.intent_alarma_codigo));
+        if(codigoAlarma!=0){
+            for(int i=0;i<arrayMensajes.size();i++){
+                if(arrayMensajes.get(i) instanceof Alarma){
+                    if(((Alarma)arrayMensajes.get(i)).getId()==codigoAlarma){
+                        recyclerView.scrollToPosition(i);
+                    }
+                }
+            }
+        }
+
         // TextWatcher
         TextWatcher tw = new TextWatcher() {
             public void afterTextChanged(Editable s){
@@ -113,7 +127,7 @@ public class ConversacionActivity extends AppCompatActivity{
                 if(seleccionarAlarma){
                     // SELECCIONAR ALARMA - Intent-> ID del contacto de este chat
                     Intent returnIntent = new Intent(getApplicationContext(),AlarmasActivity.class);
-                    returnIntent.putExtra(getResources().getString(R.string.intent_conversacion_id),id_conversacion);
+                    returnIntent.putExtras(getIntent().getExtras());
                     startActivityForResult(returnIntent, ALARMA_REQUEST);
                 }else{
                     // ENVIAR MENSAJE
@@ -161,6 +175,7 @@ public class ConversacionActivity extends AppCompatActivity{
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode==RESULT_OK){
             if(requestCode==ALARMA_REQUEST){
+                // Añadir una alarma a la interfaz
                 final int idAlarma = data.getIntExtra(getResources().getString(R.string.intent_alarma_codigo),0);
                 final String mensaje = data.getStringExtra(getResources().getString(R.string.intent_alarma_mensaje));
                 final String fecha = data.getStringExtra(getResources().getString(R.string.intent_alarma_fecha));
@@ -168,7 +183,6 @@ public class ConversacionActivity extends AppCompatActivity{
                 final String hora_inicial = data.getStringExtra(getResources().getString(R.string.intent_alarma_hora_inicio));
                 final String hora_duracion = data.getStringExtra(getResources().getString(R.string.intent_alarma_hora_duracion));
                 final String frecuencia = data.getStringExtra(getResources().getString(R.string.intent_alarma_frecuencia));
-
 
                 arrayMensajes.add(new Alarma(idAlarma,mensaje,fecha,tipo,hora_inicial,hora_duracion,frecuencia,Alarma.TAREA_EN_CURSO,null,true));
                 // Notificar cambios a la interfaz
@@ -183,7 +197,7 @@ public class ConversacionActivity extends AppCompatActivity{
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_contacto, menu);
         //Si la conversación es del chat personal no se puede silenciar, bloquear ni eliminar
-        if (getIntent().getStringExtra(getResources().getString(R.string.intent_conversacion_id)).compareTo(getResources().getString(R.string.id_propietario))==0){
+        if (getIntent().getExtras().getString(getResources().getString(R.string.intent_conversacion_id)).compareTo(getResources().getString(R.string.id_propietario))==0){
             menu.removeItem(R.id.item_silenciar);
             menu.removeItem(R.id.item_bloquear);
             menu.removeItem(R.id.item_eliminar_contacto);

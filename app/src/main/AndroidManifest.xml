@@ -26,7 +26,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ContactosActivity" />
-        <activity android:name=".ConversacionActivity" />
+        <activity android:name=".ConversacionActivity" android:launchMode="singleTop" />
         <activity
             android:name=".AlarmasActivity"
             android:label="@string/title_activity_alarmas"

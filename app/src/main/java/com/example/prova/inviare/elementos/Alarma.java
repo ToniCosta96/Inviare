@@ -77,7 +77,7 @@ public class Alarma implements Serializable{
     }
 
     /**
-     * Devuelve la hora_inicio en una forma presentable para la interfaz o null si se produce algún error
+     * Devuelve la horaInicio en una forma presentable para la interfaz o null si se produce algún error
      * @param c Context necesario para el método
      * @return String - Texto para mostrar en la interfaz
      */
@@ -104,7 +104,7 @@ public class Alarma implements Serializable{
     }
 
     /**
-     * Devuelve la hora_duracion en una forma presentable para la interfaz o null si se produce algún error
+     * Devuelve la horaDuracion en una forma presentable para la interfaz o null si se produce algún error
      * @param c Context necesario para el método
      * @return String - Texto para mostrar en la interfaz
      */

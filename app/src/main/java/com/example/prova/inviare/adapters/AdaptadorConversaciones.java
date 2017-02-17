@@ -2,6 +2,7 @@ package com.example.prova.inviare.adapters;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,9 +43,11 @@ public class AdaptadorConversaciones extends RecyclerView.Adapter<AdaptadorConve
             @Override
             public void onClick(View view) {
                 Intent i= new Intent(activity, ConversacionActivity.class);
-                i.putExtra(activity.getResources().getString(R.string.intent_conversacion_posicion_array),holder.getAdapterPosition());
-                i.putExtra(activity.getResources().getString(R.string.intent_conversacion_id),item.getId());
-                i.putExtra(activity.getResources().getString(R.string.intent_conversacion_titulo),item.getTitulo());
+                Bundle b = new Bundle();
+                b.putInt(activity.getResources().getString(R.string.intent_conversacion_posicion_array),holder.getAdapterPosition());
+                b.putString(activity.getResources().getString(R.string.intent_conversacion_id),item.getId());
+                b.putString(activity.getResources().getString(R.string.intent_conversacion_titulo),item.getTitulo());
+                i.putExtras(b);
                 activity.startActivityForResult(i,CHAT_REQUEST);
             }
         });
