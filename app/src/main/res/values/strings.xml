@@ -151,4 +151,7 @@
     <string name="alarma_fecha">Fecha: %1$s</string>
     <string name="alarma_hora">Hora: %1$s</string>
 
+    <!-- Mensajes perfil-->
+    <string name="perfil_actualizado">Cambios guardados correctamente.</string>
+
 </resources>

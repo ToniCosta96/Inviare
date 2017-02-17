@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -22,15 +23,25 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.prova.inviare.asynctasks.GuardarImagen;
+import com.example.prova.inviare.elementos_firebase.Usuario;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PerfilActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_EXTERNAL_STORAGE = 0;
@@ -41,6 +52,8 @@ public class PerfilActivity extends AppCompatActivity {
     private ImageView imageViewEliminarFoto;
     private String direccionImagenPerfil=null;
     private int intentImagenCambiada=AppCompatActivity.RESULT_CANCELED;
+
+    private LinearLayout act_perfil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +76,8 @@ public class PerfilActivity extends AppCompatActivity {
                 if (btnGuardar.isClickable()) finish();
             }
         });
+
+        act_perfil = (LinearLayout) findViewById(R.id.activity_perfil);
         btnGuardar= (Button) findViewById(R.id.btn_guardar_perfil);
         imageViewEliminarFoto= (ImageView) findViewById(R.id.imageView_eliminar);
         final Button btnImagenGaleria= (Button) findViewById(R.id.btn_imagen_galeria);
@@ -150,7 +165,10 @@ public class PerfilActivity extends AppCompatActivity {
                     editor.putString(context.getString(R.string.preferences_estado_perfil),editTextEstado.getText().toString());
                     editor.putString(context.getString(R.string.preferences_telefono_perfil),editTextTelefono.getText().toString());
                     editor.apply();
-                    Toast.makeText(getApplicationContext(),"Cambios guardados correctamente.",Toast.LENGTH_SHORT).show();
+
+                    updateFirebase(editTextNombre.getText().toString(), editTextEstado.getText().toString(), Integer.parseInt(editTextTelefono.getText().toString()));
+
+                    Toast.makeText(getApplicationContext(), R.string.perfil_actualizado,Toast.LENGTH_SHORT).show();
                 }
                 // Se guarda la imagen
                 addIntentExtras();
@@ -281,4 +299,31 @@ public class PerfilActivity extends AppCompatActivity {
         this.direccionImagenPerfil = direccionImagenPerfil;
     }
 
+    public void updateFirebase(final String name, final String estado, final int telefono){
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+        final String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final DatabaseReference contactosRef = database.getReference(getResources().getString(R.string.TABLE_CONTACTOS));
+
+        contactosRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    if (uid.equals(snapshot.getValue(Usuario.class).getUid())){
+
+                        contactosRef.child(snapshot.getKey()).child("nombre").setValue(name);
+                        contactosRef.child(snapshot.getKey()).child("estado").setValue(estado);
+                        contactosRef.child(snapshot.getKey()).child("telefono").setValue(telefono);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Snackbar.make(act_perfil, R.string.error_login, Snackbar.LENGTH_SHORT).show();
+            }
+        });
+
+    }
 }
