@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
                 // Se vacía el arrayConversaciones
                 arrayConversaciones.clear();
 
-                if(data.getStringExtra(getApplicationContext().getString(R.string.preferences_anclar_chat_personal)).compareTo(ID_PROPIETARIO)==0){
+                if(data.getStringExtra(getString(R.string.preferences_anclar_chat_personal)).compareTo(ID_PROPIETARIO)==0){
                     //Se añade primero el chat personal y luego el resto de chats
                     arrayConversaciones.add(new Contacto(ID_PROPIETARIO,"Tú","chat contigo","último uso",direccionImagenPropietario));
                 }else{

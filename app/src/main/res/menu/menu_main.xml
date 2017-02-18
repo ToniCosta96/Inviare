@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:title="@string/anyadir_contacto"
-        android:icon="@drawable/ic_add_black_24dp"
+        android:icon="@drawable/ic_person_add_24dp"
         android:id="@+id/item_add"
         app:showAsAction="ifRoom" />
     <item android:title="@string/acceso_directo_chat"

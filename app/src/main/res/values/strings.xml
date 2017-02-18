@@ -51,7 +51,7 @@
     <string name="dialog_declinar_tarea_titulo">Rechazar tarea</string>
     <string name="dialog_mensaje_declinar_tarea">Lo siento, no puedo realizar esta tarea.</string>
     <string name="dialog_tarea_realizada_titulo">¿Ya has realizado esta tarea?</string>
-    <string name="dialog_tarea_realizada">Se marcará esta tarea como realizada de manera irreversible.</string>
+    <string name="dialog_tarea_realizada">Esta tarea se marcará como realizada de manera irreversible.</string>
     <string name="dialog_declinar_tarea">Rechazar</string>
 
     <!-- SimpleDateFormat. -->
