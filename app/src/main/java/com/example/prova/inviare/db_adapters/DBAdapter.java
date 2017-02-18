@@ -85,6 +85,10 @@ public class DBAdapter {
         }
     }
 
+    public void close(){
+        db.close();
+    }
+
     public void seleccionarMensaje(ArrayList<Object> arrayElementos, String valor, String columna, String tabla){
         //Se introducen los mensajes de la base de datos en el arrayElementos
         String selectQuery = "SELECT * FROM "+tabla+" WHERE "+columna+" LIKE '"+valor+"';";
@@ -113,6 +117,45 @@ public class DBAdapter {
             } while (cursor.moveToNext());
         }
         cursor.close();
+    }
+
+    /**
+     * Selecciona las alarmas activas o inactivas de la base de datos
+     * @param alarmasActivas 'true' para retornar las alarmas activas y 'false' para retornar las inactivas
+     * @return Alarma[] - array de alarmas
+     */
+    public Alarma[] seleccionarAlarmas(boolean alarmasActivas){
+        //Se introducen los mensajes de la base de datos en el arrayElementos
+        String selectQuery;
+        if(alarmasActivas){
+            selectQuery = "SELECT * FROM "+TABLE_MENSAJES+" WHERE (tipo = "+TIPO_ALARMA_PERSISTENTE+" OR tipo = "+TIPO_ALARMA_REPETITIVA+" OR tipo = "+TIPO_ALARMA_FIJA+") AND curso_tarea = "+Alarma.TAREA_EN_CURSO+";";
+        }else{
+            selectQuery = "SELECT * FROM "+TABLE_MENSAJES+" WHERE (tipo = "+TIPO_ALARMA_PERSISTENTE+" OR tipo = "+TIPO_ALARMA_REPETITIVA+" OR tipo = "+TIPO_ALARMA_FIJA+") AND curso_tarea != "+Alarma.TAREA_EN_CURSO+";";
+        }
+
+        Cursor cursor= db.rawQuery(selectQuery, null);
+        // Crea un array de Alarmas con el número de filas devueltas por el cursor
+        Alarma[] alarmas = new Alarma[cursor.getCount()];
+        if(cursor.moveToFirst()){
+            for(int i=0;i<alarmas.length;i++){
+                //Se crea un objeto 'Elemento' con los datos de la DB recogidos por el cursor
+                SimpleDateFormat df = new SimpleDateFormat(context.getResources().getString(R.string.simple_date_format_DB), java.util.Locale.getDefault());
+                SimpleDateFormat df2 = new SimpleDateFormat(context.getResources().getString(R.string.simple_date_format_MENSAJE), java.util.Locale.getDefault());
+                Date dateSegundos=null;
+                try {
+                    dateSegundos = df.parse(cursor.getString(2));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                //Se averigua si el mensaje es del propietario y el tipo de mensaje
+                final boolean mensajePropietario = cursor.getString(9).compareTo(context.getResources().getString(R.string.id_propietario))==0;
+                final String fechaFinal=df2.format(dateSegundos);
+                alarmas[i]=new Alarma(cursor.getInt(0),cursor.getString(1),fechaFinal,cursor.getInt(3),cursor.getString(4),cursor.getString(5),cursor.getString(6),cursor.getString(7),cursor.getString(8),mensajePropietario);
+                cursor.moveToNext();
+            }
+        }
+        cursor.close();
+        return alarmas;
     }
 
     /**
@@ -299,14 +342,16 @@ public class DBAdapter {
         String[] valores_recuperar = {"_id", "mensaje", "fecha", "tipo", "hora_inicio", "hora_duracion", "frecuencia","curso_tarea","contestacion", "propietario"};
         Cursor c = db.query(TABLE_MENSAJES, valores_recuperar,
                 null, null, null, null, null, null);
-        c.moveToFirst();
-        do {
-            if (c.getInt(3)>=2) {
-                Alarma alarma = new Alarma(c.getInt(0), c.getString(1),
-                        c.getString(2), c.getInt(3), c.getString(4), c.getString(5), c.getString(6), c.getString(7), c.getString(8), true);
-                lista_alarmas.add(alarma);
-            }
-        } while (c.moveToNext());
+        if(c.moveToFirst()) {
+            do {
+                if (c.getInt(3) >= 2) {
+                    Alarma alarma = new Alarma(c.getInt(0), c.getString(1),
+                            c.getString(2), c.getInt(3), c.getString(4), c.getString(5), c.getString(6), c.getString(7), c.getString(8), true);
+                    lista_alarmas.add(alarma);
+                }
+            } while (c.moveToNext());
+        }
+        c.close();
         return lista_alarmas;
     }
 

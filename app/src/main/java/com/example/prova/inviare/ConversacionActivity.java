@@ -68,7 +68,7 @@ public class ConversacionActivity extends AppCompatActivity{
         dbAdapter.seleccionarMensaje(arrayMensajes,id_conversacion,DBAdapter.ID_CONTACTO,DBAdapter.TABLE_MENSAJES);
         // RecyclerView
         // Adaptador - AdaptadorConversaciones
-        adaptador = new AdaptadorChat(arrayMensajes, getApplicationContext());
+        adaptador = new AdaptadorChat(arrayMensajes, ConversacionActivity.this);
         recyclerView.setAdapter(adaptador);
         //Use a linear layout manager
         recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));

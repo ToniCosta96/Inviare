@@ -6,6 +6,7 @@ import android.util.Log;
 import com.example.prova.inviare.R;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Alarma implements Serializable{
     private int id;
@@ -172,5 +173,27 @@ public class Alarma implements Serializable{
 
     public void setPropietario(boolean propietario) {
         this.propietario = propietario;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Alarma alarma = (Alarma) o;
+        return id == alarma.id &&
+                tipo == alarma.tipo &&
+                propietario == alarma.propietario &&
+                Objects.equals(mensaje, alarma.mensaje) &&
+                Objects.equals(fecha, alarma.fecha) &&
+                Objects.equals(horaInicio, alarma.horaInicio) &&
+                Objects.equals(horaDuracion, alarma.horaDuracion) &&
+                Objects.equals(frecuencia, alarma.frecuencia) &&
+                Objects.equals(cursoTarea, alarma.cursoTarea) &&
+                Objects.equals(contestacion, alarma.contestacion);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, mensaje, fecha, tipo, horaInicio, horaDuracion, frecuencia, cursoTarea, contestacion, propietario);
     }
 }

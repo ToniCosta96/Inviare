@@ -89,6 +89,7 @@
     <string name="TABLE_ALARMAS">alarmas</string>
 
     <string name="title_activity_alarmas">Enviar notificación</string>
+    <string name="title_activity_alarma">Alarma</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="anyadir_contacto">Añadir contacto</string>
@@ -144,6 +145,8 @@
     <string name="text_duracion">Dura </string>
     <string name="text_inicio">Empieza en </string>
     <string name="text_frecuencia">Suena cada </string>
+    <string name="alarma_finalizada">Alarma finalizada</string>
+    <string name="aceptar">Aceptar</string>
 
     <string name="dia_lunes">Lunes</string>
     <string name="dia_martes">Martes</string>

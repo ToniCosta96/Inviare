@@ -271,19 +271,20 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
                 i.putExtra(getResources().getString(R.string.intent_alarma_hora_inicio),hora_inicio);
                 i.putExtra(getResources().getString(R.string.intent_alarma_hora_duracion),hora_duracion);
                 i.putExtra(getResources().getString(R.string.intent_alarma_frecuencia),frecuencia);
-                // Se le pasa el Bundle al intent
-                i.putExtras(i.getExtras());
                 setResult(RESULT_OK, i);
 
-                // ALARM_MANAGER
+                // ALARMA -
                 Alarma alarma = new Alarma((int)idAlarma,mensaje,fechaMuestra,tipoAlarma,hora_inicio,hora_duracion,frecuencia,Alarma.TAREA_EN_CURSO,null,true);
-                ControladorAlarma controladorAlarma = new ControladorAlarma(AlarmasActivity.this,alarma);
-                controladorAlarma.ponerAlarma();
-                controladorAlarma.guardarAlarmasPuestas();
-
                 Intent startIntent = new Intent(AlarmasActivity.this, ServicioAlarmas.class);
                 startIntent.setAction(getString(R.string.servicio_empezar));
+                startIntent.putExtras(i.getExtras());
                 startService(startIntent);
+
+                /*if(alarma.getTipo()==DBAdapter.TIPO_ALARMA_REPETITIVA || alarma.getTipo()==DBAdapter.TIPO_ALARMA_PERSISTENTE){
+                    ControladorAlarma controladorAlarma = new ControladorAlarma(AlarmasActivity.this, alarma);
+                    controladorAlarma.ponerAlarma();
+                    controladorAlarma.guardarAlarmasPuestas();
+                }*/
 
                 // FIREBASE - Se guarda en Firebase
                 myRef.push().setValue(alarma);
@@ -345,7 +346,7 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
         btnHora.setText(getResources().getString(R.string.alarma_hora,dateFormat.format(calendarFechaAlarmaFija.getTime())));
     }
 
-    @Override
+    /*@Override
     protected void onStart() {
         super.onStart();
         // Bind to LocalService
@@ -361,10 +362,10 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
             unbindService(mConnection);
             mBound = false;
         }
-    }
+    }*/
 
     /** Defines callbacks for service binding, passed to bindService() */
-    private ServiceConnection mConnection = new ServiceConnection() {
+    /*private ServiceConnection mConnection = new ServiceConnection() {
 
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
@@ -378,7 +379,7 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
         public void onServiceDisconnected(ComponentName arg0) {
             mBound = false;
         }
-    };
+    };*/
 }
 
 
