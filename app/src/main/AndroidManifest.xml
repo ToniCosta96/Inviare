@@ -52,7 +52,9 @@
             android:label="@string/title_activity_registro"/>
         <activity
             android:name=".servicios.AlarmaFijaActivity"
-            android:label="@string/title_activity_alarma"/>
+            android:label="@string/title_activity_alarma"
+            android:noHistory="true"
+            android:excludeFromRecents="true"/>
 
         <receiver android:name=".servicios.AlarmaPersistenteReceiver" />
         <receiver android:name=".servicios.AlarmaRepetitivaReceiver" />

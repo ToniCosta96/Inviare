@@ -2,7 +2,6 @@ package com.example.prova.inviare.adapters;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
@@ -11,6 +10,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +20,10 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.prova.inviare.AlarmasActivity;
 import com.example.prova.inviare.R;
 import com.example.prova.inviare.db_adapters.DBAdapter;
 import com.example.prova.inviare.elementos.Alarma;
 import com.example.prova.inviare.elementos.Mensaje;
-import com.example.prova.inviare.servicios.ControladorAlarma;
 import com.example.prova.inviare.servicios.ServicioAlarmas;
 
 import java.util.ArrayList;
@@ -132,7 +130,8 @@ public class AdaptadorChat extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //Tarea rechazada
-                        String contestacion=input.getText().toString();
+                        final String contestacion = input.getText().toString();
+                        final int codigoAlarma = ((Alarma)listData.get(position)).getId();
                         //Actualizar interfaz
                         holder.textViewContestacion.setText(contestacion);
                         holder.layoutAlarmaBotones.setVisibility(View.GONE);
@@ -144,11 +143,13 @@ public class AdaptadorChat extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         //Actualizar base de datos
                         DBAdapter dbAdapter= new DBAdapter(activity);
                         dbAdapter.open();
-                        dbAdapter.actualizarMensaje(((Alarma)listData.get(position)).getId(),Alarma.TAREA_RECHAZADA,input.getText().toString());
+                        dbAdapter.actualizarMensaje(codigoAlarma,Alarma.TAREA_RECHAZADA,input.getText().toString());
+                        dbAdapter.close();
                         // Detener alarma
                         Intent startIntent = new Intent(activity, ServicioAlarmas.class);
                         startIntent.setAction(activity.getString(R.string.servicio_empezar));
-                        startIntent.putExtras(((Activity)activity).getIntent().getExtras());
+                        startIntent.putExtra(activity.getString(R.string.intent_alarma_codigo),codigoAlarma);
+                        startIntent.putExtras(activity.getIntent().getExtras());
                         activity.startService(startIntent);
                         //if(((Alarma)listData.get(position)).getTipo() != DBAdapter.TIPO_ALARMA_FIJA) new ControladorAlarma(((Activity) activity),((Alarma)listData.get(position))).detenerAlarma();
                         //Actualizar firabase
@@ -177,6 +178,7 @@ public class AdaptadorChat extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which){
                             case DialogInterface.BUTTON_POSITIVE:
+                                final int codigoAlarma = ((Alarma)listData.get(position)).getId();
                                 // Tarea realizada
                                 final String textoTareaRealizada= activity.getResources().getString(R.string.tarea_realizada);
                                 //Actualizar interfaz
@@ -190,10 +192,12 @@ public class AdaptadorChat extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                                 //Actualizar base de datos
                                 DBAdapter dbAdapter= new DBAdapter(activity);
                                 dbAdapter.open();
-                                dbAdapter.actualizarMensaje(((Alarma)listData.get(position)).getId(),Alarma.TAREA_REALIZADA,textoTareaRealizada);
+                                dbAdapter.actualizarMensaje(codigoAlarma,Alarma.TAREA_REALIZADA,textoTareaRealizada);
+                                dbAdapter.close();
                                 // Detener alarma
                                 Intent startIntent = new Intent(activity, ServicioAlarmas.class);
                                 startIntent.setAction(activity.getString(R.string.servicio_empezar));
+                                startIntent.putExtra(activity.getString(R.string.intent_alarma_codigo),codigoAlarma);
                                 startIntent.putExtras(activity.getIntent().getExtras());
                                 activity.startService(startIntent);
                                 //if(((Alarma)listData.get(position)).getTipo() != DBAdapter.TIPO_ALARMA_FIJA) new ControladorAlarma(context,((Alarma)listData.get(position))).detenerAlarma();

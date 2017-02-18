@@ -194,6 +194,6 @@ public class Alarma implements Serializable{
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, mensaje, fecha, tipo, horaInicio, horaDuracion, frecuencia, cursoTarea, contestacion, propietario);
+        return id;
     }
 }

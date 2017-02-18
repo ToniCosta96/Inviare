@@ -24,6 +24,7 @@ import com.example.prova.inviare.elementos.Mensaje;
 
 import com.example.prova.inviare.elementos_firebase.Usuario;
 import com.example.prova.inviare.servicios.ControladorAlarma;
+import com.example.prova.inviare.servicios.ServicioAlarmas;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -237,6 +238,11 @@ public class ConversacionActivity extends AppCompatActivity{
                 arrayMensajes.clear();
                 adaptador.notifyDataSetChanged();
                 dbAdapter.eliminarMensajesPorContacto(id_conversacion);
+
+                Intent startIntent = new Intent(ConversacionActivity.this, ServicioAlarmas.class);
+                startIntent.setAction(getString(R.string.servicio_empezar));
+                startIntent.putExtras(getIntent().getExtras());
+                startService(startIntent);
                 return true;
             case R.id.item_silenciar:
                 //Se silencia el contacto actual si no estaba silenciado

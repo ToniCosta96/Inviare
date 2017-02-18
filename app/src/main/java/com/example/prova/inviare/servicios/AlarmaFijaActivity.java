@@ -43,7 +43,6 @@ public class AlarmaFijaActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // Se detiene la alarma
                 if(ringtone!=null) if(ringtone.isPlaying()) ringtone.stop();
-                finish();
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 Toast.makeText(getApplicationContext(),"Alarma detenida",Toast.LENGTH_SHORT).show();
             }

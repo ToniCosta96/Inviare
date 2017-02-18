@@ -87,6 +87,7 @@ public class DBAdapter {
 
     public void close(){
         db.close();
+        dbHelper.close();
     }
 
     public void seleccionarMensaje(ArrayList<Object> arrayElementos, String valor, String columna, String tabla){

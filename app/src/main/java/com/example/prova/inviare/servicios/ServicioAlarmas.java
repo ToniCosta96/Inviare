@@ -22,9 +22,11 @@ import com.example.prova.inviare.elementos.Alarma;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Servicio que gestiona las alarmas
@@ -34,9 +36,10 @@ public class ServicioAlarmas extends Service {
     private NotificationManager notificationManager;
 
     private static Alarma[] arrayAlarmas;
-    private HashMap<Alarma,TiemposAlarma> hashMapTiemposAlarma;
     private static Thread thread;
-    private Bundle bundle;
+
+    // Tiempo de espera del Thread
+    private static final int TIEMPO_ESPERA = 5000;
 
     /**
      * Class for clients to access.  Because we know this service always
@@ -52,13 +55,12 @@ public class ServicioAlarmas extends Service {
     @Override
     public void onCreate() {
         notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-        hashMapTiemposAlarma = new HashMap<>();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d("LocalService", "Received start id " + startId + ": " + intent);
-        bundle = intent.getExtras();
+        if(intent!=null) notificationManager.cancel(intent.getIntExtra(getString(R.string.intent_alarma_codigo),-1));
         actualizarAlarmas();
         crearThreadAlarmas();
         return START_STICKY;
@@ -83,17 +85,17 @@ public class ServicioAlarmas extends Service {
         if(thread==null){
             thread = new Thread(new Runnable() {
                 public void run() {
+                    HashMap<Alarma,TiemposAlarma> hashMapTiemposAlarma = new HashMap<>();
                     while (arrayAlarmas.length > 0) {
                         try {
-                            logicaServicioAlarmas();
+                            logicaServicioAlarmas(hashMapTiemposAlarma);
                             // Se espera por 20 segundos
-                            Thread.sleep(20000);
+                            Thread.sleep(TIEMPO_ESPERA);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
                     thread=null;
-
                 }
             });
             thread.setName("ThreadServicioAlarmas");
@@ -102,16 +104,18 @@ public class ServicioAlarmas extends Service {
         }
     }
 
-    private void logicaServicioAlarmas(){
-        for (Alarma arrayAlarma : arrayAlarmas) {
+    private void logicaServicioAlarmas(HashMap<Alarma,TiemposAlarma> hashMapTiemposAlarma){
+        TiemposAlarma tiemposAlarma;
+        for (final Alarma arrayAlarma : arrayAlarmas) {
             switch (arrayAlarma.getTipo()) {
                 case DBAdapter.TIPO_ALARMA_FIJA:
-                    SimpleDateFormat df = new SimpleDateFormat(getResources().getString(R.string.simple_date_format_MENSAJE), Locale.getDefault());
+                    final SimpleDateFormat df = new SimpleDateFormat(getResources().getString(R.string.simple_date_format_MENSAJE), Locale.getDefault());
                     try {
                         GregorianCalendar gc = new GregorianCalendar();
                         gc.setTime(df.parse(arrayAlarma.getHoraDuracion()));
                         if (gc.getTimeInMillis() < new GregorianCalendar().getTimeInMillis()) {
                             Intent i = new Intent(getApplicationContext(),AlarmaFijaActivity.class);
+                            Bundle bundle = new Bundle();
                             bundle.putString(getString(R.string.intent_alarma_mensaje),arrayAlarma.getMensaje());
                             bundle.putString(getString(R.string.intent_alarma_hora_duracion),arrayAlarma.getHoraDuracion());
                             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -129,18 +133,22 @@ public class ServicioAlarmas extends Service {
                     }
                     break;
                 case DBAdapter.TIPO_ALARMA_REPETITIVA:
+                    final int frecuencia = Integer.parseInt(arrayAlarma.getFrecuencia());
                     if(hashMapTiemposAlarma.get(arrayAlarma)==null){
-                        int horaInicio=0;
+                        long horaInicio=0;
                         if(arrayAlarma.getHoraInicio()!=null){
-                            horaInicio = (int) (Long.parseLong(arrayAlarma.getHoraInicio()) + new GregorianCalendar().getTimeInMillis());
+                            horaInicio = Long.parseLong(arrayAlarma.getHoraInicio()) + new GregorianCalendar().getTimeInMillis();
                         }
-                        int horaDuracion = (int) (Long.parseLong(arrayAlarma.getHoraDuracion()) + new GregorianCalendar().getTimeInMillis());
-                        hashMapTiemposAlarma.put(arrayAlarma, new TiemposAlarma(horaInicio,horaDuracion,0));
+                        long horaDuracion = Long.parseLong(arrayAlarma.getHoraDuracion()) + new GregorianCalendar().getTimeInMillis();
+                        hashMapTiemposAlarma.put(arrayAlarma, new TiemposAlarma(horaInicio,horaDuracion,frecuencia+TIEMPO_ESPERA));
                     }
-                    if(hashMapTiemposAlarma.get(arrayAlarma).getHoraInicio()!=-1){
-                        if(hashMapTiemposAlarma.get(arrayAlarma).getHoraInicio()<new GregorianCalendar().getTimeInMillis()){
-                            mostrarNotificationPersistente(arrayAlarma.getMensaje(),arrayAlarma.getId(),true);
-                            hashMapTiemposAlarma.get(arrayAlarma).setHoraInicio(-1);
+                    if(hashMapTiemposAlarma.get(arrayAlarma).getHoraInicio()<new GregorianCalendar().getTimeInMillis()){
+                        if(hashMapTiemposAlarma.get(arrayAlarma).getFrecuenciaActual()>frecuencia){
+                            mostrarNotificationRepetitiva(arrayAlarma.getMensaje(),arrayAlarma.getId());
+                            hashMapTiemposAlarma.get(arrayAlarma).setFrecuenciaActual(TIEMPO_ESPERA);
+                        }
+                        if(hashMapTiemposAlarma.get(arrayAlarma)!=null){
+                            hashMapTiemposAlarma.get(arrayAlarma).setFrecuenciaActual(hashMapTiemposAlarma.get(arrayAlarma).getFrecuenciaActual()+TIEMPO_ESPERA);
                         }
                     }
 
@@ -165,6 +173,9 @@ public class ServicioAlarmas extends Service {
                         hashMapTiemposAlarma.put(arrayAlarma, new TiemposAlarma(horaInicio,horaDuracion,0));
                     }
                     if(hashMapTiemposAlarma.get(arrayAlarma).getHoraInicio()!=-1){
+                        Log.d("aaaa","codigo "+arrayAlarma.getId());
+                        Log.d("aaaa","horaInicio "+hashMapTiemposAlarma.get(arrayAlarma).getHoraInicio());
+                        Log.d("aaaa","horaActual "+new GregorianCalendar().getTimeInMillis());
                         if(hashMapTiemposAlarma.get(arrayAlarma).getHoraInicio()<new GregorianCalendar().getTimeInMillis()){
                             mostrarNotificationPersistente(arrayAlarma.getMensaje(),arrayAlarma.getId(),true);
                             hashMapTiemposAlarma.get(arrayAlarma).setHoraInicio(-1);
@@ -189,9 +200,9 @@ public class ServicioAlarmas extends Service {
         DBAdapter dbAdapter = new DBAdapter(getApplicationContext());
         dbAdapter.open();
         arrayAlarmas = dbAdapter.seleccionarAlarmas(true);
-        for(Alarma alarma : dbAdapter.seleccionarAlarmas(false)){
+        /*for(Alarma alarma : dbAdapter.seleccionarAlarmas(false)){
             notificationManager.cancel(alarma.getId());
-        }
+        }*/
         dbAdapter.close();
     }
 
@@ -199,7 +210,8 @@ public class ServicioAlarmas extends Service {
         //Crea una notificación para terminar la notificación persistente
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(getApplicationContext())
-                        .setSmallIcon(R.drawable.ic_access_alarm_24dp);
+                        .setSmallIcon(R.drawable.ic_access_alarm_24dp)
+                        .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
         if(empezarNotificacion){
             mBuilder.setContentTitle(getString(R.string.tipo_notificacion_persistente));
             mBuilder.setContentText(mensaje);
@@ -208,11 +220,28 @@ public class ServicioAlarmas extends Service {
             mBuilder.setContentTitle("Tarea fuera de plazo");
             mBuilder.setContentText(getResources().getString(R.string.tipo_notificacion_persistente)+": "+mensaje);
             mBuilder.setPriority(Notification.PRIORITY_DEFAULT);
-            mBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
             mBuilder.setLights(Color.GREEN,500,1000);
             long[] pattern = {500,500};
             mBuilder.setVibrate(pattern);
         }
+        // Gets an instance of the NotificationManager service
+        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        // Builds the notification and issues it.
+        notificationManager.notify(codigoAlarma, mBuilder.build());
+    }
+
+    private void mostrarNotificationRepetitiva(final String mensaje,final int codigoAlarma) {
+        //Crea una notificación para terminar la notificación persistente
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(getApplicationContext())
+                        .setSmallIcon(R.drawable.ic_access_alarm_24dp);
+            mBuilder.setContentTitle(getString(R.string.tipo_alarma_repetitiva));
+            mBuilder.setContentText(mensaje);
+            mBuilder.setPriority(Notification.PRIORITY_DEFAULT);
+            mBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+            mBuilder.setLights(Color.GREEN,500,1000);
+            long[] pattern = {500,500};
+            mBuilder.setVibrate(pattern);
         // Gets an instance of the NotificationManager service
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         // Builds the notification and issues it.
