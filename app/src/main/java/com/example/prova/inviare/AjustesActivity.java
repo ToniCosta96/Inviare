@@ -109,6 +109,7 @@ public class AjustesActivity extends AppCompatActivity implements View.OnClickLi
                                 DBAdapter dbAdapter = new DBAdapter(getApplicationContext());
                                 dbAdapter.open();
                                 dbAdapter.eliminarDB();
+                                dbAdapter.close();
                             }
                         })
                         .setNegativeButton(context.getResources().getString(R.string.dialog_no), new DialogInterface.OnClickListener() {

@@ -128,15 +128,16 @@ public class MainActivity extends AppCompatActivity {
         }else if(requestCode == AJUSTES_REQUEST){
             if(resultCode == AppCompatActivity.RESULT_OK){
                 // Se vacía el arrayConversaciones
-                arrayConversaciones.clear();
-
-                if(data.getStringExtra(getString(R.string.preferences_anclar_chat_personal)).compareTo(ID_PROPIETARIO)==0){
-                    //Se añade primero el chat personal y luego el resto de chats
-                    arrayConversaciones.add(new Contacto(ID_PROPIETARIO,"Tú","chat contigo","último uso",direccionImagenPropietario));
-                }else{
-                    //Se añaden los chats y se intercala el chat personal en la posición correspondiente
-                    arrayConversaciones.add(new Contacto(ID_PROPIETARIO,"Tú","chat contigo","último uso",direccionImagenPropietario));
-                    // Más cosas
+                if(data.getStringExtra(getString(R.string.preferences_anclar_chat_personal))!=null){
+                    arrayConversaciones.clear();
+                    if(data.getStringExtra(getString(R.string.preferences_anclar_chat_personal)).compareTo(ID_PROPIETARIO)==0){
+                        //Se añade primero el chat personal y luego el resto de chats
+                        arrayConversaciones.add(new Contacto(ID_PROPIETARIO,"Tú","chat contigo","último uso",direccionImagenPropietario));
+                    }else{
+                        //Se añaden los chats y se intercala el chat personal en la posición correspondiente
+                        arrayConversaciones.add(new Contacto(ID_PROPIETARIO,"Tú","chat contigo","último uso",direccionImagenPropietario));
+                        // Más cosas
+                    }
                 }
                 //Se le notifican los cambios al adaptador (AdaptadorContactos)
                 adaptador.notifyDataSetChanged();
