@@ -38,6 +38,7 @@ public class Alarma implements Serializable{
     }
 
 
+
     public int getId() {
         return id;
     }

@@ -296,25 +296,25 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
 
     }
 
-    public void rellenarCampos(Alarma a){
-        editTextMensaje.setText(a.getMensaje());
-        switch(a.getTipo()){
+    public void rellenarCampos(String mensaje, String fecha, int tipo, String horaInicio, String horaDuracion, String frecuencia){
+        editTextMensaje.setText(mensaje);
+        switch(tipo){
             case DBAdapter.TIPO_ALARMA_FIJA:
                 spinnerTipoAlarmas.setSelection(0,true);
                 break;
             case DBAdapter.TIPO_ALARMA_REPETITIVA:
                 spinnerTipoAlarmas.setSelection(1,true);
-                spinnerTiempoInicio.setSelection(devolverIndice(arrayHuraDuracionMilisegundos,a.getHoraInicio()),true);
-                spinnerDuracion.setSelection(devolverIndice(arrayHuraDuracionMilisegundos,a.getHoraDuracion()),true);
-                spinnerFrecuencia.setSelection(devolverIndice(arrayFrecuenciaMilisegundos,a.getFrecuencia()),true);
+                spinnerTiempoInicio.setSelection(devolverIndice(arrayHuraDuracionMilisegundos,horaInicio),true);
+                spinnerDuracion.setSelection(devolverIndice(arrayHuraDuracionMilisegundos,horaDuracion),true);
+                spinnerFrecuencia.setSelection(devolverIndice(arrayFrecuenciaMilisegundos,frecuencia),true);
                 break;
             case DBAdapter.TIPO_ALARMA_PERSISTENTE:
                 spinnerTipoAlarmas.setSelection(2,true);
-                spinnerTiempoInicio.setSelection(devolverIndice(arrayHuraDuracionMilisegundos,a.getHoraDuracion()),true);
-                spinnerDuracion.setSelection(devolverIndice(arrayHuraDuracionMilisegundos,a.getHoraDuracion()),true);
+                spinnerTiempoInicio.setSelection(devolverIndice(arrayHuraDuracionMilisegundos,horaInicio),true);
+                spinnerDuracion.setSelection(devolverIndice(arrayHuraDuracionMilisegundos,horaDuracion),true);
                 break;
         }
-        chkInstante.setChecked(a.getHoraInicio()==null);
+        chkInstante.setChecked(horaInicio==null);
 
 
     }
@@ -330,17 +330,7 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
         return 0;
     }
 
-    public void guardarAlarmas(String mensaje, String fecha, int tipo, String hora_inicio, String hora_duracion, String frecuencia) {
-        //Aqui recibimos los datos al pulsar el cardview
-        Log.d(TAG, tipo + " " + mensaje);
-        /*if (tipo.equals("Persistente")) {
 
-        } else if (tipo.equals("Fija")) {
-
-        } else if (tipo.equals("Repetitiva")) {
-
-        }*/
-    }
 
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
