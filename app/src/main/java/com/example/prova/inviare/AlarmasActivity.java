@@ -50,6 +50,9 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
     private TextView textViewFreq;
     private GregorianCalendar calendarFechaAlarmaFija;
 
+    private static String[] arrayHuraDuracionMilisegundos;
+    private static String[] arrayFrecuenciaMilisegundos;
+
     // service
     private ServicioAlarmas mService;
     private boolean mBound = false;
@@ -68,6 +71,8 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
         final DBAdapter myDB = new DBAdapter(this);
         myDB.open();
 
+        arrayHuraDuracionMilisegundos = getResources().getStringArray(R.array.h_duracion_inicio_milisegundos);
+        arrayFrecuenciaMilisegundos = getResources().getStringArray(R.array.frecuencia_milisegundos);
         final String tipo[] = getResources().getStringArray(R.array.tipo_alarma);
         final String frecuencia_array[] = getResources().getStringArray(R.array.frecuencia);
         final String hora_inicio_duracion[] = getResources().getStringArray(R.array.h_duracion_inicio);
@@ -294,21 +299,35 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
     public void rellenarCampos(Alarma a){
         editTextMensaje.setText(a.getMensaje());
         switch(a.getTipo()){
-            case DBAdapter.TIPO_ALARMA_PERSISTENTE:
-                spinnerTipoAlarmas.setSelection(2,true);
-                break;
-            case DBAdapter.TIPO_ALARMA_REPETITIVA:
-                spinnerTipoAlarmas.setSelection(1,true);
-                spinnerFrecuencia.setSelection(1,true);
-                break;
             case DBAdapter.TIPO_ALARMA_FIJA:
                 spinnerTipoAlarmas.setSelection(0,true);
                 break;
+            case DBAdapter.TIPO_ALARMA_REPETITIVA:
+                spinnerTipoAlarmas.setSelection(1,true);
+                spinnerTiempoInicio.setSelection(devolverIndice(arrayHuraDuracionMilisegundos,a.getHoraInicio()),true);
+                spinnerDuracion.setSelection(devolverIndice(arrayHuraDuracionMilisegundos,a.getHoraDuracion()),true);
+                spinnerFrecuencia.setSelection(devolverIndice(arrayFrecuenciaMilisegundos,a.getFrecuencia()),true);
+                break;
+            case DBAdapter.TIPO_ALARMA_PERSISTENTE:
+                spinnerTipoAlarmas.setSelection(2,true);
+                spinnerTiempoInicio.setSelection(devolverIndice(arrayHuraDuracionMilisegundos,a.getHoraDuracion()),true);
+                spinnerDuracion.setSelection(devolverIndice(arrayHuraDuracionMilisegundos,a.getHoraDuracion()),true);
+                break;
         }
         chkInstante.setChecked(a.getHoraInicio()==null);
-        spinnerTiempoInicio.setSelection(1,true);
-        spinnerDuracion.setSelection(1,true);
 
+
+    }
+    private int devolverIndice(final String[] array, final String milisegundos){
+        // Cuando coinciden los milisegundos retorna el índice del array
+        if(milisegundos!=null){
+            for(int i=0;i<array.length;i++){
+                if(array[i].compareTo(milisegundos)==0){
+                    return i;
+                }
+            }
+        }
+        return 0;
     }
 
     public void guardarAlarmas(String mensaje, String fecha, int tipo, String hora_inicio, String hora_duracion, String frecuencia) {
