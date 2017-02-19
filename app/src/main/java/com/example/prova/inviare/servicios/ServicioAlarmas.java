@@ -114,18 +114,21 @@ public class ServicioAlarmas extends Service {
                         GregorianCalendar gc = new GregorianCalendar();
                         gc.setTime(df.parse(arrayAlarma.getHoraDuracion()));
                         if (gc.getTimeInMillis() < new GregorianCalendar().getTimeInMillis()) {
+                            DBAdapter dbAdapter = new DBAdapter(getApplicationContext());
+                            dbAdapter.open();
+
                             Intent i = new Intent(getApplicationContext(),AlarmaFijaActivity.class);
                             Bundle bundle = new Bundle();
+                            bundle.putString(getString(R.string.intent_conversacion_titulo),dbAdapter.seleccionarNombreContactoDeMensaje(arrayAlarma.getId()));
                             bundle.putString(getString(R.string.intent_alarma_mensaje),arrayAlarma.getMensaje());
                             bundle.putString(getString(R.string.intent_alarma_hora_duracion),arrayAlarma.getHoraDuracion());
                             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             i.putExtras(bundle);
                             startActivity(i);
                             // Eliminar alarma de la base de datos
-                            DBAdapter dbAdapter = new DBAdapter(getApplicationContext());
-                            dbAdapter.open();
                             dbAdapter.actualizarMensaje(arrayAlarma.getId(),Alarma.TAREA_REALIZADA,getString(R.string.alarma_finalizada));
                             arrayAlarmas = dbAdapter.seleccionarAlarmas(true);
+
                             dbAdapter.close();
                         }
                     } catch (ParseException e) {

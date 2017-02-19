@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.prova.inviare.R;
@@ -212,6 +213,21 @@ public class DBAdapter {
         }
         cursor.close();
         return ultimaFecha;
+    }
+
+    public String seleccionarNombreContactoDeMensaje(int valor){
+        String selectQuery = "SELECT c.nombre,m.contacto_id FROM contactos c INNER JOIN mensajes m ON c._id=m.contacto_id AND m._id="+valor+" GROUP BY c._id AND m.contacto_id";
+        Cursor cursor= db.rawQuery(selectQuery, null);
+        //Se asigna
+        String nombreContacto=null;
+        if(cursor.moveToFirst()){
+            //Se guarda el valor int de la consulta en la variable permisosContacto
+            nombreContacto = cursor.getString(0);
+        }else{
+            nombreContacto="Tú";
+        }
+        cursor.close();
+        return nombreContacto;
     }
 
     public void seleccionarContactos(ArrayList<Contacto> arrayElementos, String valor, String columna, String tabla){
