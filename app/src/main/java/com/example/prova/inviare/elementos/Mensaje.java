@@ -9,7 +9,7 @@ public class Mensaje {
     private String hora;
     private boolean propietario;
 
-    public Mensaje(String mensaje, String hora, boolean propietario) {
+    public Mensaje(String mensaje, String hora, boolean propietario){
         this.mensaje=mensaje;
         this.hora=hora;
         this.propietario=propietario;
