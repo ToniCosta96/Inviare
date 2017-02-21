@@ -43,9 +43,9 @@ public class ServicioAlarmas extends Service {
     private static final String FILENAME="hashMapAlarmasActivas.data";
     private NotificationManager notificationManager;
 
-    private Alarma[] arrayAlarmas;
+    private static Alarma[] arrayAlarmas;
     private HashMap<Alarma,TiemposAlarma> hashMapTiemposAlarma;
-    private Thread thread;
+    private static Thread thread;
 
     // Tiempo de espera del Thread
     private static final int TIEMPO_ESPERA = 5000;
@@ -246,8 +246,6 @@ public class ServicioAlarmas extends Service {
             long[] pattern = {500,500};
             mBuilder.setVibrate(pattern);
         }
-        // Gets an instance of the NotificationManager service
-        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         // Builds the notification and issues it.
         notificationManager.notify(codigoAlarma, mBuilder.build());
     }
@@ -264,8 +262,6 @@ public class ServicioAlarmas extends Service {
             mBuilder.setLights(Color.GREEN,500,1000);
             long[] pattern = {500,500};
             mBuilder.setVibrate(pattern);
-        // Gets an instance of the NotificationManager service
-        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         // Builds the notification and issues it.
         notificationManager.notify(codigoAlarma, mBuilder.build());
     }
