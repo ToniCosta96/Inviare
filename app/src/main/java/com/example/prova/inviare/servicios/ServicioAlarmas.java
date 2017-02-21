@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.RingtoneManager;
@@ -20,8 +21,14 @@ import com.example.prova.inviare.R;
 import com.example.prova.inviare.db_adapters.DBAdapter;
 import com.example.prova.inviare.elementos.Alarma;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -33,10 +40,12 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 
 public class ServicioAlarmas extends Service {
+    private static final String FILENAME="hashMapAlarmasActivas.data";
     private NotificationManager notificationManager;
 
-    private static Alarma[] arrayAlarmas;
-    private static Thread thread;
+    private Alarma[] arrayAlarmas;
+    private HashMap<Alarma,TiemposAlarma> hashMapTiemposAlarma;
+    private Thread thread;
 
     // Tiempo de espera del Thread
     private static final int TIEMPO_ESPERA = 5000;
@@ -55,11 +64,17 @@ public class ServicioAlarmas extends Service {
     @Override
     public void onCreate() {
         notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        if(new File(FILENAME).exists()){
+            cargarHashMap();
+        }else{
+            hashMapTiemposAlarma = new HashMap<>();
+        }
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d("LocalService", "Received start id " + startId + ": " + intent);
+        // Se cancela la notificación si ya se había iniciado
         if(intent!=null) notificationManager.cancel(intent.getIntExtra(getString(R.string.intent_alarma_codigo),-1));
         actualizarAlarmas();
         crearThreadAlarmas();
@@ -68,6 +83,13 @@ public class ServicioAlarmas extends Service {
 
     @Override
     public void onDestroy() {
+        final File file = new File(FILENAME);
+        if(hashMapTiemposAlarma==null){
+            if(file.exists()) if(!file.delete()) Toast.makeText(getApplicationContext(),"Error al eliminar archivo \"hashMapAlarmasActivas.data\"",Toast.LENGTH_LONG);
+        }else{
+            guardarHashMap();
+        }
+        if(hashMapTiemposAlarma!=null) guardarHashMap();
         // Tell the user we stopped.
         Toast.makeText(this, R.string.local_service_stopped, Toast.LENGTH_SHORT).show();
     }
@@ -85,7 +107,7 @@ public class ServicioAlarmas extends Service {
         if(thread==null){
             thread = new Thread(new Runnable() {
                 public void run() {
-                    HashMap<Alarma,TiemposAlarma> hashMapTiemposAlarma = new HashMap<>();
+
                     while (arrayAlarmas.length > 0) {
                         try {
                             logicaServicioAlarmas(hashMapTiemposAlarma);
@@ -145,17 +167,17 @@ public class ServicioAlarmas extends Service {
                         long horaDuracion = Long.parseLong(arrayAlarma.getHoraDuracion()) + new GregorianCalendar().getTimeInMillis();
                         hashMapTiemposAlarma.put(arrayAlarma, new TiemposAlarma(horaInicio,horaDuracion,frecuencia+TIEMPO_ESPERA));
                     }
-                    if(hashMapTiemposAlarma.get(arrayAlarma).getHoraInicio()<new GregorianCalendar().getTimeInMillis()){
-                        if(hashMapTiemposAlarma.get(arrayAlarma).getFrecuenciaActual()>frecuencia){
+                    if(hashMapTiemposAlarma.get(arrayAlarma).horaInicio<new GregorianCalendar().getTimeInMillis()){
+                        if(hashMapTiemposAlarma.get(arrayAlarma).frecuenciaActual>frecuencia){
                             mostrarNotificationRepetitiva(arrayAlarma.getMensaje(),arrayAlarma.getId());
-                            hashMapTiemposAlarma.get(arrayAlarma).setFrecuenciaActual(TIEMPO_ESPERA);
+                            hashMapTiemposAlarma.get(arrayAlarma).frecuenciaActual = TIEMPO_ESPERA;
                         }
                         if(hashMapTiemposAlarma.get(arrayAlarma)!=null){
-                            hashMapTiemposAlarma.get(arrayAlarma).setFrecuenciaActual(hashMapTiemposAlarma.get(arrayAlarma).getFrecuenciaActual()+TIEMPO_ESPERA);
+                            hashMapTiemposAlarma.get(arrayAlarma).frecuenciaActual = hashMapTiemposAlarma.get(arrayAlarma).frecuenciaActual+TIEMPO_ESPERA;
                         }
                     }
 
-                    if(hashMapTiemposAlarma.get(arrayAlarma).getHoraDuracion()<new GregorianCalendar().getTimeInMillis()){
+                    if(hashMapTiemposAlarma.get(arrayAlarma).horaDuracion<new GregorianCalendar().getTimeInMillis()){
                         // Eliminar alarma de la base de datos
                         DBAdapter dbAdapter = new DBAdapter(getApplicationContext());
                         dbAdapter.open();
@@ -175,16 +197,13 @@ public class ServicioAlarmas extends Service {
                         long horaDuracion = Long.parseLong(arrayAlarma.getHoraDuracion()) + new GregorianCalendar().getTimeInMillis();
                         hashMapTiemposAlarma.put(arrayAlarma, new TiemposAlarma(horaInicio,horaDuracion,0));
                     }
-                    if(hashMapTiemposAlarma.get(arrayAlarma).getHoraInicio()!=-1){
-                        Log.d("aaaa","codigo "+arrayAlarma.getId());
-                        Log.d("aaaa","horaInicio "+hashMapTiemposAlarma.get(arrayAlarma).getHoraInicio());
-                        Log.d("aaaa","horaActual "+new GregorianCalendar().getTimeInMillis());
-                        if(hashMapTiemposAlarma.get(arrayAlarma).getHoraInicio()<new GregorianCalendar().getTimeInMillis()){
+                    if(hashMapTiemposAlarma.get(arrayAlarma).horaInicio!=-1){
+                        if(hashMapTiemposAlarma.get(arrayAlarma).horaInicio<new GregorianCalendar().getTimeInMillis()){
                             mostrarNotificationPersistente(arrayAlarma.getMensaje(),arrayAlarma.getId(),true);
-                            hashMapTiemposAlarma.get(arrayAlarma).setHoraInicio(-1);
+                            hashMapTiemposAlarma.get(arrayAlarma).horaInicio = -1;
                         }
                     }
-                    if(hashMapTiemposAlarma.get(arrayAlarma).getHoraDuracion()<new GregorianCalendar().getTimeInMillis()){
+                    if(hashMapTiemposAlarma.get(arrayAlarma).horaDuracion<new GregorianCalendar().getTimeInMillis()){
                         // Eliminar alarma de la base de datos
                         DBAdapter dbAdapter = new DBAdapter(getApplicationContext());
                         dbAdapter.open();
@@ -252,29 +271,42 @@ public class ServicioAlarmas extends Service {
     }
 
     private class TiemposAlarma {
-        private long horaInicio;
-        private long horaDuracion;
-        private int frecuenciaActual;
+        long horaInicio;
+        long horaDuracion;
+        int frecuenciaActual;
 
-        public TiemposAlarma(long horaInicio, long horaDuracion, int frecuenciaActual) {
+        TiemposAlarma(long horaInicio, long horaDuracion, int frecuenciaActual) {
             this.frecuenciaActual = frecuenciaActual;
             this.horaInicio = horaInicio;
             this.horaDuracion = horaDuracion;
         }
-        public void setHoraInicio(long horaInicio) {
-            this.horaInicio = horaInicio;
+    }
+
+    private void guardarHashMap(){
+        try {
+            FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(hashMapTiemposAlarma);
+            oos.close();
+            fos.close();
+        } catch ( Exception ex ) {
+            ex.printStackTrace ();
         }
-        public long getHoraInicio() {
-            return horaInicio;
-        }
-        public long getHoraDuracion() {
-            return horaDuracion;
-        }
-        public int getFrecuenciaActual() {
-            return frecuenciaActual;
-        }
-        public void setFrecuenciaActual(int frecuenciaActual) {
-            this.frecuenciaActual = frecuenciaActual;
+    }
+
+    @SuppressWarnings("unchecked")
+    private void cargarHashMap(){
+        try {
+            FileInputStream fis = openFileInput(FILENAME);
+            ObjectInputStream is = new ObjectInputStream(fis);
+            Object object=is.readObject();
+            if(object instanceof HashMap){
+                hashMapTiemposAlarma = (HashMap<Alarma,TiemposAlarma>) object;
+            }
+            is.close();
+            fis.close();
+        } catch ( Exception ex ) {
+            ex.printStackTrace ();
         }
     }
 }

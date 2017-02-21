@@ -17,6 +17,9 @@ import android.widget.Toast;
 
 import com.example.prova.inviare.MainActivity;
 import com.example.prova.inviare.R;
+import com.example.prova.inviare.elementos.Alarma;
+
+import java.util.HashMap;
 
 public class AlarmaFijaActivity extends AppCompatActivity {
     private Ringtone ringtone;
@@ -51,8 +54,21 @@ public class AlarmaFijaActivity extends AppCompatActivity {
         // Hacer sonar la alarma
         try {
             Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-           ringtone = RingtoneManager.getRingtone(getApplicationContext(), notification);
+            ringtone = RingtoneManager.getRingtone(getApplicationContext(), notification);
             ringtone.play();
+
+            // Si después de 15 segundos la alarma está sonando se detiene.
+            new Thread(new Runnable() {
+                public void run() {
+                    try {
+                        Thread.sleep(15000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }finally {
+                        if(ringtone!=null) if(ringtone.isPlaying()) ringtone.stop();
+                    }
+                }
+            }).start();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -121,7 +121,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Cancelar"
-                    android:background="@drawable/borde_redondo"
+                    android:background="@drawable/button_border"
                     android:textColor="#ffffff" />
 
                 <Button
@@ -130,7 +130,7 @@
                     android:layout_height="wrap_content"
                     android:padding="12dp"
                     android:text="Registrarse"
-                    android:background="@drawable/borde_redondo"
+                    android:background="@drawable/button_border"
                     android:textColor="#ffffff" />
 
 

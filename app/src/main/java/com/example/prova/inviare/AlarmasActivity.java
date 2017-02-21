@@ -277,7 +277,6 @@ public class AlarmasActivity extends AppCompatActivity implements DatePickerDial
                 Alarma alarma = new Alarma((int)idAlarma,mensaje,fechaMuestra,tipoAlarma,hora_inicio,hora_duracion,frecuencia,Alarma.TAREA_EN_CURSO,null,true);
                 Intent startIntent = new Intent(AlarmasActivity.this, ServicioAlarmas.class);
                 startIntent.setAction(getString(R.string.servicio_empezar));
-                startIntent.putExtras(i.getExtras());
                 startService(startIntent);
 
                 /*if(alarma.getTipo()==DBAdapter.TIPO_ALARMA_REPETITIVA || alarma.getTipo()==DBAdapter.TIPO_ALARMA_PERSISTENTE){
