@@ -26,6 +26,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -127,7 +128,6 @@ public class ServicioAlarmas extends Service {
     }
 
     private void logicaServicioAlarmas(HashMap<Alarma,TiemposAlarma> hashMapTiemposAlarma){
-        TiemposAlarma tiemposAlarma;
         for (final Alarma arrayAlarma : arrayAlarmas) {
             switch (arrayAlarma.getTipo()) {
                 case DBAdapter.TIPO_ALARMA_FIJA:
@@ -266,7 +266,7 @@ public class ServicioAlarmas extends Service {
         notificationManager.notify(codigoAlarma, mBuilder.build());
     }
 
-    private class TiemposAlarma {
+    private class TiemposAlarma implements Serializable {
         long horaInicio;
         long horaDuracion;
         int frecuenciaActual;

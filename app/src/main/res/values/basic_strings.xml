@@ -1,0 +1,44 @@
+<resources>
+    <!-- SharedPreferences / Preferences. -->
+    <string name="shared_preferences">shared_preferences</string>
+    <string name="preferences_sesion_iniciada">sesion_iniciada</string>
+    <string name="preferences_nombre_perfil">nombre_perfil</string>
+    <string name="preferences_telefono_perfil">telefono_perfil</string>
+    <string name="preferences_email_perfil">email_perfil</string>
+    <string name="preferences_estado_perfil">estado_perfil</string>
+    <string name="preferences_imagen_perfil">imagen_perfil</string>
+    <!--<string name="preferences_usuario_acceso_directo">usuario_acceso_directo</string>-->
+    <string name="preferences_sonido_notificacion">sonido_notificacion</string>
+    <string name="preferences_horario_nocturno">horario_nocturno</string>
+    <string name="preferences_horario_nocturno_hora_inicio">horario_nocturno_inicio</string>
+    <string name="preferences_horario_nocturno_hora_final">horario_nocturno_final</string>
+    <string name="preferences_led_notificacion">led_notificacion</string>
+    <string name="preferences_anclar_chat_personal">anclar_chat_personal</string>
+
+    <!-- Intents (Extras). -->
+    <string name="intent_conversacion_id">id_conversacion</string>
+    <string name="intent_conversacion_titulo">titulo_conversacion</string>
+    <string name="intent_conversacion_posicion_array">c_posicion_array</string>
+    <string name="intent_mensaje_fecha">m_fecha</string>
+    <string name="intent_alarma_codigo">codigo_alarma</string>
+    <string name="intent_alarma_mensaje">mensaje</string>
+    <string name="intent_alarma_fecha">fecha</string>
+    <string name="intent_alarma_tipo">tipo_alarma</string>
+    <string name="intent_alarma_hora_inicio">hora_inicio</string>
+    <string name="intent_alarma_hora_duracion">hora_duracion</string>
+    <string name="intent_alarma_duracion_milisegundos">duracion_milisegundos</string>
+    <string name="intent_alarma_dia">dia_alarma</string>
+    <string name="intent_alarma_frecuencia">frecuencia</string>
+    <string name="intent_empezar_notificacion_bool">empezarNotificacion</string>
+
+    <!-- ServicioAlarmas. -->
+    <string name="local_service_started">servicio_empezado</string>
+    <string name="local_service_stopped">servicio_detenido</string>
+    <string name="servicio_empezar">servicio_empezado</string>
+    <string name="servicio_terminar">servicio_detenido</string>
+
+    <!--Tags Firebase-->
+    <string name="TABLE_CONTACTOS">contactos</string>
+    <string name="TABLE_MENSAJES">conversaciones</string>
+    <string name="TABLE_ALARMAS">alarmas</string>
+</resources>

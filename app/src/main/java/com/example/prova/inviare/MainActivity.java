@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
     private static final int CHAT_REQUEST=2;
     private ArrayList<Contacto> arrayConversaciones;
     private AdaptadorConversaciones adaptador;
-    private static String USUARIO_ACCESO_DIRECTO;
     private static final String MY_FIREBASE_BUCKET = "gs://inviare-411d4.appspot.com";
 
     private String direccionImagenPropietario;
@@ -73,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        USUARIO_ACCESO_DIRECTO = sharedPref.getString(getResources().getString(R.string.preferences_usuario_acceso_directo),ID_PROPIETARIO);
         direccionImagenPropietario=sharedPref.getString(getResources().getString(R.string.preferences_imagen_perfil),null);
         final int posicionChatPersonal = sharedPref.getInt(getResources().getString(R.string.preferences_anclar_chat_personal),Integer.parseInt(ID_PROPIETARIO));
 
@@ -168,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
                 i= new Intent(getApplicationContext(),ContactosActivity.class);
                 startActivity(i);
                 return true;
-            case R.id.item_acceso_directo:
+            /*case R.id.item_acceso_directo:
                 // Intent -> Acceso directo
                 i= new Intent(getApplicationContext(),ConversacionActivity.class);
                 i.putExtra(getResources().getString(R.string.intent_conversacion_id),USUARIO_ACCESO_DIRECTO);
@@ -182,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
                 // Se pasa el nombre de este contacto al activity ConversacionActivity
                 i.putExtra(getResources().getString(R.string.intent_conversacion_titulo),nombreContacto);
                 startActivity(i);
-                return true;
+                return true;*/
             case R.id.item_perfil:
                 // Intent -> Perfil
                 i= new Intent(getApplicationContext(),PerfilActivity.class);
