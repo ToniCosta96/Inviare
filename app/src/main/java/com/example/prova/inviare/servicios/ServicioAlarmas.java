@@ -231,11 +231,27 @@ public class ServicioAlarmas extends Service {
     }
 
     private void mostrarNotificationPersistente(final String mensaje,final int codigoAlarma,final boolean empezarNotificacion) {
-        //Crea una notificación para terminar la notificación persistente
+        final SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.shared_preferences), Context.MODE_PRIVATE);
+        //Crea una notificación
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(getApplicationContext())
-                        .setSmallIcon(R.drawable.ic_access_alarm_24dp)
-                        .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+                        .setSmallIcon(R.drawable.ic_access_alarm_24dp);
+
+        // SONIDO
+        if(sharedPref.getBoolean(getString(R.string.preferences_sonido_notificacion),true)){
+            if(sharedPref.getBoolean(getString(R.string.preferences_horario_nocturno),false)){
+                final SimpleDateFormat dfHora = new SimpleDateFormat(getResources().getString(R.string.simple_date_format_HORA), java.util.Locale.getDefault());
+                final String horaInicio = sharedPref.getString(getString(R.string.preferences_horario_nocturno_hora_inicio),getString(R.string.predeterminado_horario_nocturno_hora_inicio));
+                final String horaFinal = sharedPref.getString(getString(R.string.preferences_horario_nocturno_hora_inicio),getString(R.string.predeterminado_horario_nocturno_hora_inicio));
+                final String horaActual = dfHora.format(new GregorianCalendar().getTime());
+                if(horaActual.compareTo(horaInicio)>0 || horaActual.compareTo(horaFinal)<0){
+                    mBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+                }
+            }else{
+                mBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+            }
+        }
+
         if(empezarNotificacion){
             mBuilder.setContentTitle(getString(R.string.tipo_notificacion_persistente));
             mBuilder.setContentText(mensaje);
@@ -244,7 +260,7 @@ public class ServicioAlarmas extends Service {
             mBuilder.setContentTitle("Tarea fuera de plazo");
             mBuilder.setContentText(getResources().getString(R.string.tipo_notificacion_persistente)+": "+mensaje);
             mBuilder.setPriority(Notification.PRIORITY_DEFAULT);
-            mBuilder.setLights(Color.GREEN,500,1000);
+            if(sharedPref.getBoolean(getString(R.string.preferences_led_notificacion),true)) mBuilder.setLights(Color.GREEN,500,1000);
             long[] pattern = {500,500};
             mBuilder.setVibrate(pattern);
         }
@@ -254,13 +270,14 @@ public class ServicioAlarmas extends Service {
 
     private void mostrarNotificationRepetitiva(final String mensaje,final int codigoAlarma) {
         final SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.shared_preferences), Context.MODE_PRIVATE);
-        //Crea una notificación para terminar la notificación persistente
+        //Crea una notificación
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(getApplicationContext())
                         .setSmallIcon(R.drawable.ic_access_alarm_24dp);
             mBuilder.setContentTitle(getString(R.string.tipo_alarma_repetitiva));
             mBuilder.setContentText(mensaje);
             mBuilder.setPriority(Notification.PRIORITY_DEFAULT);
+            // SONIDO
             if(sharedPref.getBoolean(getString(R.string.preferences_sonido_notificacion),true)){
                 if(sharedPref.getBoolean(getString(R.string.preferences_horario_nocturno),false)){
                     final SimpleDateFormat dfHora = new SimpleDateFormat(getResources().getString(R.string.simple_date_format_HORA), java.util.Locale.getDefault());
@@ -274,6 +291,7 @@ public class ServicioAlarmas extends Service {
                     mBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
                 }
             }
+            // LED
             if(sharedPref.getBoolean(getString(R.string.preferences_led_notificacion),true)) mBuilder.setLights(Color.GREEN,500,1000);
 
             long[] pattern = {500,500};
