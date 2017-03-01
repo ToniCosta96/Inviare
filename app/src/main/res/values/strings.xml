@@ -23,13 +23,6 @@
     <string name="dialog_tarea_realizada">Esta tarea se marcará como realizada de manera irreversible.</string>
     <string name="dialog_declinar_tarea">Rechazar</string>
 
-    <!-- SimpleDateFormat. -->
-    <string name="simple_date_format_DB">dd MM yyyy, HH:mm:ss</string>
-    <string name="simple_date_format_MENSAJE">dd-MM-yyyy, HH:mm</string>
-    <string name="simple_date_format_CONTACTO">dd MMMM yyyy, HH:mm</string>
-    <string name="simple_date_format_FECHA">dd-MM-yyyy</string>
-    <string name="simple_date_format_HORA">HH:mm</string>
-
     <!-- Menu. -->
     <string name="menu_desactivar_silencio">Desactivar silencio</string>
     <string name="menu_desactivar_bloqueo">Desbloquear contacto</string>

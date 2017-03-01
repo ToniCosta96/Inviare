@@ -31,6 +31,15 @@
     <string name="intent_alarma_frecuencia">frecuencia</string>
     <string name="intent_empezar_notificacion_bool">empezarNotificacion</string>
 
+    <!-- SimpleDateFormat. -->
+    <string name="simple_date_format_DB">dd MM yyyy, HH:mm:ss</string>
+    <string name="simple_date_format_MENSAJE">dd-MM-yyyy, HH:mm</string>
+    <string name="simple_date_format_CONTACTO">dd MMMM yyyy, HH:mm</string>
+    <string name="simple_date_format_FECHA">dd-MM-yyyy</string>
+    <string name="simple_date_format_HORA">HH:mm</string>
+    <string name="predeterminado_horario_nocturno_hora_inicio">23:00</string>
+    <string name="predeterminado_horario_nocturno_hora_final">8:00</string>
+
     <!-- ServicioAlarmas. -->
     <string name="local_service_started">servicio_empezado</string>
     <string name="local_service_stopped">servicio_detenido</string>

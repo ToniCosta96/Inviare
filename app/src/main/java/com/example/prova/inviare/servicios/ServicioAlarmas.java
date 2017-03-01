@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.os.Binder;
@@ -31,6 +32,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Locale;
@@ -251,6 +253,7 @@ public class ServicioAlarmas extends Service {
     }
 
     private void mostrarNotificationRepetitiva(final String mensaje,final int codigoAlarma) {
+        final SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.shared_preferences), Context.MODE_PRIVATE);
         //Crea una notificación para terminar la notificación persistente
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(getApplicationContext())
@@ -258,8 +261,21 @@ public class ServicioAlarmas extends Service {
             mBuilder.setContentTitle(getString(R.string.tipo_alarma_repetitiva));
             mBuilder.setContentText(mensaje);
             mBuilder.setPriority(Notification.PRIORITY_DEFAULT);
-            mBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
-            mBuilder.setLights(Color.GREEN,500,1000);
+            if(sharedPref.getBoolean(getString(R.string.preferences_sonido_notificacion),true)){
+                if(sharedPref.getBoolean(getString(R.string.preferences_horario_nocturno),false)){
+                    final SimpleDateFormat dfHora = new SimpleDateFormat(getResources().getString(R.string.simple_date_format_HORA), java.util.Locale.getDefault());
+                    final String horaInicio = sharedPref.getString(getString(R.string.preferences_horario_nocturno_hora_inicio),getString(R.string.predeterminado_horario_nocturno_hora_inicio));
+                    final String horaFinal = sharedPref.getString(getString(R.string.preferences_horario_nocturno_hora_inicio),getString(R.string.predeterminado_horario_nocturno_hora_inicio));
+                    final String horaActual = dfHora.format(new GregorianCalendar().getTime());
+                    if(horaActual.compareTo(horaInicio)>0 || horaActual.compareTo(horaFinal)<0){
+                        mBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+                    }
+                }else{
+                    mBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+                }
+            }
+            if(sharedPref.getBoolean(getString(R.string.preferences_led_notificacion),true)) mBuilder.setLights(Color.GREEN,500,1000);
+
             long[] pattern = {500,500};
             mBuilder.setVibrate(pattern);
         // Builds the notification and issues it.
