@@ -43,7 +43,7 @@ public class AdaptadorChat extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         switch (viewType) {
             case DBAdapter.TIPO_TEXTO:
-                View v1 = inflater.inflate(R.layout.lista_chat1, parent, false);
+                View v1 = inflater.inflate(R.layout.lista_chat_texto, parent, false);
                 viewHolder = new AdaptadorChat.ViewHolderMensaje(v1);
                 break;
             case DBAdapter.TIPO_ALARMA_REPETITIVA:
